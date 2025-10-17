@@ -1658,7 +1658,7 @@ getBasicTimeStatus(hours) {
             
             if (allOficios.length === 0) {
                 return "🔧 No tengo información de profesionales disponibles en este momento. " +
-                       `Puedes [ver todos los oficios aquí](/${this.currentLocalidad}../oficios-profeciones.html)`;
+                       `Puedes [ver todos los oficios aquí](/${this.currentLocalidad}../../oficios-profeciones.html)`;
             }
 
             const oficioType = this.extractOficioType(input);
@@ -1676,7 +1676,7 @@ getBasicTimeStatus(hours) {
 
             if (relevantOficios.length === 0) {
                 return `❌ No encontré ${oficioType ? oficioType + ' ' : ''}disponibles. ` +
-                       `Puedes [ver todos los oficios aquí](/${this.currentLocalidad}../oficios-profeciones.html)`;
+                       `Puedes [ver todos los oficios aquí](/${this.currentLocalidad}../../oficios-profeciones.html)`;
             }
 
             // 🎯 GUARDAR RESULTADOS PARA PAGINACIÓN
@@ -1689,7 +1689,7 @@ getBasicTimeStatus(hours) {
         } catch (error) {
             console.error('Error cargando oficios:', error);
             return `🔧 No pude cargar la información de profesionales. ` +
-                   `Puedes [ver los oficios disponibles aquí](/${this.currentLocalidad}../oficios-profeciones.html)`;
+                   `Puedes [ver los oficios disponibles aquí](/${this.currentLocalidad}../../oficios-profeciones.html)`;
         }
     }
 
@@ -1772,7 +1772,7 @@ getBasicTimeStatus(hours) {
             response += `🔍 *¿Quieres ver más? Escribe "más resultados"*`;
         }
 
-        response += `\n💡 *¿Necesitás otro tipo de profesional? [Ver todos los oficios](/${this.currentLocalidad}../oficios-profeciones.html)*`;
+        response += `\n💡 *¿Necesitás otro tipo de profesional? [Ver todos los oficios](/${this.currentLocalidad}../../oficios-profeciones.html)*`;
 
         return response;
     }
@@ -1838,7 +1838,7 @@ getBasicTimeStatus(hours) {
 
         } catch (error) {
             return `💡 **Emprendimientos Locales**\n\n` +
-                   `Puedes [explorar todos los emprendimientos aquí](/${this.currentLocalidad}../emprendimientos.html)\n\n` +
+                   `Puedes [explorar todos los emprendimientos aquí](/${this.currentLocalidad}../../emprendimientos.html)\n\n` +
                    `*¿Te gustaría registrar tu propio emprendimiento?*`;
         }
     }
@@ -1877,10 +1877,10 @@ getBasicTimeStatus(hours) {
             if (filteredOfertas.length === 0) {
                 if (businessType) {
                     return `❌ No encontré ofertas de **${this.formatBusinessType(businessType)}** disponibles.\n\n` +
-                           `💡 *Puedes [ver todas las ofertas aquí](/${this.currentLocalidad}../comunidad-de-ofertas.html) o probar con otra categoría.*`;
+                           `💡 *Puedes [ver todas las ofertas aquí](/${this.currentLocalidad}../../comunidad-de-ofertas.html) o probar con otra categoría.*`;
                 } else {
                     return `❌ No encontré ofertas que coincidan con tu búsqueda.\n\n` +
-                           `💡 *Puedes [ver todas las ofertas aquí](/${this.currentLocalidad}../comunidad-de-ofertas.html)*`;
+                           `💡 *Puedes [ver todas las ofertas aquí](/${this.currentLocalidad}../../comunidad-de-ofertas.html)*`;
                 }
             }
 
@@ -1889,7 +1889,7 @@ getBasicTimeStatus(hours) {
         } catch (error) {
             console.error('Error en búsqueda de ofertas:', error);
             return "❌ No pude cargar las ofertas en este momento. Por favor intenta más tarde.\n\n" +
-                   `💡 *Puedes [ver las ofertas en la web](/${this.currentLocalidad}../comunidad-de-ofertas.html)*`;
+                   `💡 *Puedes [ver las ofertas en la web](/${this.currentLocalidad}../../comunidad-de-ofertas.html)*`;
         }
     }
 
@@ -1945,7 +1945,7 @@ getBasicTimeStatus(hours) {
             response += `*... y ${ofertas.length - 8} ofertas más.*\n\n`;
         }
 
-        response += `💡 *¿No encontrás lo que buscas? [Ver todas las ofertas](/${this.currentLocalidad}../comunidad-de-ofertas.html)*`;
+        response += `💡 *¿No encontrás lo que buscas? [Ver todas las ofertas](/${this.currentLocalidad}../../comunidad-de-ofertas.html)*`;
 
         return response;
     }

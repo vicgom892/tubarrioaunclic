@@ -1658,7 +1658,7 @@ getBasicTimeStatus(hours) {
             
             if (allOficios.length === 0) {
                 return "🔧 No tengo información de profesionales disponibles en este momento. " +
-                       `Puedes [ver todos los oficios aquí](/${this.currentLocalidad}../oficios-profeciones.html)`;
+                       `Puedes [ver todos los oficios aquí](/${this.currentLocalidad}/oficios-profeciones.html)`;
             }
 
             const oficioType = this.extractOficioType(input);
@@ -1676,7 +1676,7 @@ getBasicTimeStatus(hours) {
 
             if (relevantOficios.length === 0) {
                 return `❌ No encontré ${oficioType ? oficioType + ' ' : ''}disponibles. ` +
-                       `Puedes [ver todos los oficios aquí](/${this.currentLocalidad}../oficios-profeciones.html)`;
+                       `Puedes [ver todos los oficios aquí](/${this.currentLocalidad}/oficios-profeciones.html)`;
             }
 
             // 🎯 GUARDAR RESULTADOS PARA PAGINACIÓN
@@ -1689,7 +1689,7 @@ getBasicTimeStatus(hours) {
         } catch (error) {
             console.error('Error cargando oficios:', error);
             return `🔧 No pude cargar la información de profesionales. ` +
-                   `Puedes [ver los oficios disponibles aquí](/${this.currentLocalidad}../oficios-profeciones.html)`;
+                   `Puedes [ver los oficios disponibles aquí](/${this.currentLocalidad}/oficios-profeciones.html)`;
         }
     }
 
@@ -1772,7 +1772,7 @@ getBasicTimeStatus(hours) {
             response += `🔍 *¿Quieres ver más? Escribe "más resultados"*`;
         }
 
-        response += `\n💡 *¿Necesitás otro tipo de profesional? [Ver todos los oficios](/${this.currentLocalidad}../oficios-profeciones.html)*`;
+        response += `\n💡 *¿Necesitás otro tipo de profesional? [Ver todos los oficios](/${this.currentLocalidad}/oficios-profeciones.html)*`;
 
         return response;
     }
@@ -1801,7 +1801,7 @@ getBasicTimeStatus(hours) {
             if (!emprendimientos || emprendimientos.length === 0) {
                 return `💡 **Emprendimientos Locales**\n\n` +
                        `Actualmente no tengo emprendimientos cargados en ${this.formatLocalidadName(this.currentLocalidad)}.\n\n` +
-                       `¿Te gustaría [ser el primero en registrar tu emprendimiento](/${this.currentLocalidad}../inscripcion.html)?`;
+                       `¿Te gustaría [ser el primero en registrar tu emprendimiento](/${this.currentLocalidad}/inscripcion.html)?`;
             }
 
             let response = `💡 **Emprendimientos en ${this.formatLocalidadName(this.currentLocalidad)}**\n\n`;
@@ -1832,13 +1832,13 @@ getBasicTimeStatus(hours) {
                 response += '\n';
             });
 
-            response += `\n🌟 *¿Tienes un emprendimiento? [¡Inscríbelo aquí!](/${this.currentLocalidad}../inscripcion.html)*`;
+            response += `\n🌟 *¿Tienes un emprendimiento? [¡Inscríbelo aquí!](/${this.currentLocalidad}/inscripcion.html)*`;
 
             return response;
 
         } catch (error) {
             return `💡 **Emprendimientos Locales**\n\n` +
-                   `Puedes [explorar todos los emprendimientos aquí](/${this.currentLocalidad}../emprendimientos.html)\n\n` +
+                   `Puedes [explorar todos los emprendimientos aquí](/${this.currentLocalidad}/emprendimientos.html)\n\n` +
                    `*¿Te gustaría registrar tu propio emprendimiento?*`;
         }
     }
@@ -1856,7 +1856,7 @@ getBasicTimeStatus(hours) {
             if (!ofertas || ofertas.length === 0) {
                 console.log('❌ No se cargaron ofertas');
                 return "📭 No hay ofertas disponibles en este momento. ¡Vuelve pronto para descubrir nuevas promociones!\n\n" +
-                       `💡 *¿Eres un comercio? [Agrega tus ofertas aquí](/${this.currentLocalidad}../inscripcion.html)*`;
+                       `💡 *¿Eres un comercio? [Agrega tus ofertas aquí](/${this.currentLocalidad}/inscripcion.html)*`;
             }
 
             // Filtrar ofertas por tipo si se especifica
@@ -1877,10 +1877,10 @@ getBasicTimeStatus(hours) {
             if (filteredOfertas.length === 0) {
                 if (businessType) {
                     return `❌ No encontré ofertas de **${this.formatBusinessType(businessType)}** disponibles.\n\n` +
-                           `💡 *Puedes [ver todas las ofertas aquí](/${this.currentLocalidad}../comunidad-de-ofertas.html) o probar con otra categoría.*`;
+                           `💡 *Puedes [ver todas las ofertas aquí](/${this.currentLocalidad}/comunidad-de-ofertas.html) o probar con otra categoría.*`;
                 } else {
                     return `❌ No encontré ofertas que coincidan con tu búsqueda.\n\n` +
-                           `💡 *Puedes [ver todas las ofertas aquí](/${this.currentLocalidad}../comunidad-de-ofertas.html)*`;
+                           `💡 *Puedes [ver todas las ofertas aquí](/${this.currentLocalidad}/comunidad-de-ofertas.html)*`;
                 }
             }
 
@@ -1889,7 +1889,7 @@ getBasicTimeStatus(hours) {
         } catch (error) {
             console.error('Error en búsqueda de ofertas:', error);
             return "❌ No pude cargar las ofertas en este momento. Por favor intenta más tarde.\n\n" +
-                   `💡 *Puedes [ver las ofertas en la web](/${this.currentLocalidad}../comunidad-de-ofertas.html)*`;
+                   `💡 *Puedes [ver las ofertas en la web](/${this.currentLocalidad}/comunidad-de-ofertas.html)*`;
         }
     }
 
@@ -1945,7 +1945,7 @@ getBasicTimeStatus(hours) {
             response += `*... y ${ofertas.length - 8} ofertas más.*\n\n`;
         }
 
-        response += `💡 *¿No encontrás lo que buscas? [Ver todas las ofertas](/${this.currentLocalidad}../comunidad-de-ofertas.html)*`;
+        response += `💡 *¿No encontrás lo que buscas? [Ver todas las ofertas](/${this.currentLocalidad}/comunidad-de-ofertas.html)*`;
 
         return response;
     }
@@ -1989,7 +1989,7 @@ getBasicTimeStatus(hours) {
     }
 
     async handleInscripcion() {
-        const inscripcionUrl = `/${this.currentLocalidad}../inscripcion.html`;
+        const inscripcionUrl = `/${this.currentLocalidad}/inscripcion.html`;
         return `📝 **Inscripción de Negocios**\n\n` +
                `¡Qué bueno que quieras unirte a Tu Barrio A Un Click!\n\n` +
                `Puedes registrar tu negocio completando el formulario online:\n\n` +
@@ -2094,7 +2094,7 @@ getBasicTimeStatus(hours) {
                 
                 if (!ofertas || ofertas.length === 0) {
                     return "📭 No hay ofertas disponibles en este momento. ¡Vuelve pronto para descubrir nuevas promociones!\n\n" +
-                           `💡 *¿Eres un comercio? [Agrega tus ofertas aquí](/${this.currentLocalidad}../inscripcion.html)*`;
+                           `💡 *¿Eres un comercio? [Agrega tus ofertas aquí](/${this.currentLocalidad}/inscripcion.html)*`;
                 }
                 
                 return this.formatOfertasResponse(ofertas, null);
@@ -2171,7 +2171,7 @@ getBasicTimeStatus(hours) {
             <div id="tuBarrioChatbot" class="chatbot-container">
                 <div class="chatbot-header">
                     <div class="chatbot-logo">
-                        <img src="../shared/img/icon-192x192.png" alt="Tu Barrio A Un Click">
+                        <img src="../shared/img/icon-abeja-sola.png" alt="Tu Barrio A Un Click">
                         <div class="chatbot-info">
                             <h3>Tu Barrio Assistant</h3>
                             <span class="localidad-badge">${this.formatLocalidadName(this.currentLocalidad)}</span>
@@ -2221,7 +2221,7 @@ getBasicTimeStatus(hours) {
             </div>
             
             <button class="chatbot-toggle">
-                <img src="../shared/img/icon-192x192.png" alt="Chat Tu Barrio">
+                <img src="../shared/img/icon-abeja-sola.png" alt="Chat Tu Barrio">
                 <span class="notification-dot"></span>
             </button>
         `;

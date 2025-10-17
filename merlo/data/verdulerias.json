@@ -1,0 +1,17 @@
+[
+    {
+      "id": "verduleria-01",
+      "nombre": "Verdulería El Huerto",
+      "imagen": "img/verduleria-1.webp",
+      "horario": "Lunes a Sábados: 8am - 8pm",
+      "horarioData": "Mon-Sat 08:00-20:00",
+      "telefono": "11 5555 8888",
+      "whatsapp": "541155558888",
+      "pagina": "negocios/verduleria-2.html",
+      "icono": "fas fa-carrot",
+      "rubro": "Verdulería",
+      "direccion": "Av. San Martín 999",
+      "latitud": -34.6524,
+      "longitud": -58.6430
+    }
+  ]

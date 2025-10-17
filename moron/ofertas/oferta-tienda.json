@@ -1,0 +1,21 @@
+{
+  "categoria": "Tienda",
+  "negocio": "Tienda El Buen Precio",
+  "ofertas": [
+    {
+      "titulo": "Liquidación de Ropa 40-70% OFF",
+      "descripcion": "Gran liquidación en ropa de temporada. Remeras, pantalones, buzos y más con descuentos increíbles",
+      "precioOriginal": null,
+      "precioOferta": null,
+      "descuento": 60,
+      "validez": "Hasta agotar stock",
+      "imagen": "../images/ofertas/liquidacion-ropa.jpg",
+      "tarjetaUrl": "/castelar/tarjeta.html?negocio=tienda_buen_precio",
+      "boton": {
+        "texto": "Ver talles",
+        "url": "https://wa.me/5491101234567?text=Hola!%20Consulto%20por%20la%20liquidación%20de%20ropa"
+      },
+      "condiciones": ["Precios finales", "No acumulable", "Stock limitado"]
+    }
+  ]
+}

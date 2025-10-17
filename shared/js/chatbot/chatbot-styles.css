@@ -1,0 +1,576 @@
+/* shared/js/chatbot/chatbot-styles.css MEJORADO */
+.chatbot-container {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 380px;
+    height: 85vh;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    z-index: 15000;
+    transform: translateY(100px) scale(0.9);
+    opacity: 0;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: 1px solid #e1e8ed;
+    /* CORRECCIÓN CRÍTICA: Ocultar cuando no está activo */
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.chatbot-container.active {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    /* CORRECCIÓN CRÍTICA: Mostrar solo cuando está activo */
+    visibility: visible;
+    pointer-events: all;
+}
+
+.chatbot-toggle {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    /* CORRECCIÓN: z-index más bajo que el footer pero más alto que otros elementos */
+    z-index: 1000;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+/* Asegurar que el footer tenga un z-index adecuado */
+.footer, 
+[class*="footer"],
+[class*="nav-bottom"] {
+    position: relative;
+    z-index: 100 !important; /* Un poco más alto que el botón del chat */
+}
+
+/* Asegurar que la barra inferior sea clickeable */
+.navbar-fixed-bottom,
+.bottom-navigation,
+.mobile-bottom-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1002 !important; /* Más alto que el botón del chat */
+    background: white !important;
+}
+
+/* CORRECCIÓN PARA ELEMENTOS QUE DEBEN SER CLICKEABLES */
+.instagram-button,
+.whatsapp-button,
+.contact-buttons,
+.social-links,
+.footer-links {
+    position: relative;
+    z-index: 1003 !important;
+}
+
+.chatbot-toggle img {
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.chatbot-toggle:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.6);
+}
+
+.chatbot-toggle.active {
+    transform: scale(0.9);
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+/* CORRECCIÓN: Cuando el chat está abierto, oscurecer el fondo detrás */
+.chatbot-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.chatbot-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.chatbot-header {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2980b9;
+}
+
+.chatbot-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.chatbot-logo img {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+.chatbot-info h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.localidad-badge {
+    background: rgba(255,255,255,0.2);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.chatbot-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.chatbot-controls button {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.chatbot-controls button:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.1);
+}
+
+.close-chatbot {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.chatbot-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.welcome-message {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    padding: 20px;
+    border-radius: 15px;
+    border-left: 4px solid #3498db;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #2c3e50;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+}
+
+.message {
+    padding: 12px 16px;
+    border-radius: 18px;
+    max-width: 85%;
+    word-wrap: break-word;
+    line-height: 1.4;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.user-message {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 5px;
+}
+
+.assistant-message {
+    background: white;
+    color: #2c3e50;
+    border: 1px solid #e1e8ed;
+    border-bottom-left-radius: 5px;
+}
+
+.system-message {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+    font-style: italic;
+    max-width: 90%;
+    margin: 10px auto;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* Estilos para enlaces en los mensajes */
+.chat-link {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px dashed #3498db;
+    transition: all 0.3s ease;
+}
+
+.chat-link:hover {
+    color: #2980b9;
+    border-bottom: 1px solid #2980b9;
+}
+
+/* Botones de WhatsApp */
+.whatsapp-button {
+    display: inline-block;
+    background: #25D366;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    margin: 8px 0;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid #25D366;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    font-size: 13px;
+}
+
+.whatsapp-button:hover {
+    background: white;
+    color: #25D366;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+.typing-indicator {
+    display: none;
+    padding: 12px 20px;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    margin: 5px 0;
+    border-radius: 18px;
+    border: 1px solid #e1e8ed;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #3498db;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-indicator span:last-child {
+    background: transparent;
+    animation: none;
+    color: #7f8c8d;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: 0s; }
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+    0%, 60%, 100% { transform: scale(1); opacity: 0.5; }
+    30% { transform: scale(1.2); opacity: 1; }
+}
+
+.quick-actions {
+    display: flex;
+    padding: 15px 20px 0;
+    gap: 8px;
+    justify-content: center;
+    border-top: 1px solid #e1e8ed;
+    background: white;
+}
+
+.quick-btn {
+    flex: 1;
+    padding: 10px 8px;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    color: #2c3e50;
+}
+
+.quick-btn:hover {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.quick-soporte {
+    background: #25D366;
+    color: white;
+    border-color: #25D366;
+}
+
+.quick-soporte:hover {
+    background: #128C7E;
+    border-color: #128C7E;
+}
+
+.chatbot-input {
+    display: flex;
+    padding: 15px 20px;
+    border-top: 1px solid #e1e8ed;
+    background: white;
+    gap: 10px;
+    border-radius: 0 0 20px 20px;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 12px 18px;
+    border: 2px solid #e1e8ed;
+    border-radius: 25px;
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    background: #f8f9fa;
+}
+
+.chat-input:focus {
+    border-color: #3498db;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.voice-btn, .send-btn {
+    background: #3498db;
+    border: none;
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+.voice-btn:hover, .send-btn:hover {
+    background: #2980b9;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+}
+
+.voice-btn.listening {
+    background: #e74c3c;
+    animation: pulse 1.5s infinite;
+}
+
+.notification-dot {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background: #e74c3c;
+    border-radius: 50%;
+    border: 2px solid white;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Scrollbar personalizado */
+.chatbot-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chatbot-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.chatbot-messages::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.chatbot-messages::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .chatbot-toggle, .voice-btn, .send-btn, .quick-btn {
+        transition: none;
+    }
+    
+    .typing-indicator span {
+        animation: none;
+    }
+    
+    .notification-dot {
+        animation: none;
+    }
+}
+
+/* Texto más grande para mejor legibilidad */
+.chatbot-messages {
+    font-size: 15px;
+}
+
+.message {
+    font-size: 15px;
+}
+
+/* Alto contraste para mejor accesibilidad */
+@media (prefers-contrast: high) {
+    .chatbot-container {
+        border: 2px solid #000;
+    }
+    
+    .message {
+        border: 1px solid #000;
+    }
+    
+    .chat-input {
+        border: 2px solid #000;
+    }
+}
+
+/* Responsive mejorado */
+@media (max-width: 480px) {
+    .chatbot-container {
+        width: calc(100vw - 30px);
+        height: 75vh;
+        bottom: 95px;
+        right: 15px;
+        left: 15px;
+    }
+    
+    .chatbot-toggle {
+        width: 50px;
+        height: 50px;
+        bottom: 10px;
+        right: 20px;
+        z-index: 1000; /* Mantener consistente */
+    }
+    
+    .chatbot-toggle img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .message {
+        font-size: 16px;
+        max-width: 90%;
+    }
+    
+    .quick-actions {
+        flex-wrap: wrap;
+    }
+    
+    .quick-btn {
+        flex: 1 0 calc(50% - 8px);
+        margin-bottom: 8px;
+        font-size: 10px;
+        padding: 8px 4px;
+    }
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .chatbot-container {
+        background: #2c3e50;
+        border-color: #34495e;
+    }
+    
+    .chatbot-messages {
+        background: #34495e;
+    }
+    
+    .welcome-message {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+    }
+    
+    .assistant-message {
+        background: #3a506b;
+        color: #ecf0f1;
+        border-color: #4a6290;
+    }
+    
+    .chat-input {
+        background: #3a506b;
+        border-color: #4a6290;
+        color: #ecf0f1;
+    }
+    
+    .chat-input:focus {
+        background: #2c3e50;
+    }
+    
+    .quick-btn {
+        background: #3a506b;
+        border-color: #4a6290;
+        color: #ecf0f1;
+    }
+}
+
+/* CORRECCIÓN EXTRA: Asegurar que los elementos del footer sean clickeables */
+footer * {
+    position: relative;
+    z-index: 1002 !important;
+}
+
+/* Si usas una barra inferior fija, asegurar su z-index */
+.fixed-bottom {
+    z-index: 1003 !important;
+}

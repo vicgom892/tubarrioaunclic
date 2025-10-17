@@ -1,0 +1,17 @@
+[
+    {
+      "id": "pasta-01",
+      "nombre": "Pasta Fresca",
+      "imagen": "img/pastas-1.webp",
+      "horario": "Lunes a Sábados: 9am - 8pm",
+      "horarioData": "Mon-Sat 09:00-20:00",
+      "telefono": "11 5555 7777",
+      "whatsapp": "541155557777",
+      "pagina": "negocios/pastas-2.html",
+      "icono": "fas fa-shopping-basket",
+      "rubro": "Fábrica de Pastas",
+      "direccion": "Av. San Martín 111",
+      "latitud": -34.6523,
+      "longitud": -58.6429
+    }
+  ]

@@ -1,0 +1,19 @@
+{
+  "name": "Tu Barrio A Un Click - Selector",
+  "short_name": "TuBarrioSelector",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "./shared/img/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./shared/img/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

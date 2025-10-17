@@ -1,0 +1,110 @@
+Tu_BARRIO_A_UN_CLICK/
+├── index.html                 ← Esta nueva página de selección de localidades
+├── robots.txt
+├── shared/                    # Recursos compartidos (opcional pero recomendado)
+│   ├── css/
+│   │   └── fondo.css 
+│   │   └── negocios.css 
+│   │   └── styles.css          # Estilos comunes
+│   ├── js/
+│   │   └── chat-2.js 
+│   │   └── form.js
+│   │   └── main-2.js
+│   │   └── install-app.js
+│   │   └── notificaciones.js
+│   │   └── search-function.js
+│   │   └── splash.js
+│   │   └── testimonials.js        # Funcionalidad compartida
+│   └── img/
+│       └── logo.svg   
+├── castelar/                  ← Tu app actual para Castelar
+│   ├── index.html
+│   ├── comunidad.html
+│   ├── emprendimientos.html
+│   ├── inscripcion.html
+│   ├── oficios-profeciones.html
+│   ├── offline.html
+│   ├── data/
+│   ├── datos/
+│   ├── img/
+│   ├── oficios/
+│   └── negocios/
+├── ituzaingo/                 ← Copia de tu app con datos de Ituzaingó  │   ├── index.html
+│   ├── comunidad.html
+│   ├── emprendimientos.html
+│   ├── inscripcion.html
+│   ├── oficios-profeciones.html
+│   ├── offline.html
+│   ├── data/
+│   ├── datos/
+│   ├── img/
+│   ├── oficios/
+│   └── negocios/
+├── moron/                     ← Copia de tu app con datos de Morón
+│   ├── index.html
+│   ├── comunidad.html
+│   ├── emprendimientos.html
+│   ├── inscripcion.html
+│   ├── oficios-profeciones.html
+│   ├── offline.html
+│   ├── data/
+│   ├── datos/
+│   ├── img/
+│   ├── oficios/
+│   └── negocios/
+├── ciudadela/
+│   ├── index.html
+│   ├── comunidad.html
+│   ├── emprendimientos.html
+│   ├── inscripcion.html
+│   ├── oficios-profeciones.html
+│   ├── offline.html
+│   ├── data/
+│   ├── datos/
+│   ├── img/
+│   ├── oficios/
+│   └── negocios/
+├── merlo/
+│   ├── index.html
+│   ├── comunidad.html
+│   ├── emprendimientos.html
+│   ├── inscripcion.html
+│   ├── oficios-profeciones.html
+│   ├── offline.html
+│   ├── data/
+│   ├── datos/
+│   ├── img/
+│   ├── oficios/
+│   └── negocios/
+├── haedo/
+│   ├── index.html
+│   ├── comunidad.html
+│   ├── emprendimientos.html
+│   ├── inscripcion.html
+│   ├── oficios-profeciones.html
+│   ├── offline.html
+│   ├── data/
+│   ├── datos/
+│   ├── img/
+│   ├── oficios/
+│   └── negocios/
+└── ramos-mejia/
+│   ├── index.html
+│   ├── comunidad.html
+│   ├── emprendimientos.html
+│   ├── inscripcion.html
+│   ├── oficios-profeciones.html
+│   ├── offline.html
+│   ├── data/
+│   ├── datos/
+│   ├── img/
+│   ├── oficios/
+│   └── negocios/
+└──.gitignore
+└──generate-sitemaps.js
+└──manifest.json
+└──netlify.toml
+└──sitemap.xml
+└──sw.js
+└──estructura-de-carga.txt
+└──.txt

@@ -1,0 +1,9 @@
+carga de tarjetas en cada seccion a travez de DATA mediante .json por cada negocio.
+carga del primer carousel  a travez de DATA carousel.json.
+carga de carousel emprendedores a travez de DATA emprendedores.json.
+carga de oficios a travez de OFICIOS a travez de .json.
+carga de ofertas  a travez de OFERTAS a travez de .json.
+carga de profeciones a travez de DATA profeciones.json.
+carga de comercios nuevos con promociones a travez de DATA comercios-nuevos.json.
+carga del  segundo carusel a travez de DATOS promociones.json.
+carga de testimonios a travez de SHARED JS testimonials.js.

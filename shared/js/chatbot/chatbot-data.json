@@ -1,0 +1,68 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2024-01-01",
+  "localidades": {
+    "castelar": {
+      "name": "Castelar",
+      "business_count": 0,
+      "last_sync": "2024-01-01"
+    },
+    "ituzaingo": {
+      "name": "Ituzaingó", 
+      "business_count": 0,
+      "last_sync": "2024-01-01"
+    },
+    "moron": {
+      "name": "Morón",
+      "business_count": 0,
+      "last_sync": "2024-01-01"
+    },
+    "ciudadela": {
+      "name": "Ciudadela",
+      "business_count": 0,
+      "last_sync": "2024-01-01"
+    },
+    "merlo": {
+      "name": "Merlo",
+      "business_count": 0,
+      "last_sync": "2024-01-01"
+    },
+    "haedo": {
+      "name": "Haedo", 
+      "business_count": 0,
+      "last_sync": "2024-01-01"
+    },
+    "ramos-mejia": {
+      "name": "Ramos Mejía",
+      "business_count": 0,
+      "last_sync": "2024-01-01"
+    }
+  },
+  "categories": {
+    "barberia": "Barberías y Peluquerías",
+    "cafeteria": "Cafeterías y Confiterías",
+    "carniceria": "Carnicerías y Pollerías", 
+    "comida": "Restaurantes y Comida",
+    "farmacia": "Farmacias y Turnos",
+    "ferreteria": "Ferreterías y Materiales",
+    "fiambreria": "Fiambrerías y Quesos",
+    "granja": "Granjas y Avícolas",
+    "kiosco": "Kioscos y Librerías",
+    "libreria": "Librerías y Papelerías",
+    "mascotas": "Mascotas y Veterinarias",
+    "muebles": "Muebles y Decoración",
+    "panaderia": "Panaderías y Pastelerías",
+    "pastas": "Pastas Frescas y Caseras",
+    "taller": "Talleres Mecánicos",
+    "tienda": "Tiendas y Ropa",
+    "uñas": "Uñas y Estética",
+    "verduleria": "Verdulerías y Fruterías",
+    "veterinaria": "Veterinarias y Clínicas"
+  },
+  "settings": {
+    "voice_enabled": true,
+    "learning_enabled": true,
+    "notifications_enabled": true,
+    "default_localidad": "castelar"
+  }
+}

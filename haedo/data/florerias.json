@@ -1,0 +1,17 @@
+[
+  {
+    "id": "floreria-01",
+    "nombre": "Florería del Sol",
+    "horario": "Lunes a Sábados: 8am - 20pm",
+    "horarioData": "Mon-Sat 8:00-20:00",
+    "telefono": "11 5555 1111",
+    "whatsapp": "5491155551111",
+    "pagina": "negocios/floreria-sol.html",
+    "imagen": "img/floreria.webp",
+     "icono": "fas fa-cut",
+      "rubro": "Barbería",
+    "direccion": "Av. Rivadavia 300",
+    "latitud": -34.6525,
+    "longitud": -58.6435
+  }
+]

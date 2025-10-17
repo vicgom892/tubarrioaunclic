@@ -1,0 +1,17 @@
+[
+    {
+      "id": "profesion-01",
+      "nombre": "Dr. Pérez - Médico",
+      "imagen": "img/barberia.webp",
+      "horario": "Lunes a Viernes: 9am - 5pm",
+      "horarioData": "Mon-Fri 09:00-17:00",
+      "telefono": "11 5555 7777",
+      "whatsapp": "541155557777",
+      "pagina": "negocios/muebles-2.html",
+      "icono": "fas fa-user-md",
+      "rubro": "Médico",
+      "direccion": "Av. San Martín 8181",
+      "latitud": -34.6533,
+      "longitud": -58.6439
+    }
+  ]

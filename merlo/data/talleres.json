@@ -1,0 +1,17 @@
+[
+  {
+     "id": "Talleres-01",
+     "icono": "fas fa-cut",
+      "rubro": "Talleres",
+    "nombre": "Taller Mecánico Central",
+    "horario": "Lunes a Viernes: 8am - 18pm, Sábados: 8am - 13pm",
+    "horarioData": "Mon-Fri 8:00-18:00, Sat 8:00-13:00",
+    "telefono": "11 5555 1111",
+    "whatsapp": "5491155551111",
+    "pagina": "negocios/taller-central.html",
+    "imagen": "img/taller.webp",
+    "direccion": "Av. Rivadavia 200",
+    "latitud": -34.6525,
+    "longitud": -58.6435
+  }
+]

@@ -9,7 +9,7 @@
       "precioOferta": 4000,
       "descuento": 50,
       "validez": "Fin de semana",
-      "imagen": "./img/Carniceria-1.webp",
+      "imagen": "./img/farmacia-1.webp",
       "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Encargar",

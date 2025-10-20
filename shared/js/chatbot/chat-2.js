@@ -485,39 +485,92 @@ document.addEventListener('DOMContentLoaded', function() {
 
   async function cargarNegociosDesdeEndpoint() {
     try {
-      const endpoints = [
-        'datos/negocios.json',
-        'data/businesses.json', 
-        'datos/comercios.json',
-        'json/negocios.json'
+      // Lista de archivos JSON en la carpeta negocios
+      const jsonFiles = [
+        'panaderia.json', 'carniceria.json', 'verduleria.json', 'fiambreria.json',
+        'kiosco.json', 'farmacia.json', 'ferreteria.json', 'ropa.json',
+        'servicios.json', 'belleza.json', 'hogar.json', 'otros.json'
       ];
 
-      const requests = endpoints.map(endpoint => 
-        fetch(endpoint).then(response => {
-          if (response.ok) return response.json();
-          throw new Error('Endpoint no disponible');
-        }).catch(() => null)
-      );
+      negociosData = []; // Reiniciar array
 
-      const results = await Promise.all(requests);
-      const successfulResult = results.find(result => result !== null);
-
-      if (successfulResult) {
-        const data = Array.isArray(successfulResult) ? successfulResult : 
-                    (successfulResult.data || successfulResult.negocios || []);
-        
-        if (data.length > 0) {
-          negociosData = data;
-          negociosCache = data;
-          lastLoadTime = Date.now();
-          
-          localStorage.setItem('businesses_cache_v7', JSON.stringify(data));
-          console.log(`✅ Negocios cargados desde endpoint: ${data.length}`);
-          return;
+      // Cargar cada archivo JSON de negocios
+      for (const file of jsonFiles) {
+        try {
+          const response = await fetch(`negocios/${file}`);
+          if (response.ok) {
+            const data = await response.json();
+            
+            // Procesar los negocios según el formato del archivo
+            let negociosDelArchivo = [];
+            
+            if (Array.isArray(data)) {
+              negociosDelArchivo = data;
+            } else if (data.negocios && Array.isArray(data.negocios)) {
+              negociosDelArchivo = data.negocios;
+            } else if (data.categoria && data.negocios) {
+              negociosDelArchivo = [data]; // Si es un objeto individual
+            }
+            
+            // Procesar cada negocio
+            negociosDelArchivo.forEach((negocio, index) => {
+              const processedNegocio = {
+                name: negocio.nombre || negocio.name || 'Negocio Local',
+                category: negocio.categoria || negocio.category || 'General',
+                hours: negocio.horario || negocio.hours || 'Lunes a Viernes: 08:00-20:00',
+                address: negocio.direccion || negocio.address || 'Dirección no disponible',
+                image: negocio.imagen || negocio.image || 'img/placeholder-negocio.jpg',
+                url: negocio.web || negocio.url || '#',
+                latitude: negocio.latitud || negocio.latitude || -34.6037,
+                longitude: negocio.longitud || negocio.longitude || -58.3816,
+                telefono: negocio.telefono || negocio.phone || '1157194796',
+                whatsapp: negocio.whatsapp || negocio.telefono || '5491157194796',
+                promo: negocio.promo || negocio.descripcion || 'Visítanos'
+              };
+              negociosData.push(processedNegocio);
+            });
+          }
+        } catch (error) {
+          console.warn(`❌ Error cargando negocios/${file}:`, error);
         }
       }
 
-      throw new Error('No hay datos disponibles');
+      // Si no se cargaron negocios, intentar con los endpoints antiguos como fallback
+      if (negociosData.length === 0) {
+        const endpointsAntiguos = [
+          'datos/negocios.json',
+          'data/businesses.json', 
+          'datos/comercios.json',
+          'json/negocios.json'
+        ];
+
+        for (const endpoint of endpointsAntiguos) {
+          try {
+            const response = await fetch(endpoint);
+            if (response.ok) {
+              const successfulResult = await response.json();
+              const data = Array.isArray(successfulResult) ? successfulResult : 
+                          (successfulResult.data || successfulResult.negocios || []);
+              
+              if (data.length > 0) {
+                negociosData = data;
+                break;
+              }
+            }
+          } catch (error) {
+            console.warn(`❌ Error cargando ${endpoint}:`, error);
+          }
+        }
+      }
+
+      if (negociosData.length > 0) {
+        negociosCache = negociosData;
+        lastLoadTime = Date.now();
+        localStorage.setItem('businesses_cache_v7', JSON.stringify(negociosData));
+        console.log(`✅ Negocios cargados: ${negociosData.length}`);
+      } else {
+        throw new Error('No hay datos disponibles');
+      }
 
     } catch (error) {
       console.warn('No se pudieron cargar negocios desde endpoints:', error);
@@ -562,37 +615,107 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
 
-      const endpoints = ['datos/seccion-ofertas.json', 'data/ofertas.json', 'datos/promociones.json'];
-      
-      for (const endpoint of endpoints) {
-        try {
-          const response = await fetch(endpoint);
-          if (response.ok) {
-            const rawData = await response.json();
-            ofertasData = Array.isArray(rawData) ? rawData.map((oferta, index) => ({
-              id: oferta.id || `oferta-${index}-${Date.now()}`,
-              nombre: oferta.title || oferta.nombre || 'Oferta especial',
-              categoria: oferta.rubro || oferta.categoria || 'General',
-              descuento: oferta.discount || oferta.descuento || "Ver detalle",
-              detalle: oferta.description || oferta.detalle || 'Oferta disponible por tiempo limitado',
-              imagen: oferta.image || oferta.imagen || 'img/placeholder-oferta.jpg',
-              web: (oferta.web_url || oferta.web || '').trim().replace(/\s+/g, '') || null,
-              instagram: (oferta.instagram_url || oferta.instagram || '').trim().replace(/\s+/g, '') || null,
-              ofertaLimitada: true,
-              fechaInicio: oferta.start_date || oferta.fechaInicio || new Date().toISOString(),
-              fechaFin: oferta.end_date || oferta.fechaFin || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
-            })) : [];
+      // Lista de archivos JSON en la carpeta ofertas
+      const jsonFiles = [
+        'oferta-barberias.json',
+        'oferta-carniceria.json', 
+        'oferta-farmacia.json',
+        'oferta-ferreteria.json',
+        'oferta-fiambreria.json',
+        'oferta-kiosco.json'
+      ];
 
-            localStorage.setItem('ofertas_cache_v3', JSON.stringify(ofertasData));
-            console.log(`✅ Ofertas transformadas: ${ofertasData.length}`);
-            return;
+      ofertasData = []; // Reiniciar array
+
+      // Cargar cada archivo JSON de ofertas
+      for (const file of jsonFiles) {
+        try {
+          const response = await fetch(`ofertas/${file}`);
+          if (response.ok) {
+            const data = await response.json();
+            
+            // Procesar cada oferta del archivo
+            if (data.ofertas && Array.isArray(data.ofertas)) {
+              data.ofertas.forEach((oferta, index) => {
+                const processedOferta = {
+                  id: `oferta-${data.categoria}-${index}-${Date.now()}`,
+                  nombre: oferta.titulo || 'Oferta especial',
+                  categoria: data.categoria || 'General',
+                  descuento: oferta.descuento ? `${oferta.descuento}% OFF` : "Ver detalle",
+                  detalle: oferta.descripcion || 'Oferta disponible por tiempo limitado',
+                  imagen: oferta.imagen || 'img/placeholder-oferta.jpg',
+                  web: (oferta.web_url || oferta.tarjetaUrl || '').trim().replace(/\s+/g, '') || null,
+                  instagram: null, // Los JSON de ofertas no tienen instagram
+                  whatsapp: oferta.boton?.url || null,
+                  botonTexto: oferta.boton?.texto || 'Contactar',
+                  precioOriginal: oferta.precioOriginal,
+                  precioOferta: oferta.precioOferta,
+                  validez: oferta.validez,
+                  condiciones: oferta.condiciones,
+                  ofertaLimitada: true,
+                  fechaInicio: oferta.start_date || new Date().toISOString(),
+                  fechaFin: oferta.end_date || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+                };
+                ofertasData.push(processedOferta);
+              });
+            }
           }
         } catch (error) {
-          console.warn(`❌ Error cargando ${endpoint}:`, error);
+          console.warn(`❌ Error cargando ofertas/${file}:`, error);
         }
       }
 
-      throw new Error('No se pudieron cargar las ofertas');
+      // Si no se cargaron ofertas, intentar con los endpoints antiguos como fallback
+      if (ofertasData.length === 0) {
+        const endpointsAntiguos = ['datos/seccion-ofertas.json', 'data/ofertas.json', 'datos/promociones.json'];
+        
+        for (const endpoint of endpointsAntiguos) {
+          try {
+            const response = await fetch(endpoint);
+            if (response.ok) {
+              const rawData = await response.json();
+              ofertasData = Array.isArray(rawData) ? rawData.map((oferta, index) => ({
+                id: oferta.id || `oferta-${index}-${Date.now()}`,
+                nombre: oferta.title || oferta.nombre || 'Oferta especial',
+                categoria: oferta.rubro || oferta.categoria || 'General',
+                descuento: oferta.discount || oferta.descuento || "Ver detalle",
+                detalle: oferta.description || oferta.detalle || 'Oferta disponible por tiempo limitado',
+                imagen: oferta.image || oferta.imagen || 'img/placeholder-oferta.jpg',
+                web: (oferta.web_url || oferta.web || '').trim().replace(/\s+/g, '') || null,
+                instagram: (oferta.instagram_url || oferta.instagram || '').trim().replace(/\s+/g, '') || null,
+                ofertaLimitada: true,
+                fechaInicio: oferta.start_date || oferta.fechaInicio || new Date().toISOString(),
+                fechaFin: oferta.end_date || oferta.fechaFin || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+              })) : [];
+
+              console.log(`✅ Ofertas cargadas desde endpoint antiguo: ${endpoint}`);
+              break;
+            }
+          } catch (error) {
+            console.warn(`❌ Error cargando ${endpoint}:`, error);
+          }
+        }
+      }
+
+      // Guardar en caché
+      if (ofertasData.length > 0) {
+        localStorage.setItem('ofertas_cache_v3', JSON.stringify(ofertasData));
+        console.log(`✅ Ofertas transformadas: ${ofertasData.length}`);
+      } else {
+        // Datos de ejemplo si todo falla
+        ofertasData = [{
+          id: 'oferta-ejemplo-1',
+          nombre: 'Descuento especial',
+          categoria: 'General',
+          descuento: '10% OFF',
+          detalle: 'Acércate al local y menciona que viniste desde Tu Barrio A Un Clik',
+          imagen: 'img/placeholder-oferta.jpg',
+          web: null,
+          instagram: null,
+          ofertaLimitada: true
+        }];
+        console.warn('⚠️ Usando ofertas de ejemplo');
+      }
 
     } catch (error) {
       console.error('Error al cargar ofertas:', error);

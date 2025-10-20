@@ -9,7 +9,7 @@
       "precioOferta": 5100,
       "descuento": 40,
       "validez": "Hasta el 28/02/2025",
-      "imagen": "../img/veterinaria-1.webp",
+      "imagen": "./img/veterinaria-1.webp",
       "pagina": "https://patitasfelices.com.ar/promos",
       "web_url": "../comunidad-de-ofertas.html",
       "boton": {

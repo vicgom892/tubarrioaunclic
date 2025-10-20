@@ -5,7 +5,7 @@
     "discount": "20% OFF",
     "originalPrice": "$5000",
     "discountedPrice": "$4000",
-    "url": "https://example.com"
+    "url": "../comunidad-de-ofertas.html"
   },
   {
     "name": "Oferta Kiosco",
@@ -13,7 +13,7 @@
     "discount": "15% OFF",
     "originalPrice": "$2000",
     "discountedPrice": "$1700",
-    "url": "https://example.com"
+    "url": "../comunidad-de-ofertas.html"
   },
   {
     "name": "Oferta Panadería",
@@ -21,7 +21,7 @@
     "discount": "20% OFF",
     "originalPrice": "$5000",
     "discountedPrice": "$4000",
-    "url": "https://example.com"
+    "url": "../comunidad-de-ofertas.html"
   },
   {
     "name": "Oferta Kiosco",
@@ -29,7 +29,7 @@
     "discount": "15% OFF",
     "originalPrice": "$2000",
     "discountedPrice": "$1700",
-    "url": "https://example.com"
+    "url": "../comunidad-de-ofertas.html"
   },
   {
     "name": "Oferta Baeberia",
@@ -37,7 +37,7 @@
     "discount": "20% OFF",
     "originalPrice": "$5000",
     "discountedPrice": "$4000",
-    "url": "https://example.com"
+    "url": "../comunidad-de-ofertas.html"
   },
   {
     "name": "Oferta Kiosco",
@@ -45,7 +45,7 @@
     "discount": "15% OFF",
     "originalPrice": "$2000",
     "discountedPrice": "$1700",
-    "url": "https://example.com"
+    "url": "../comunidad-de-ofertas.html"
   },
   {
     "name": "Oferta Fiambreria",
@@ -53,7 +53,7 @@
     "discount": "20% OFF",
     "originalPrice": "$5000",
     "discountedPrice": "$4000",
-    "url": "https://example.com"
+    "url": "../comunidad-de-ofertas.html"
   },
   {
     "name": "Oferta Ropa",
@@ -61,7 +61,7 @@
     "discount": "15% OFF",
     "originalPrice": "$2000",
     "discountedPrice": "$1700",
-    "url": "https://example.com"
+    "url": "../comunidad-de-ofertas.html"
   },
   {
     "name": "Oferta Panadería",
@@ -69,7 +69,7 @@
     "discount": "20% OFF",
     "originalPrice": "$5000",
     "discountedPrice": "$4000",
-    "url": "https://example.com"
+    "url": "../comunidad-de-ofertas.html"
   },
   {
     "name": "Oferta Pastas",
@@ -77,6 +77,6 @@
     "discount": "15% OFF",
     "originalPrice": "$2000",
     "discountedPrice": "$1700",
-    "url": "https://example.com"
+    "url": "../comunidad-de-ofertas.html"
   }
 ]

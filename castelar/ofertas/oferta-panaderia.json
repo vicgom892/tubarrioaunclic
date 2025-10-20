@@ -9,7 +9,7 @@
       "precioOferta": 1800,
       "descuento": 28,
       "validez": "Hasta el 30/12/2024",
-      "imagen": "../img/panaderia-1.webp",
+      "imagen": "./img/panaderia-1.webp",
       "pagina": "https://panaderialaesquina.com.ar/ofertas",
       "web_url": "../comunidad-de-ofertas.html",
       "boton": {
@@ -25,7 +25,7 @@
       "precioOferta": 600,
       "descuento": 50,
       "validez": "Solo hoy",
-      "imagen": "../img/panaderia-2.webp",
+      "imagen": "./img/panaderia-2.webp",
       "boton": {
         "texto": "Consultar",
         "url": "https://wa.me/5491156789012"

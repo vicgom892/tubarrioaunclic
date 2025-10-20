@@ -9,7 +9,7 @@
       "precioOferta": null,
       "descuento": 60,
       "validez": "Hasta agotar stock",
-      "imagen": "../img/ropa-1.webp",
+      "imagen": "./img/ropa-1.webp",
       "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Ver talles",

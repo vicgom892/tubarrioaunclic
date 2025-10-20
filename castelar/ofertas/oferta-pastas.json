@@ -9,7 +9,7 @@
       "precioOferta": 2800,
       "descuento": 26,
       "validez": "Todos los días",
-      "imagen": "../img/pastas-1.webp",
+      "imagen": "./img/pastas-1.webp",
       "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Encargar",

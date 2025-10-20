@@ -9,7 +9,7 @@
       "precioOferta": null,
       "descuento": 50,
       "validez": "Fin de semana",
-      "imagen": "../img/kiosco-1.webp",
+      "imagen": "./img/kiosco-1.webp",
       "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Pedir",

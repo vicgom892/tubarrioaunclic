@@ -9,7 +9,7 @@
       "precioOferta": 9000,
       "descuento": 25,
       "validez": "Hasta el 31/12/2024",
-      "imagen": "../img/fiambreria-1.webp",
+      "imagen": "./img/fiambreria-1.webp",
       "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Encargar",

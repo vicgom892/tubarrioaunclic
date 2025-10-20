@@ -9,7 +9,7 @@
       "precioOferta": 3900,
       "descuento": 29,
       "validez": "Solo por pedido",
-      "imagen": "../img/verduleria-1.webp",
+      "imagen": "./img/verduleria-1.webp",
       "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Pedir caja",

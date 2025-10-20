@@ -9,7 +9,7 @@
       "precioOferta": null,
       "descuento": 33,
       "validez": "Todo el mes",
-      "imagen": "../img/ferreteria-1.webp",
+      "imagen": "./img/ferreteria-1.webp",
       "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Consultar stock",

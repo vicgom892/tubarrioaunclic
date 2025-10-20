@@ -9,8 +9,8 @@
       "precioOferta": null,
       "descuento": 60,
       "validez": "Hasta agotar stock",
-      "imagen": "../images/ofertas/liquidacion-ropa.jpg",
-      "tarjetaUrl": "/castelar/tarjeta.html?negocio=tienda_buen_precio",
+      "imagen": "../img/ropa-1.webp",
+      "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Ver talles",
         "url": "https://wa.me/5491101234567?text=Hola!%20Consulto%20por%20la%20liquidación%20de%20ropa"

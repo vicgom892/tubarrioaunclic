@@ -3,7 +3,7 @@
 
 // === CONFIGURACIÓN DINÁMICA MEJORADA ===
 const isGitHubPages = self.location.hostname.includes('github.io');
-const BASE_PATH = isGitHubPages ? '/Zona-Tu-Barrio' : '';
+const BASE_PATH = isGitHubPages ? '/TU_BARRIO_AUN_CLICK' : '';
 
 const CACHE_VERSION = 'v60-multi';
 
@@ -35,7 +35,7 @@ const CONFIG = {
     baseDelay: 1000,
     maxDelay: 5000
   },
-  LOCALIDADES: ['castelar', 'moron', 'ituzaingo', 'ciudadela', 'merlo', 'haedo', 'ramos-mejia']
+  LOCALIDADES: ['castelar', 'moron', 'ituzaingo', 'ciudadela', 'merlo', 'haedo', 'ramos']
 };
 
 const STATIC_CACHE = `${CONFIG.CACHES.STATIC}-${CONFIG.CACHE_VERSION}`;
@@ -96,8 +96,7 @@ const CRITICAL_RESOURCES = [
   // Imágenes esenciales
   getFullPath('/shared/img/icon-192x192.png'),
   getFullPath('/shared/img/icon-512x512.png'),
-  getFullPath('/shared/img/icon-abeja-sola.png'),
-  getFullPath('/shared/img/fallback-image.png')
+  getFullPath('/shared/img/icon-abeja-sola.png')
 ];
 
 // Recursos específicos para Castelar

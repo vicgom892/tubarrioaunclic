@@ -9,8 +9,8 @@
       "precioOferta": 2800,
       "descuento": 26,
       "validez": "Todos los días",
-      "imagen": "../images/ofertas/sorrentinos-oferta.jpg",
-      "tarjetaUrl": "/castelar/tarjeta.html?negocio=pastas_mama_rosa",
+      "imagen": "../img/pastas-1.webp",
+      "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Encargar",
         "url": "https://wa.me/5491190123456?text=Hola!%20Quiero%20la%20oferta%20de%20sorrentinos"

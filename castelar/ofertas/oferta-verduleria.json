@@ -9,8 +9,8 @@
       "precioOferta": 3900,
       "descuento": 29,
       "validez": "Solo por pedido",
-      "imagen": "../images/ofertas/caja-verduras.jpg",
-      "tarjetaUrl": "/castelar/tarjeta.html?negocio=verduleria_fresca",
+      "imagen": "../img/verduleria-1.webp",
+      "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Pedir caja",
         "url": "https://wa.me/5491112345678?text=Hola!%20Quiero%20pedir%20la%20caja%20de%20verduras"

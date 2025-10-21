@@ -9,8 +9,8 @@
       "precioOferta": 9000,
       "descuento": 25,
       "validez": "Hasta el 31/12/2024",
-      "imagen": "../images/ofertas/quesos-oferta.jpg",
-      "tarjetaUrl": "/castelar/tarjeta.html?negocio=fiambreria_carlos",
+      "imagen": "./img/fiambreria-1.webp",
+      "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Encargar",
         "url": "https://wa.me/5491178901234?text=Hola!%20Quiero%20la%20oferta%20de%20quesos%20importados"

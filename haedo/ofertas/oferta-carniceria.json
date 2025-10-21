@@ -9,8 +9,8 @@
       "precioOferta": 4000,
       "descuento": 50,
       "validez": "Fin de semana",
-      "imagen": "../images/ofertas/asado-2x1.jpg",
-      "tarjetaUrl": "/castelar/tarjeta.html?negocio=carniceria_jose",
+      "imagen": "./img/carniceria-1.webp",
+      "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Encargar",
         "url": "https://wa.me/5491165432109"

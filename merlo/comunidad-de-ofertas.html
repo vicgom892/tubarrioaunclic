@@ -38,6 +38,280 @@
             overflow-x: hidden;
         }
 
+        /* Splash Screen Tecnológico */
+    .splash-screen {
+        position: fixed;
+        /*top: 50px;*/
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #121212 0%, #1a1a2e 50%, #16213e 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 100000;
+        opacity: 1;
+        transition: opacity 0.8s ease;
+        overflow: hidden;
+    }
+    
+    .splash-screen.fade-out {
+        opacity: 0;
+        pointer-events: none;
+    }
+    
+    /* Fondo de partículas animadas */
+    .splash-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+    
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        pointer-events: none;
+        animation: float 6s infinite ease-in-out;
+    }
+    
+    /* Grid de fondo */
+    .splash-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 2;
+        opacity: 0.3;
+    }
+    
+    /* Logo con efecto de brillo */
+    .splash-logo {
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff6200 0%, #ff9e2c 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 30px;
+        z-index: 3;
+        box-shadow: 0 20px 60px rgba(255, 98, 0, 0.4);
+        position: relative;
+        overflow: hidden;
+        animation: pulseGlow 2s infinite alternate;
+        border: 4px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .splash-logo::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+        opacity: 0;
+        animation: shine 3s infinite;
+    }
+    
+    .logo-icon {
+        font-size: 80px;
+        color: white;
+        z-index: 1;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        width: 230px;
+        height: 230px;
+    }
+    
+    .splash-text {
+        color: #f8f9fa !important;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 30px;
+        text-align: center;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        z-index: 3;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 1s ease forwards 0.5s;
+    }
+    
+    .loading-bar-container {
+        width: 200px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        overflow: hidden;
+        position: relative;
+        z-index: 3;
+        margin-top: 20px;
+    }
+    
+    .loading-bar {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, #ff6200, #ff9e2c);
+        border-radius: 3px;
+        transition: width 0.3s ease;
+        position: relative;
+    }
+    
+    .loading-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.4), 
+            transparent);
+        animation: shimmer 1.5s infinite;
+    }
+    
+    .loading-text {
+        color:#f8f9fa;
+        font-size: 0.9rem;
+        margin-top: 10px;
+        opacity: 0;
+        transform: translateY(10px);
+        animation: fadeInUp 0.5s ease forwards 1.2s;
+        z-index: 3;
+    }
+    
+    .skip-btn {
+        margin-top: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 10px 20px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        z-index: 3;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.5s ease forwards 1.5s;
+    }
+    
+    .skip-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 98, 0, 0.3);
+    }
+    
+    /* Animaciones */
+    @keyframes pulseGlow {
+        0% {
+            box-shadow: 0 20px 60px rgba(255, 98, 0, 0.4);
+            transform: scale(1);
+        }
+        100% {
+            box-shadow: 0 20px 60px rgba(255, 98, 0, 0.6);
+            transform: scale(1.05);
+        }
+    }
+    
+    @keyframes shine {
+        0% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-50%) rotate(0deg);
+        }
+        50% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+            transform: translateX(50%) translateY(50%) rotate(180deg);
+        }
+    }
+    
+    @keyframes shimmer {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(100%);
+        }
+    }
+    
+    @keyframes float {
+        0%, 100% {
+            transform: translate(0, 0);
+        }
+        25% {
+            transform: translate(10px, 15px);
+        }
+        50% {
+            transform: translate(-10px, 5px);
+        }
+        75% {
+            transform: translate(5px, -10px);
+        }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .splash-logo {
+            width: 280px;
+            height: 280px;
+        }
+        
+        .splash-text {
+            font-size: 1.6rem;
+        }
+        
+        .loading-bar-container {
+            width: 160px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .splash-logo {
+            width: 250px;
+            height: 250px;
+        }
+        
+        .splash-text {
+            font-size: 1.4rem;
+        }
+        
+        .loading-bar-container {
+            width: 140px;
+        }
+        
+        .skip-btn {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+        }
+    }
+
+
            /* Banner elegante con logo y efecto de brillo */
         .banner {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -523,6 +797,22 @@
     </style>
 </head>
 <body>
+
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-particles" id="splashParticles"></div>
+        <div class="splash-grid"></div>
+        <div class="splash-logo">
+            <!--<i class="fas fa-store logo-icon"></i>-->
+            <img src="img/icon-192x192.png" class="logo-icon" alt="logo de la app">
+        </div>
+        <h1 class="splash-text">Tu Barrio A Un Clic</h1>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loadingBar"></div>
+        </div>
+        <p class="loading-text" id="loadingText">Cargando experiencia local...</p>
+        <button onclick="skipSplash()" class="skip-btn">Saltar</button>
+    </div>
+
     <!-- Banner elegante con logo y nombre -->
     <div class="banner">
         <img src="img/icon-192x192.png" alt="Tu Barrio a un Click">
@@ -539,6 +829,9 @@
             <option value="Farmacia">Farmacia</option>
             <option value="Kiosco">Kiosco</option>
             <option value="Barbería">Barbería</option>
+            <option value="Carnicería">Carnicería</option>
+            <option value="Ferretería">Ferretería</option>
+            <option value="Fiambrería">Fiambrería</option>
             <option value="Otro">Otro</option>
         </select>
     </div>
@@ -560,28 +853,87 @@
         Regresar
     </a>
 
+
+    <script src="../shared/js/splash.js"></script>
+    <script src="../shared/js/install-app.js"></script>
+
     <!-- Script para manejar JSON, cronómetro, likes y modal -->
     <script>
         let offers = []; // Array de ofertas
 
-        // Cargar ofertas iniciales desde JSON o localStorage
+        // Lista de archivos JSON en la carpeta ofertas
+        const jsonFiles = [
+            'oferta-barberias.json',
+            'oferta-carniceria.json',
+            'oferta-farmacia.json',
+            'oferta-ferreteria.json',
+            'oferta-fiambreria.json',
+            'oferta-kiosco.json',
+            'oferta-panaderia.json',
+            'oferta-pastas.json',
+            'oferta-tienda.json',
+            'oferta-verduleria.json',
+            'oferta-veterinaria.json'
+        ];
+
+        // Cargar ofertas desde múltiples archivos JSON
         async function loadOffers() {
             try {
                 const container = document.getElementById('offers-container');
                 container.innerHTML = '<div class="loading">Cargando ofertas...</div>';
 
-                const response = await fetch('./datos/seccion-ofertas.json');
-                if (!response.ok) throw new Error('Error al cargar ofertas.json');
-                offers = await response.json();
+                offers = []; // Reiniciar array
 
+                // Cargar cada archivo JSON
+                for (const file of jsonFiles) {
+                    try {
+                        const response = await fetch(`ofertas/${file}`);
+                        if (!response.ok) throw new Error(`Error al cargar ${file}`);
+                        const data = await response.json();
+                        
+                        // Procesar cada oferta del archivo
+                        data.ofertas.forEach(oferta => {
+                            // Convertir el formato del JSON individual al formato esperado por la página
+                            const processedOffer = {
+                                title: oferta.titulo,
+                                description: oferta.descripcion,
+                                rubro: data.categoria,
+                                negocio: data.negocio,
+                                image: oferta.imagen,
+                                web_url: oferta.web_url || oferta.tarjetaUrl,
+                                whatsapp: extractWhatsappNumber(oferta.boton?.url),
+                                start_date: null, // Puedes agregar estas fechas si están en tus JSON
+                                end_date: null,
+                                precioOriginal: oferta.precioOriginal,
+                                precioOferta: oferta.precioOferta,
+                                descuento: oferta.descuento,
+                                validez: oferta.validez,
+                                condiciones: oferta.condiciones,
+                                boton: oferta.boton
+                            };
+                            offers.push(processedOffer);
+                        });
+                    } catch (error) {
+                        console.error(`Error al cargar ${file}:`, error);
+                    }
+                }
+
+                // Cargar ofertas guardadas en localStorage
                 const storedOffers = JSON.parse(localStorage.getItem('offers')) || [];
                 offers = [...offers, ...storedOffers];
 
                 renderOffers();
             } catch (error) {
                 console.error('Error al cargar ofertas:', error);
-                document.getElementById('offers-container').innerHTML = '<p style="text-align: center; color: var(--danger-color);">Error al cargar las ofertas. Verifica el archivo ofertas.json.</p>';
+                document.getElementById('offers-container').innerHTML = '<p style="text-align: center; color: var(--danger-color);">Error al cargar las ofertas.</p>';
             }
+        }
+
+        // Función para extraer número de WhatsApp de la URL
+        function extractWhatsappNumber(url) {
+            if (!url) return null;
+            const match = url.match(/wa\.me\/(\d+)/);
+            return match ? match[1] : null;
         }
 
         // Renderizar tarjetas, filtradas si aplica
@@ -589,7 +941,9 @@
             const container = document.getElementById('offers-container');
             container.innerHTML = '';
 
-            const filteredOffers = filterRubro ? offers.filter(offer => offer.rubro === filterRubro) : offers;
+            const filteredOffers = filterRubro ? 
+                offers.filter(offer => offer.rubro.toLowerCase().includes(filterRubro.toLowerCase())) : 
+                offers;
 
             if (filteredOffers.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: var(--light-text);">No hay ofertas disponibles para este rubro.</p>';
@@ -599,25 +953,61 @@
             filteredOffers.forEach((offer, index) => {
                 const card = document.createElement('div');
                 card.classList.add('offer-card');
-                card.innerHTML = `
-                    ${offer.image ? `<img src="${offer.image}" alt="${offer.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Imagen+No+Disponible'" onclick="openModal(${index})">` : ''}
-                    <h3>${offer.title}</h3>
-                    <p>${offer.description}</p>
-                    <p class="rubro">Rubro: ${offer.rubro}</p>
-                    ${offer.start_date && offer.end_date ? `<p class="timer" id="timer-${index}">Tiempo restante: Calculando...</p>` : ''}
-                    <div class="buttons">
-                        ${offer.web_url ? `<a href="${offer.web_url}" class="btn web-btn" target="_blank">Visitar Web</a>` : ''}
-                        ${offer.instagram_url ? `<a href="${offer.instagram_url}" class="btn instagram-btn" target="_blank">Instagram</a>` : ''}
-                        ${offer.whatsapp ? `<a href="https://wa.me/${offer.whatsapp}" class="btn whatsapp-btn" target="_blank">WhatsApp</a>` : ''}
-                    </div>
-                    <button class="like-btn ${offer.liked ? 'liked' : ''}" onclick="likeOffer(${index})">⭐ Me gusta</button>
-                    <span class="likes-count" id="likes-${index}">${offer.likes || 0}</span>
-                `;
-                container.appendChild(card);
-
-                if (offer.start_date && offer.end_date) {
-                    startTimer(index, offer.start_date, offer.end_date);
+                
+                // Construir el contenido de la tarjeta
+                let cardContent = '';
+                
+                // Imagen
+                if (offer.image) {
+                    cardContent += `<img src="${offer.image}" alt="${offer.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Imagen+No+Disponible'" onclick="openModal(${index})">`;
                 }
+                
+                // Título y descripción
+                cardContent += `<h3>${offer.title}</h3>`;
+                cardContent += `<p>${offer.description}</p>`;
+                
+                // Información del negocio y rubro
+                cardContent += `<p class="rubro">${offer.negocio} - ${offer.rubro}</p>`;
+                
+                // Precios si están disponibles
+                if (offer.precioOriginal || offer.precioOferta) {
+                    if (offer.precioOriginal && offer.precioOferta) {
+                        cardContent += `<p><strong>Precio: </strong><span style="text-decoration: line-through; color: var(--light-text);">$${offer.precioOriginal}</span> <span style="color: var(--secondary-color); font-weight: bold;">$${offer.precioOferta}</span></p>`;
+                    } else if (offer.precioOferta) {
+                        cardContent += `<p><strong>Precio: </strong><span style="color: var(--secondary-color); font-weight: bold;">$${offer.precioOferta}</span></p>`;
+                    }
+                }
+                
+                // Descuento si está disponible
+                if (offer.descuento) {
+                    cardContent += `<p><strong>Descuento: </strong><span style="color: var(--accent-color); font-weight: bold;">${offer.descuento}% OFF</span></p>`;
+                }
+                
+                // Validez
+                if (offer.validez) {
+                    cardContent += `<p><strong>Válido: </strong>${offer.validez}</p>`;
+                }
+                
+                // Botones de acción
+                cardContent += `<div class="buttons">`;
+                if (offer.web_url) {
+                    cardContent += `<a href="${offer.web_url}" class="btn web-btn" target="_blank">Ver más</a>`;
+                }
+                if (offer.boton && offer.boton.url) {
+                    const buttonClass = offer.boton.url.includes('wa.me') ? 'whatsapp-btn' : 'web-btn';
+                    cardContent += `<a href="${offer.boton.url}" class="btn ${buttonClass}" target="_blank">${offer.boton.texto || 'Contactar'}</a>`;
+                }
+                if (offer.whatsapp && !offer.boton) {
+                    cardContent += `<a href="https://wa.me/${offer.whatsapp}" class="btn whatsapp-btn" target="_blank">WhatsApp</a>`;
+                }
+                cardContent += `</div>`;
+                
+                // Botón de like
+                cardContent += `<button class="like-btn ${offer.liked ? 'liked' : ''}" onclick="likeOffer(${index})">⭐ Me gusta</button>`;
+                cardContent += `<span class="likes-count" id="likes-${index}">${offer.likes || 0}</span>`;
+
+                card.innerHTML = cardContent;
+                container.appendChild(card);
             });
         }
 
@@ -635,103 +1025,75 @@
             renderOffers(document.getElementById('rubro-filter').value);
         }
 
-        // Función para cronómetro optimizada
-        function startTimer(index, startDate, endDate) {
-            const timerElement = document.getElementById(`timer-${index}`);
-            const modalTimerElement = document.getElementById(`modal-timer-${index}`);
-            if (!timerElement && !modalTimerElement) return;
-
-            const updateTimer = () => {
-                const now = new Date().getTime();
-                const start = new Date(startDate).getTime();
-                const end = new Date(endDate).getTime();
-
-                if (isNaN(start) || isNaN(end)) {
-                    if (timerElement) timerElement.textContent = 'Fechas inválidas';
-                    if (modalTimerElement) modalTimerElement.textContent = 'Fechas inválidas';
-                    if (timerElement) timerElement.style.color = 'var(--danger-color)';
-                    if (modalTimerElement) modalTimerElement.style.color = 'var(--danger-color)';
-                    return;
-                }
-
-                if (now < start) {
-                    const distance = start - now;
-                    const text = `Inicia en: ${formatTime(distance)}`;
-                    const color = 'var(--primary-color)';
-                    if (timerElement) {
-                        timerElement.textContent = text;
-                        timerElement.style.color = color;
-                    }
-                    if (modalTimerElement) {
-                        modalTimerElement.textContent = text;
-                        modalTimerElement.style.color = color;
-                    }
-                } else if (now < end) {
-                    const distance = end - now;
-                    const text = `Tiempo restante: ${formatTime(distance)}`;
-                    const color = 'var(--secondary-color)';
-                    if (timerElement) {
-                        timerElement.textContent = text;
-                        timerElement.style.color = color;
-                    }
-                    if (modalTimerElement) {
-                        modalTimerElement.textContent = text;
-                        modalTimerElement.style.color = color;
-                    }
-                } else {
-                    const text = 'Oferta expirada';
-                    const color = 'var(--danger-color)';
-                    if (timerElement) {
-                        timerElement.textContent = text;
-                        timerElement.style.color = color;
-                    }
-                    if (modalTimerElement) {
-                        modalTimerElement.textContent = text;
-                        modalTimerElement.style.color = color;
-                    }
-                }
-
-                if (now < end) {
-                    requestAnimationFrame(updateTimer);
-                }
-            };
-
-            function formatTime(distance) {
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                return `${days}d ${hours}h ${minutes}m ${seconds}s`;
-            }
-
-            updateTimer();
-        }
-
         // Funciones para el modal
         function openModal(index) {
             const offer = offers[index];
             const modal = document.getElementById('card-modal');
             const modalContent = document.getElementById('modal-card-content');
-            modalContent.innerHTML = `
-                ${offer.image ? `<img src="${offer.image}" alt="${offer.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Imagen+No+Disponible'">` : ''}
-                <h3>${offer.title}</h3>
-                <p>${offer.description}</p>
-                <p class="rubro">Rubro: ${offer.rubro}</p>
-                ${offer.start_date && offer.end_date ? `<p class="timer" id="modal-timer-${index}">Tiempo restante: Calculando...</p>` : ''}
-                <div class="buttons">
-                    ${offer.web_url ? `<a href="${offer.web_url}" class="btn web-btn" target="_blank">Visitar Web</a>` : ''}
-                    ${offer.instagram_url ? `<a href="${offer.instagram_url}" class="btn instagram-btn" target="_blank">Instagram</a>` : ''}
-                    ${offer.whatsapp ? `<a href="https://wa.me/${offer.whatsapp}" class="btn whatsapp-btn" target="_blank">WhatsApp</a>` : ''}
-                </div>
-                <button class="like-btn ${offer.liked ? 'liked' : ''}" onclick="likeOffer(${index}); closeModal(); renderOffers(document.getElementById('rubro-filter').value)">⭐ Me gusta</button>
-                <span class="likes-count" id="modal-likes-${index}">${offer.likes || 0}</span>
-            `;
-            modal.classList.add('show');
-
-            // Iniciar cronómetro en el modal si aplica
-            if (offer.start_date && offer.end_date) {
-                startTimer(index, offer.start_date, offer.end_date);
+            
+            let modalHTML = '';
+            
+            // Imagen
+            if (offer.image) {
+                modalHTML += `<img src="${offer.image}" alt="${offer.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Imagen+No+Disponible'">`;
             }
+            
+            // Título y descripción
+            modalHTML += `<h3>${offer.title}</h3>`;
+            modalHTML += `<p>${offer.description}</p>`;
+            
+            // Información del negocio y rubro
+            modalHTML += `<p class="rubro">${offer.negocio} - ${offer.rubro}</p>`;
+            
+            // Precios si están disponibles
+            if (offer.precioOriginal || offer.precioOferta) {
+                if (offer.precioOriginal && offer.precioOferta) {
+                    modalHTML += `<p><strong>Precio Original: </strong><span style="text-decoration: line-through; color: var(--light-text);">$${offer.precioOriginal}</span></p>`;
+                    modalHTML += `<p><strong>Precio Oferta: </strong><span style="color: var(--secondary-color); font-weight: bold; font-size: 1.2rem;">$${offer.precioOferta}</span></p>`;
+                } else if (offer.precioOferta) {
+                    modalHTML += `<p><strong>Precio: </strong><span style="color: var(--secondary-color); font-weight: bold; font-size: 1.2rem;">$${offer.precioOferta}</span></p>`;
+                }
+            }
+            
+            // Descuento si está disponible
+            if (offer.descuento) {
+                modalHTML += `<p><strong>Descuento: </strong><span style="color: var(--accent-color); font-weight: bold; font-size: 1.1rem;">${offer.descuento}% OFF</span></p>`;
+            }
+            
+            // Validez
+            if (offer.validez) {
+                modalHTML += `<p><strong>Válido: </strong>${offer.validez}</p>`;
+            }
+            
+            // Condiciones si están disponibles
+            if (offer.condiciones && offer.condiciones.length > 0) {
+                modalHTML += `<p><strong>Condiciones:</strong></p><ul>`;
+                offer.condiciones.forEach(condicion => {
+                    modalHTML += `<li>${condicion}</li>`;
+                });
+                modalHTML += `</ul>`;
+            }
+            
+            // Botones de acción
+            modalHTML += `<div class="buttons">`;
+            if (offer.web_url) {
+                modalHTML += `<a href="${offer.web_url}" class="btn web-btn" target="_blank">Ver más</a>`;
+            }
+            if (offer.boton && offer.boton.url) {
+                const buttonClass = offer.boton.url.includes('wa.me') ? 'whatsapp-btn' : 'web-btn';
+                modalHTML += `<a href="${offer.boton.url}" class="btn ${buttonClass}" target="_blank">${offer.boton.texto || 'Contactar'}</a>`;
+            }
+            if (offer.whatsapp && !offer.boton) {
+                modalHTML += `<a href="https://wa.me/${offer.whatsapp}" class="btn whatsapp-btn" target="_blank">WhatsApp</a>`;
+            }
+            modalHTML += `</div>`;
+            
+            // Botón de like
+            modalHTML += `<button class="like-btn ${offer.liked ? 'liked' : ''}" onclick="likeOffer(${index}); closeModal(); renderOffers(document.getElementById('rubro-filter').value)">⭐ Me gusta</button>`;
+            modalHTML += `<span class="likes-count" id="modal-likes-${index}">${offer.likes || 0}</span>`;
+
+            modalContent.innerHTML = modalHTML;
+            modal.classList.add('show');
 
             // Cerrar con tecla Esc
             document.addEventListener('keydown', closeOnEsc);

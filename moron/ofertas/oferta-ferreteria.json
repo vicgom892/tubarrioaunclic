@@ -9,8 +9,8 @@
       "precioOferta": null,
       "descuento": 33,
       "validez": "Todo el mes",
-      "imagen": "../images/ofertas/herramientas-3x2.jpg",
-      "tarjetaUrl": "/castelar/tarjeta.html?negocio=ferreteria_martillo",
+      "imagen": "./img/ferreteria-1.webp",
+      "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Consultar stock",
         "url": "https://wa.me/5491167890123?text=Hola!%20Consulto%20por%20la%20oferta%203x2%20en%20herramientas"

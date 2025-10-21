@@ -9,7 +9,7 @@
       "precioOferta": 3150,
       "descuento": 30,
       "validez": "Hasta el 15/01/2025",
-      "imagen": "../images/ofertas/barberia-combo.jpg",
+      "imagen": "./img/barberia-1.webp",
       "tarjetaUrl": "/castelar/tarjeta.html?negocio=barberia_classic",
       "boton": {
         "texto": "Sacar turno",

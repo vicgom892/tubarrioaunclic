@@ -9,8 +9,8 @@
       "precioOferta": null,
       "descuento": 50,
       "validez": "Fin de semana",
-      "imagen": "../images/ofertas/golosinas-2x1.jpg",
-      "tarjetaUrl": "/castelar/tarjeta.html?negocio=kiosco_esquina",
+      "imagen": "./img/kiosco-1.webp",
+      "web_url": "../comunidad-de-ofertas.html",
       "boton": {
         "texto": "Pedir",
         "url": "https://wa.me/5491189012345?text=Hola!%20Quiero%20el%20combo%202x1%20de%20golosinas"

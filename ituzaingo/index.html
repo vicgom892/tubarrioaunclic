@@ -132,7 +132,7 @@
             <img src="img/icon-192x192.png" class="logo-icon" alt="logo de la app">
         </div>
         <h1 class="splash-text">Tu Barrio A Un Clik</h1>
-         <h1 class="splash-text">Castelar</h1>
+         <h2 class="splash-text">Ituzaingo</h2>
         <div class="loading-bar-container">
             <div class="loading-bar" id="loadingBar"></div>
         </div>
@@ -2763,6 +2763,57 @@ document.addEventListener('DOMContentLoaded', function() {
     <button id="welcomeCloseBtn" class="welcome-btn">Empezar a explorar</button>
   </div>
 </div>
+
+<!-- Botón flotante del chatbot -->
+<button id="chatbotBtn" class="floating-btn" aria-label="Abrir chatbot">
+  <div class="robot-avatar">
+    <img src="img/icon-abeja-sola.png" alt="Asistente Virtual">
+  </div>
+</button>
+
+<!-- Contenedor del chatbot -->
+<div id="chatContainer" class="chat-container">
+  <div class="chat-header">
+    <div class="robot-avatar">
+      <img src="img/icon-abeja-sola.png" alt="Asistente Virtual">
+    </div>
+    <div>
+      <h5>Asistente Virtual</h5>
+      <small><span class="status-dot"></span>En línea • Inteligencia Artificial</small>
+    </div>
+    
+    <button id="closeChat" class="btn btn-secondary" aria-label="Cerrar chat">Cerrar</button>
+  </div>
+
+  <div class="chat-body" id="chatBody" role="log" aria-live="polite">
+    <div class="chat-body-content">
+      <!-- Mensajes y tarjetas se generan dinámicamente aquí -->
+    </div>
+    <!-- Los botones se agregarán automáticamente aquí -->
+  </div>
+
+  <div class="chat-footer">
+    <div class="input-group">
+      <button id="micBtn" class="mic-btn" aria-label="Usar micrófono">
+        <i class="fas fa-microphone"></i>
+      </button>
+      <button id="voiceToggleBtn" class="voice-btn" aria-label="Activar/Desactivar voz">
+        <i class="fas fa-volume-up"></i>
+      </button>
+      <textarea 
+        id="messageInput" 
+        placeholder="Escribe aquí, por ejemplo: 'negocios', 'horarios' o 'ayuda'" 
+        aria-label="Escribe tu mensaje"></textarea>
+      <button id="sendBtn" class="send-btn" aria-label="Enviar mensaje">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+    <small class="text-muted">
+      <i class="fas fa-lightbulb"></i> Usa los botones de arriba para preguntas frecuentes
+    </small>
+  </div>
+</div>
+
 
   <!-- Scripts - Cargados al final del body en el orden correcto -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

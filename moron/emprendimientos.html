@@ -433,6 +433,7 @@
     .card-title {
       font-size: 1.25rem;
       margin-bottom: 8px;
+      color: #fff;
     }
 
     .card-text {
@@ -778,6 +779,20 @@
     const bottomNav = document.getElementById('bottom-nav');
     let allBusinesses = [];
 
+    // Lista de archivos JSON en la carpeta emprendimientos
+    const jsonFiles = [
+      'gastronomia.json',
+      'artesanias.json', 
+      'moda.json',
+      'tecnologia.json',
+      'servicios.json',
+      'belleza.json',
+      'educacion.json',
+      'hogar.json',
+      'mascotas.json',
+      'otros.json'
+    ];
+
     // Create bottom navigation
     categorias.forEach(categoria => {
       const btn = document.createElement('button');
@@ -815,15 +830,27 @@
     async function loadCategoria(categoriaId, categoriaName) {
       const container = document.querySelector(`#${categoriaId} .cards-container`);
       try {
-        // Cargar desde la carpeta datos/ (¡esta es la clave!)
-        const response = await fetch(`datos/${categoriaId}.json`);
-        if (!response.ok) throw new Error(`Archivo no encontrado: datos/${categoriaId}.json`);
+        // Cargar desde la carpeta emprendimientos/
+        const response = await fetch(`emprendimientos/${categoriaId}.json`);
+        if (!response.ok) throw new Error(`Archivo no encontrado: emprendimientos/${categoriaId}.json`);
         const data = await response.json();
-        const businesses = Array.isArray(data) ? data : [data];
         
-        // Guardar en array global con ID único
+        // Procesar los datos según el formato de los archivos JSON
+        let businesses = [];
+        
+        // Verificar si es un array o un objeto con estructura específica
+        if (Array.isArray(data)) {
+          businesses = data;
+        } else if (data.emprendimientos && Array.isArray(data.emprendimientos)) {
+          businesses = data.emprendimientos;
+        } else if (data.categoria && data.emprendimientos) {
+          businesses = [data]; // Si es un objeto individual
+        }
+        
+        // Asignar IDs únicos y guardar en array global
         businesses.forEach((business, index) => {
           business.id = `${categoriaId}-${index}`;
+          business.categoria = categoriaId; // Asegurar que tenga la categoría
           allBusinesses.push(business);
         });
         
@@ -841,6 +868,7 @@
         `;
       }
     }
+
     function getRandomColor() {
       const colors = ['1e3a8a', '0ea5e9', '00f5ff', '10b981', '8b5cf6', 'e1306c', 'f59e0b', 'ef4444'];
       return colors[Math.floor(Math.random() * colors.length)];
@@ -849,6 +877,20 @@
     // Render business cards
     function renderCards(businesses, container, categoryName, categoryId) {
       container.innerHTML = '';
+      
+      if (businesses.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-store-slash"></i>
+            <p>No hay emprendimientos disponibles en ${categoryName.toLowerCase()}.</p>
+            <button class="btn btn-outline-light mt-3" onclick="showPublishModal('${categoryId}')">
+              <i class="fas fa-plus me-2"></i>¿Eres emprendedor? Publica tu negocio
+            </button>
+          </div>
+        `;
+        return;
+      }
+      
       businesses.forEach(business => {
         // Build contact buttons
         let contactButtons = '';
@@ -882,16 +924,16 @@
         col.className = 'col-md-6 col-lg-4';
         col.innerHTML = `
           <div class="card h-100" onclick="openBusinessModal('${business.id}')">
-            <img src="${business.imagen}" class="card-img-top" alt="${business.nombre}">
+            <img src="${business.imagen}" class="card-img-top" alt="${business.nombre}" onerror="this.src='https://via.placeholder.com/400x200?text=Imagen+No+Disponible'">
             <div class="card-body d-flex flex-column">
               <div class="d-flex justify-content-between align-items-start mb-2">
                 <span class="badge-category">${categoryName}</span>
                 <span class="text-muted small">
-                  <i class="fas fa-map-marker-alt"></i> ${business.direccion.split(',')[0]}
+                  <i class="fas fa-map-marker-alt"></i> ${business.direccion ? business.direccion.split(',')[0] : 'Ubicación no disponible'}
                 </span>
               </div>
               <h5 class="card-title">${business.nombre}</h5>
-              <p class="card-text">${business.descripcion.substring(0, 100)}...</p>
+              <p class="card-text">${business.descripcion ? business.descripcion.substring(0, 100) + '...' : 'Descripción no disponible'}</p>
               <div class="mt-auto">
                 <p class="text-muted small mb-2">
                   <i class="fas fa-clock me-1"></i> ${business.horario || 'Horario no especificado'}
@@ -904,9 +946,6 @@
           </div>
         `;
         container.appendChild(col);
-        
-        // Store in global array for modal
-        allBusinesses.push(business);
       });
     }
 
@@ -945,15 +984,15 @@
       
       const modalBody = document.getElementById('modalBody');
       modalBody.innerHTML = `
-        <img src="${business.imagen}" alt="${business.nombre}">
+        <img src="${business.imagen}" alt="${business.nombre}" onerror="this.src='https://via.placeholder.com/400x200?text=Imagen+No+Disponible'">
         <h3>${business.nombre}</h3>
         <div class="d-flex align-items-center mb-3">
           <span class="badge-category me-2">${categorias.find(c => c.id === business.categoria)?.name || 'Negocio Local'}</span>
           <span class="text-muted">
-            <i class="fas fa-map-marker-alt me-1"></i> ${business.direccion}
+            <i class="fas fa-map-marker-alt me-1"></i> ${business.direccion || 'Dirección no disponible'}
           </span>
         </div>
-        <p>${business.descripcion}</p>
+        <p>${business.descripcion || 'Descripción no disponible'}</p>
         <p><i class="fas fa-clock me-2"></i> ${business.horario || 'Horario no especificado'}</p>
         <div class="modal-contact-buttons">
           ${modalButtons}
@@ -1001,6 +1040,11 @@
         ticking = true;
       }
     });
+
+    // Función placeholder para publicar negocio
+    function showPublishModal(categoryId) {
+      alert(`¡Próximamente podrás publicar tu negocio en la categoría ${categorias.find(c => c.id === categoryId)?.name || categoryId}!`);
+    }
   </script>
 </body>
 </html>

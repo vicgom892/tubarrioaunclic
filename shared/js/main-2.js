@@ -1252,25 +1252,50 @@ function updateRubrosBarStatus() {
                 // Remover indicadores de abierto
                 if (openIndicator) openIndicator.remove();
                 
-                // Agregar o mantener indicadores de cerrado
-                if (!closedIndicator) {
-                    closedIndicator = document.createElement('div');
-                    closedIndicator.className = 'closed-indicator';
-                    btn.appendChild(closedIndicator);
-                }
-                
-                if (!closedText) {
-                    closedText = document.createElement('span');
-                    closedText.className = 'closed-text';
-                    closedText.textContent = 'CERRADO';
-                    // Insertar después del texto principal
-                    const textNode = btn.querySelector('span:not(.closed-text)') || btn.lastChild;
-                    if (textNode) {
-                        btn.insertBefore(closedText, textNode.nextSibling);
-                    } else {
-                        btn.appendChild(closedText);
-                    }
-                }
+                // En la parte donde creas los indicadores, cambia a:
+if (!closedIndicator) {
+    closedIndicator = document.createElement('div');
+    closedIndicator.className = 'closed-indicator';
+    closedIndicator.style.cssText = `
+        position: absolute !important;
+        top: 6px !important;
+        right: 6px !important;
+        width: 16px !important;
+        height: 16px !important;
+        background: #ff0000 !important;
+        border: 3px solid white !important;
+        border-radius: 50% !important;
+        box-shadow: 0 0 15px #ff0000 !important;
+        z-index: 100 !important;
+    `;
+    btn.appendChild(closedIndicator);
+}
+
+if (!closedText) {
+    closedText = document.createElement('span');
+    closedText.className = 'closed-text';
+    closedText.textContent = 'CERRADO';
+    closedText.style.cssText = `
+        display: block !important;
+        font-size: 11px !important;
+        color: #ff0000 !important;
+        margin-top: 4px !important;
+        font-weight: 900 !important;
+        z-index: 100 !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        padding: 2px 6px !important;
+        border-radius: 4px !important;
+        border: 1px solid #ff0000 !important;
+    `;
+    
+    // Insertar después del ícono
+    const icono = btn.querySelector('i');
+    if (icono) {
+        btn.insertBefore(closedText, icono.nextSibling);
+    } else {
+        btn.appendChild(closedText);
+    }
+}
                 
                 btn.title = `Todos cerrados (0/${stats.total})`;
             }

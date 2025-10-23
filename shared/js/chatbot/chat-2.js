@@ -929,7 +929,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const header = document.createElement('div');
       header.className = 'business-category-header';
       header.innerHTML = `
-        <h5 style="margin: 16px 0 8px 0; color: #128C7E; font-size: 14px; font-weight: 600;">
+        <h5 style="margin: 16px 0 8px 0; font-size: 14px; font-weight: 600;">
           ${getBusinessCategoryIcon(categoria)} ${categoria} (${negocios.length})
         </h5>
       `;

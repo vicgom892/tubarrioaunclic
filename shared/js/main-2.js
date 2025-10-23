@@ -1162,8 +1162,134 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 }
 
+// Función para actualizar el estado de los rubros en la barra
+function updateRubrosBarStatus() {
+    console.log('🔄 Actualizando estados de rubros en la barra...');
+    
+    // Mapeo de rubros de la barra a las secciones
+    const rubroMapping = {
+        'panaderia': 'panaderias',
+        'pastas': 'pastas',
+        'verduleria': 'verdulerias',
+        'fiambreria': 'fiambrerias',
+        'cafeteria': 'cafeterias',
+        'carniceria': 'carnicerias',
+        'comida-rapida': 'comida',
+        'granja': 'granjas',
+        'kiosco': 'kioscos',
+        'mascotas': 'mascotas',
+        'barberia': 'barberias',
+        'ferreteria': 'ferreterias',
+        'farmacia': 'farmacias',
+        'floreria': 'florerias',
+        'taller': 'talleres',
+        'veterinaria': 'veterinarias',
+        'muebles': 'muebles',
+        'uñas': 'uñas',
+        'libreria': 'librerias',
+        'ropa': 'ropa',
+        'mates': 'mates'
+    };
+    
+    // Contar negocios abiertos por rubro
+    const rubroStats = {};
+    
+    Object.keys(rubroMapping).forEach(rubroKey => {
+        const seccion = rubroMapping[rubroKey];
+        const negociosEnRubro = window.businesses.filter(b => 
+            b.category === seccion || 
+            (b.category && b.category.includes(seccion.replace('ias', 'ia').replace('s', '')))
+        );
+        
+        const abiertos = negociosEnRubro.filter(b => isBusinessOpen(b.hours));
+        rubroStats[rubroKey] = {
+            total: negociosEnRubro.length,
+            abiertos: abiertos.length,
+            porcentaje: negociosEnRubro.length > 0 ? (abiertos.length / negociosEnRubro.length) * 100 : 0
+        };
+    });
+    
+    // Actualizar botones de la barra
+    document.querySelectorAll('.rubro-btn[data-rubro]').forEach(btn => {
+        const rubroKey = btn.getAttribute('data-rubro');
+        
+        // Excluir botones especiales
+        if (['todos', 'mapa', 'contacto', 'profesion'].includes(rubroKey)) {
+            return;
+        }
+        
+        const stats = rubroStats[rubroKey];
+        
+        if (stats && stats.total > 0) {
+            const tieneAbiertos = stats.abiertos > 0;
+            const porcentajeAbiertos = stats.porcentaje;
+            
+            // Actualizar clases
+            btn.classList.toggle('open', tieneAbiertos);
+            btn.classList.toggle('closed', !tieneAbiertos);
+            
+            // Actualizar indicadores
+            let openIndicator = btn.querySelector('.open-indicator');
+            let closedIndicator = btn.querySelector('.closed-indicator');
+            let closedText = btn.querySelector('.closed-text');
+            
+            if (tieneAbiertos) {
+                // Remover indicadores de cerrado
+                if (closedIndicator) closedIndicator.remove();
+                if (closedText) closedText.remove();
+                
+                // Agregar o mantener indicador de abierto
+                if (!openIndicator) {
+                    openIndicator = document.createElement('div');
+                    openIndicator.className = 'open-indicator';
+                    btn.appendChild(openIndicator);
+                }
+                
+                // Actualizar tooltip con información
+                btn.title = `${stats.abiertos}/${stats.total} abiertos (${Math.round(porcentajeAbiertos)}%)`;
+                
+            } else {
+                // Remover indicadores de abierto
+                if (openIndicator) openIndicator.remove();
+                
+                // Agregar o mantener indicadores de cerrado
+                if (!closedIndicator) {
+                    closedIndicator = document.createElement('div');
+                    closedIndicator.className = 'closed-indicator';
+                    btn.appendChild(closedIndicator);
+                }
+                
+                if (!closedText) {
+                    closedText = document.createElement('span');
+                    closedText.className = 'closed-text';
+                    closedText.textContent = 'CERRADO';
+                    // Insertar después del texto principal
+                    const textNode = btn.querySelector('span:not(.closed-text)') || btn.lastChild;
+                    if (textNode) {
+                        btn.insertBefore(closedText, textNode.nextSibling);
+                    } else {
+                        btn.appendChild(closedText);
+                    }
+                }
+                
+                btn.title = `Todos cerrados (0/${stats.total})`;
+            }
+            
+        } else {
+            // No hay negocios en este rubro
+            btn.classList.remove('open', 'closed');
+            btn.title = 'Sin negocios registrados';
+            
+            // Limpiar indicadores
+            btn.querySelectorAll('.open-indicator, .closed-indicator, .closed-text').forEach(el => el.remove());
+        }
+    });
+    
+    console.log('✅ Estados de rubros actualizados');
+}
+
   // --- INICIALIZACIÓN DE FUNCIONALIDADES (MEJORADA) ---
-  function checkInitialization() {
+ function checkInitialization() {
     if (loadedSections === totalSections) {
       console.log(`✅ Todos los negocios cargados: ${window.businesses.length}`);
       saveBusinessesToCache(window.businesses);
@@ -1177,10 +1303,13 @@ document.addEventListener('DOMContentLoaded', function() {
       initMapLogic();
       setupLocationButton();
       
-      // 🆕 Actualizar estados de negocios
-      setTimeout(updateBusinessStatus, 1000);
+      // 🆕 Actualizar estados de negocios y rubros
+      setTimeout(() => {
+        updateBusinessStatus();
+        updateRubrosBarStatus();
+      }, 1000);
     }
-  }
+}
 
   function initializeFeatures() {
     if (window.businesses.length === 0) {
@@ -2153,9 +2282,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
   setTimeout(showWelcomeModal, 1500);
 
-  // 🆕 INICIALIZAR ACTUALIZACIÓN PERIÓDICA DE ESTADOS
-  setInterval(updateBusinessStatus, 60000); // Actualizar cada minuto
-  window.addEventListener('focus', updateBusinessStatus); // Actualizar al enfocar la ventana
+ // 🆕 INICIALIZAR ACTUALIZACIÓN PERIÓDICA DE ESTADOS
+setInterval(() => {
+    updateBusinessStatus();
+    updateRubrosBarStatus();
+}, 60000); // Actualizar cada minuto
+
+window.addEventListener('focus', () => {
+    updateBusinessStatus();
+    updateRubrosBarStatus();
+});
 
   // --- INICIALIZACIÓN FINAL MEJORADA ---
   console.log('🚀 Inicializando app con mejoras...');
@@ -2191,6 +2327,7 @@ document.addEventListener('DOMContentLoaded', function() {
   window.updateBusinessList = updateBusinessList;
   window.isBusinessOpen = isBusinessOpen;
   window.updateBusinessStatus = updateBusinessStatus; // 🆕 Exportar nueva función
+  window.updateRubrosBarStatus = updateRubrosBarStatus; // ← AGREGAR ESTA LÍNEA
   
   // Exportar nuevas funciones para compatibilidad
   window.getComercios = () => window.appData.comercios;

@@ -5844,3 +5844,33 @@ margin: 5px !important;
 .rubros-bar {
     animation: slideUp 0.6s ease-out forwards;
 }
+
+/* Opción 1: Solo Badge */
+/* Estilos para negocios cerrados - CORREGIDO */
+.business-closed .card-img-top {
+    filter: grayscale(90%) opacity(0.8);
+}
+
+.business-closed {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.closed-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #dc3545;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Asegurar que el badge no se vea afectado por los filtros */
+.position-relative {
+    position: relative;
+}

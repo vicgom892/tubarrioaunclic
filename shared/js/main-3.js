@@ -1,5 +1,5 @@
-// main-2.js - Versión Mejorada v60-multi con Estados de Negocios
-// Incluye funcionalidad para mostrar negocios cerrados en gris/blur
+// main-2.js - Versión Mejorada v60-multi
+// Mantiene todas las funcionalidades existentes + nuevas mejoras
 
 document.addEventListener('DOMContentLoaded', function() {
   // --- CONSTANTES GLOBALES ---
@@ -359,6 +359,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(`🗃️ Cache ${type.split('_')[1]}: ${strategy} - ${this.getShortUrl(url)}`);
     }
     
+    // === FUNCIÓN FALTANTE - AGREGAR ESTO ===
     getShortUrl(url) {
         try {
             const parsed = new URL(url);
@@ -652,31 +653,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function isBusinessOpen(hoursString) {
     if (!hoursString) return true;
-    
     try {
-        const normalized = hoursString.trim().toLowerCase();
-        
-        // Casos especiales
-        if (normalized.includes('24 horas') || normalized.includes('24h') || normalized.includes('siempre abierto')) {
-            return true;
+      const normalized = hoursString.trim().toLowerCase();
+      if (normalized.includes('24 horas') || normalized.includes('24h')) return true;
+      if (normalized.includes('cerrado') || normalized.includes('cerrada')) return false;
+      if (hoursString.includes(',')) {
+        const timeRanges = hoursString.split(',');
+        for (const range of timeRanges) {
+          if (checkSingleTimeRange(range.trim())) return true;
         }
-        if (normalized.includes('cerrado') || normalized.includes('cerrada') || normalized.includes('no abre')) {
-            return false;
-        }
-        
-        // Para múltiples rangos separados por coma
-        if (hoursString.includes(',')) {
-            const timeRanges = hoursString.split(',');
-            for (const range of timeRanges) {
-                if (checkSingleTimeRange(range.trim())) return true;
-            }
-            return false;
-        }
-        
-        return checkSingleTimeRange(hoursString);
+        return false;
+      }
+      return checkSingleTimeRange(hoursString);
     } catch (error) {
-        console.error("Error en isBusinessOpen:", error, "Horario:", hoursString);
-        return true; // Por defecto asumimos abierto si hay error
+      console.error("Error en isBusinessOpen:", error, "Horario:", hoursString);
+      return true;
     }
   }
 
@@ -847,43 +838,29 @@ document.addEventListener('DOMContentLoaded', function() {
   let loadedSections = 0;
   const totalSections = Object.keys(secciones).length;
 
-  // 🆕 FUNCIÓN MEJORADA PARA CREAR TARJETAS CON ESTADO
- function crearTarjetaNegocio(negocio) {
-    const isOpen = isBusinessOpen(negocio.horarioData || negocio.horario);
-    const closedClass = isOpen ? '' : 'business-closed';
-    const closedBadge = isOpen ? '' : '<span class="closed-badge">🔴 CERRADO</span>';
-    
+  function crearTarjetaNegocio(negocio) {
     return `
       <div class="col-4 col-md-3">
-        <div class="card card-small h-100 shadow-sm business-card ${closedClass}" data-aos="fade-up">
-          <div class="position-relative">
-            <img 
-              src="${negocio.imagen}" 
-              alt="${negocio.nombre}" 
-              loading="lazy" 
-              class="card-img-top clickable-image"
-              data-bs-toggle="modal"
-              data-bs-target="#businessModal"
-              data-business='${JSON.stringify(negocio).replace(/'/g, "&#x27;")}'
-            />
-            ${closedBadge}
-          </div>
+        <div class="card card-small h-100 shadow-sm business-card" data-aos="fade-up">
+          <img 
+            src="${negocio.imagen}" 
+            alt="${negocio.nombre}" 
+            loading="lazy" 
+            class="card-img-top clickable-image"
+            data-bs-toggle="modal"
+            data-bs-target="#businessModal"
+            data-business='${JSON.stringify(negocio).replace(/'/g, "&#x27;")}'
+          />
           <div class="card-body text-center py-2">
             <h5 class="card-title mb-0">${negocio.nombre}</h5>
-            <small class="text-muted">
-              ${isOpen ? 
-                '<span class="text-success">🟢 Abierto ahora</span>' : 
-                '<span class="text-danger">🔴 Cerrado</span>'
-              }
-            </small>
           </div>
         </div>
       </div>
     `;
-}
+  }
 
   async function cargarSeccion(rubro) {
-    const url = `./data/${secciones[rubro]}`;
+    const url = `./data/${secciones[rubro]}`; // RUTA RELATIVA CORREGIDA
     let contenedor = null;
     let intentos = 0;
     const maxIntentos = 20;
@@ -1057,14 +1034,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // === MODAL DETALLADO DEL NEGOCIO MEJORADO CON ESTADO ===
+  // === MODAL DETALLADO DEL NEGOCIO (EXISTENTE) ===
   document.addEventListener('click', function(e) {
     const image = e.target.closest('.clickable-image');
     if (!image) return;
-    
     const negocio = JSON.parse(image.dataset.business);
-    const isOpen = isBusinessOpen(negocio.horarioData || negocio.horario);
-    
     const modal = document.getElementById('businessModal');
     
     document.getElementById('modalImage').src = negocio.imagen;
@@ -1074,25 +1048,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('modalHours').textContent = negocio.horario;
     document.getElementById('modalPhone').textContent = negocio.telefono;
     
-    // 🆕 Agregar indicador de estado en el modal
-    const statusElement = document.getElementById('modalStatus') || (() => {
-        const statusEl = document.createElement('div');
-        statusEl.id = 'modalStatus';
-        statusEl.className = 'mb-2';
-        document.querySelector('#businessModal .modal-body').insertBefore(statusEl, document.getElementById('modalAddress'));
-        return statusEl;
-    })();
-    
-    statusElement.innerHTML = isOpen ? 
-        '<span class="badge bg-success">🟢 ABIERTO AHORA</span>' : 
-        '<span class="badge bg-danger">🔴 CERRADO</span>';
-    
-    // 🆕 Actualizar botones según estado
     const modalWhatsapp = document.getElementById('modalWhatsapp');
     modalWhatsapp.href = `https://wa.me/${negocio.whatsapp}?text=Hola%20desde%20BarrioClik`;
-    modalWhatsapp.classList.toggle('disabled', !isOpen);
-    modalWhatsapp.style.opacity = isOpen ? '1' : '0.6';
-    
+    modalWhatsapp.setAttribute('data-analytics', 'whatsapp');
+    modalWhatsapp.setAttribute('data-negocio', negocio.nombre);
+
     const modalWebsite = document.getElementById('modalWebsite');
     modalWebsite.href = negocio.pagina;
     modalWebsite.setAttribute('data-analytics', 'web');
@@ -1122,46 +1082,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (img) img.src = '';
   });
 
-  // 🆕 FUNCIÓN PARA ACTUALIZAR ESTADOS EN TIEMPO REAL
- function updateBusinessStatus() {
-    console.log('🔄 Actualizando estados de negocios...');
-    
-    document.querySelectorAll('.business-card').forEach(card => {
-        const img = card.querySelector('.clickable-image');
-        if (!img) return;
-        
-        try {
-            const negocio = JSON.parse(img.dataset.business);
-            const isOpen = isBusinessOpen(negocio.horarioData || negocio.horario);
-            
-            // Actualizar clase principal - SOLO para deshabilitar interacción
-            card.classList.toggle('business-closed', !isOpen);
-            
-            // Actualizar badge
-            let badge = card.querySelector('.closed-badge');
-            if (!isOpen && !badge) {
-                badge = document.createElement('span');
-                badge.className = 'closed-badge';
-                badge.textContent = '🔴 CERRADO';
-                card.querySelector('.position-relative').appendChild(badge);
-            } else if (isOpen && badge) {
-                badge.remove();
-            }
-            
-            // Actualizar indicador de estado (texto)
-            const statusIndicator = card.querySelector('.text-muted small');
-            if (statusIndicator) {
-                statusIndicator.innerHTML = isOpen ? 
-                    '<span class="text-success">🟢 Abierto ahora</span>' : 
-                    '<span class="text-danger">🔴 Cerrado</span>';
-            }
-            
-        } catch (error) {
-            console.error('Error actualizando estado del negocio:', error);
-        }
-    });
-}
-
   // --- INICIALIZACIÓN DE FUNCIONALIDADES (MEJORADA) ---
   function checkInitialization() {
     if (loadedSections === totalSections) {
@@ -1176,9 +1096,6 @@ document.addEventListener('DOMContentLoaded', function() {
       initializeFeatures();
       initMapLogic();
       setupLocationButton();
-      
-      // 🆕 Actualizar estados de negocios
-      setTimeout(updateBusinessStatus, 1000);
     }
   }
 
@@ -2153,10 +2070,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   setTimeout(showWelcomeModal, 1500);
 
-  // 🆕 INICIALIZAR ACTUALIZACIÓN PERIÓDICA DE ESTADOS
-  setInterval(updateBusinessStatus, 60000); // Actualizar cada minuto
-  window.addEventListener('focus', updateBusinessStatus); // Actualizar al enfocar la ventana
-
   // --- INICIALIZACIÓN FINAL MEJORADA ---
   console.log('🚀 Inicializando app con mejoras...');
   
@@ -2190,12 +2103,11 @@ document.addEventListener('DOMContentLoaded', function() {
   window.setupLocationButton = setupLocationButton;
   window.updateBusinessList = updateBusinessList;
   window.isBusinessOpen = isBusinessOpen;
-  window.updateBusinessStatus = updateBusinessStatus; // 🆕 Exportar nueva función
   
   // Exportar nuevas funciones para compatibilidad
   window.getComercios = () => window.appData.comercios;
   window.getRubros = () => window.appData.rubros;
   window.isAppLoading = () => window.appData.isLoading;
   
-  console.log('✅ main-2.js mejorado completamente cargado con estados de negocios');
+  console.log('✅ main-2.js mejorado completamente cargado');
 });

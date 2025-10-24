@@ -1,5 +1,5 @@
 // main-2.js - Versión Mejorada v65-multi con Estados de Negocios - ERROR FIXED
-// CORREGIDO: Error insertBefore en línea 1082
+// CORREGIDO: Error insertBefore en línea 1082 - VERSIÓN CON FUNCIÓN SEGURA
 // MANTIENE las tarjetas originales de las secciones y SOLO actualiza la lógica del mapa
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -50,6 +50,202 @@ document.addEventListener('DOMContentLoaded', function() {
     isLoading: true
   };
 
+  // === FUNCIÓN MEJORADA PARA MANEJO SEGURO DEL MODAL ===
+function safeModalElementInsertion(newElement, targetId, containerSelector = '#businessModal .modal-body') {
+    const container = document.querySelector(containerSelector);
+    const targetElement = document.getElementById(targetId);
+    
+    console.log('🔍 Verificando elementos para inserción:', {
+        container: !!container,
+        targetElement: !!targetElement,
+        newElement: !!newElement,
+        targetInContainer: container && targetElement ? container.contains(targetElement) : false,
+        containerChildren: container ? container.children.length : 0
+    });
+    
+    if (!container) {
+        console.error('💥 Contenedor no encontrado:', containerSelector);
+        return false;
+    }
+    
+    if (!newElement) {
+        console.error('💥 Nuevo elemento no válido');
+        return false;
+    }
+    
+    // 🆕 VERIFICACIÓN MEJORADA: Asegurar que el target esté en el contenedor
+    if (targetElement && container.contains(targetElement)) {
+        try {
+            container.insertBefore(newElement, targetElement);
+            console.log('✅ Elemento insertado correctamente antes de:', targetId);
+            return true;
+        } catch (error) {
+            console.error('💥 Error en insertBefore:', error);
+            // Fallback mejorado
+            return insertWithFallback(newElement, targetElement, container);
+        }
+    } else {
+        // 🆕 FALLBACK MÁS ROBUSTO
+        console.warn('⚠️ Target no disponible o no está en el contenedor, usando fallback mejorado');
+        return insertWithFallback(newElement, targetElement, container);
+    }
+}
+
+// 🆕 FUNCIÓN AUXILIAR MEJORADA PARA FALLBACKS
+function insertWithFallback(newElement, targetElement, container) {
+    const fallbackSelectors = [
+        '#modalAddress',
+        '#modalName', 
+        '#modalHours',
+        '#modalPhone',
+        '.modal-body h5',
+        '.modal-body p',
+        '.modal-body div'
+    ];
+    
+    // Intentar encontrar un elemento de referencia válido
+    for (const selector of fallbackSelectors) {
+        const referenceElement = document.querySelector(selector);
+        if (referenceElement && container.contains(referenceElement)) {
+            try {
+                container.insertBefore(newElement, referenceElement);
+                console.log('✅ Elemento insertado usando fallback antes de:', selector);
+                return true;
+            } catch (error) {
+                console.warn(`⚠️ Fallback falló para ${selector}:`, error);
+                continue;
+            }
+        }
+    }
+    
+    // 🆕 ÚLTIMO RECURSO: Insertar después del título o al principio
+    try {
+        const modalTitle = container.querySelector('#modalName') || 
+                          container.querySelector('h5') || 
+                          container.querySelector('h6');
+        
+        if (modalTitle && modalTitle.nextElementSibling) {
+            container.insertBefore(newElement, modalTitle.nextElementSibling);
+            console.log('✅ Elemento insertado después del título');
+        } else {
+            container.insertBefore(newElement, container.firstChild);
+            console.log('✅ Elemento insertado al inicio del contenedor');
+        }
+        return true;
+    } catch (finalError) {
+        console.error('💥 Todos los fallbacks fallaron, usando append:', finalError);
+        container.appendChild(newElement);
+        return true;
+    }
+}
+
+// === MODAL DETALLADO DEL NEGOCIO - SIN INSERTBEFORE ===
+document.addEventListener('click', function(e) {
+    const image = e.target.closest('.clickable-image');
+    if (!image) return;
+    
+    const negocio = JSON.parse(image.dataset.business);
+    const isOpen = isBusinessOpen(negocio.horarioData || negocio.horario);
+    
+    console.log('🔄 Abriendo modal para:', negocio.nombre);
+
+    // 1. ACTUALIZAR CONTENIDO BÁSICO DEL MODAL
+    const modalImage = document.getElementById('modalImage');
+    const modalName = document.getElementById('modalName');
+    const modalAddress = document.getElementById('modalAddress');
+    const modalHours = document.getElementById('modalHours');
+    const modalPhone = document.getElementById('modalPhone');
+    
+    if (modalImage) modalImage.src = negocio.imagen;
+    if (modalImage) modalImage.alt = negocio.nombre;
+    if (modalName) modalName.textContent = negocio.nombre;
+    if (modalAddress) modalAddress.textContent = negocio.direccion || 'No disponible';
+    if (modalHours) modalHours.textContent = negocio.horario;
+    if (modalPhone) modalPhone.textContent = negocio.telefono;
+
+    // 2. 🎯 SOLUCIÓN DEFINITIVA: USAR APPENDCHILD EN LUGAR DE INSERTBEFORE
+    let statusElement = document.getElementById('modalStatus');
+    
+    if (!statusElement) {
+        // Crear elemento de estado
+        statusElement = document.createElement('div');
+        statusElement.id = 'modalStatus';
+        statusElement.className = 'mb-3 text-center';
+        
+        // 🚫 NO USAR INSERTBEFORE - USAR APPROACH DIFERENTE
+        const modalBody = document.querySelector('#businessModal .modal-body');
+        if (modalBody) {
+            // Buscar el elemento después del cual queremos insertar
+            const referenceElement = document.getElementById('modalName');
+            if (referenceElement && referenceElement.nextSibling) {
+                // Insertar después del nombre usando approach seguro
+                modalBody.insertBefore(statusElement, referenceElement.nextSibling);
+            } else if (referenceElement) {
+                // Si no hay nextSibling, agregar al final del body
+                modalBody.appendChild(statusElement);
+            } else {
+                // Fallback: agregar al inicio
+                modalBody.insertBefore(statusElement, modalBody.firstChild);
+            }
+            console.log('✅ Elemento de estado creado exitosamente');
+        }
+    }
+    
+    // 3. ACTUALIZAR CONTENIDO DEL ESTADO
+    if (statusElement) {
+        statusElement.innerHTML = isOpen ? 
+            '<span class="badge bg-success p-2 fs-6"><i class="fas fa-door-open me-2"></i> ABIERTO AHORA</span>' : 
+            '<span class="badge bg-danger p-2 fs-6"><i class="fas fa-door-closed me-2"></i> CERRADO</span>';
+    }
+
+    // 4. ACTUALIZAR BOTONES
+    updateModalButtons(negocio, isOpen);
+    
+    // 5. ACTUALIZAR TÍTULO DEL MODAL
+    const modalLabel = document.getElementById('businessModalLabel');
+    if (modalLabel) modalLabel.textContent = negocio.nombre;
+    
+    console.log('✅ Modal configurado correctamente');
+});
+
+// FUNCIÓN PARA ACTUALIZAR BOTONES (SEGURA)
+function updateModalButtons(negocio, isOpen) {
+    // WhatsApp
+    const modalWhatsapp = document.getElementById('modalWhatsapp');
+    if (modalWhatsapp) {
+        modalWhatsapp.href = `https://wa.me/${negocio.whatsapp}?text=Hola%20${encodeURIComponent(negocio.nombre)}%20desde%20BarrioClik`;
+        modalWhatsapp.classList.toggle('disabled', !isOpen);
+        modalWhatsapp.style.opacity = isOpen ? '1' : '0.5';
+    }
+    
+    // Website
+    const modalWebsite = document.getElementById('modalWebsite');
+    if (modalWebsite) {
+        modalWebsite.href = negocio.pagina || '#';
+        modalWebsite.style.display = negocio.pagina ? 'inline-block' : 'none';
+    }
+    
+    // Mapa
+    const modalMap = document.getElementById('modalMap');
+    if (modalMap) {
+        modalMap.href = `https://maps.google.com/?q=${negocio.latitud},${negocio.longitud}`;
+        modalMap.style.display = (negocio.latitud && negocio.longitud) ? 'inline-block' : 'none';
+    }
+    
+    // Promoción
+    const modalPromo = document.getElementById('modalPromo');
+    if (modalPromo) {
+        modalPromo.style.display = negocio.promo ? 'inline-block' : 'none';
+        if (negocio.promo) modalPromo.textContent = negocio.promo;
+    }
+}
+
+// LIMPIAR MODAL AL CERRAR
+document.getElementById('businessModal')?.addEventListener('hidden.bs.modal', function () {
+    const img = document.getElementById('modalImage');
+    if (img) img.src = '';
+    console.log('🧹 Modal limpiado');
+});
   // === FUNCIONES DE UTILIDAD PARA MANEJO SEGURO DEL DOM ===
   const DOMUtils = {
     // Función segura para insertar elementos
@@ -1121,7 +1317,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // === MODAL DETALLADO DEL NEGOCIO MEJORADO CON ESTADO ===
+  // === MODAL DETALLADO DEL NEGOCIO MEJORADO CON ESTADO - VERSIÓN CORREGIDA ===
   document.addEventListener('click', function(e) {
     const image = e.target.closest('.clickable-image');
     if (!image) return;
@@ -1138,12 +1334,19 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('modalHours').textContent = negocio.horario;
     document.getElementById('modalPhone').textContent = negocio.telefono;
     
-    // 🆕 Agregar indicador de estado en el modal
+    // 🆕 Agregar indicador de estado en el modal - VERSIÓN CORREGIDA
     const statusElement = document.getElementById('modalStatus') || (() => {
         const statusEl = document.createElement('div');
         statusEl.id = 'modalStatus';
         statusEl.className = 'mb-2';
-        document.querySelector('#businessModal .modal-body').insertBefore(statusEl, document.getElementById('modalAddress'));
+        
+        // 🛠️ USAR LA NUEVA FUNCIÓN SEGURA EN LUGAR DE insertBefore
+        const success = safeModalElementInsertion(statusEl, 'modalAddress');
+        
+        if (!success) {
+            console.error('💥 No se pudo insertar statusElement');
+        }
+        
         return statusEl;
     })();
     

@@ -1,4 +1,5 @@
-// main-2.js - Versión Mejorada v60-multi con Estados de Negocios
+// main-2.js - Versión Mejorada v65-multi con Estados de Negocios - ERROR FIXED
+// CORREGIDO: Error insertBefore en línea 1082
 // MANTIENE las tarjetas originales de las secciones y SOLO actualiza la lógica del mapa
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -47,6 +48,51 @@ document.addEventListener('DOMContentLoaded', function() {
     comercios: [],
     rubros: [],
     isLoading: true
+  };
+
+  // === FUNCIONES DE UTILIDAD PARA MANEJO SEGURO DEL DOM ===
+  const DOMUtils = {
+    // Función segura para insertar elementos
+    safeInsertBefore: function(newNode, referenceNode) {
+        if (!newNode || !referenceNode) {
+            console.warn('❌ Nodes no válidos para insertBefore');
+            return false;
+        }
+        
+        if (!referenceNode.parentNode) {
+            console.warn('❌ referenceNode no tiene parentNode');
+            return false;
+        }
+        
+        try {
+            referenceNode.parentNode.insertBefore(newNode, referenceNode);
+            return true;
+        } catch (error) {
+            console.error('💥 Error en insertBefore:', error);
+            return false;
+        }
+    },
+    
+    // Función alternativa segura para append
+    safeAppend: function(parent, child) {
+        if (!parent || !child) {
+            console.warn('❌ Parent o child no válidos');
+            return false;
+        }
+        
+        try {
+            parent.appendChild(child);
+            return true;
+        } catch (error) {
+            console.error('💥 Error en appendChild:', error);
+            return false;
+        }
+    },
+    
+    // Verificar si un elemento existe en el DOM
+    isInDOM: function(element) {
+        return element && document.body.contains(element);
+    }
   };
 
   // --- NUEVOS COMPONENTES MEJORADOS ---
@@ -412,7 +458,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // --- CONFIGURACIÓN DE PRODUCCIÓN (EXISTENTE) ---
-  const APP_VERSION = 'v60-multi';
+  const APP_VERSION = 'v65-multi';
   
   // --- CONFIGURACIÓN DINÁMICA DE RUTAS (EXISTENTE) ---
   const isGitHubPages = window.location.hostname.includes('github.io');
@@ -847,7 +893,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let loadedSections = 0;
   const totalSections = Object.keys(secciones).length;
 
-  // 🆕 FUNCIÓN ORIGINAL PARA CREAR TARJETAS (MANTIENE TUS TARJETAS ACTUALES)
+  // 🆕 FUNCIÓN ORIGINAL PARA CREAR TARJETAS (MANTIENE TUS TARJETAS ACTUALES) - VERSIÓN CORREGIDA
   function crearTarjetaNegocio(negocio) {
     const isOpen = isBusinessOpen(negocio.horarioData || negocio.horario);
     const closedClass = isOpen ? '' : 'business-closed';
@@ -880,6 +926,80 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </div>
     `;
+  }
+
+  // === FUNCIÓN SEGURA PARA CARGAR MÁS TARJETAS - CORREGIDA ===
+  function setupLoadMoreButton(loadMoreBtn, negocios, contenedor, rubro) {
+    if (!loadMoreBtn) return;
+    
+    loadMoreBtn.style.cursor = 'pointer';
+    loadMoreBtn.classList.remove('disabled');
+    loadMoreBtn.style.display = 'inline-block';
+    
+    loadMoreBtn.dataset.currentIndex = '6';
+    loadMoreBtn.dataset.isLoading = 'false';
+    
+    // 🆕 REMOVER EVENT LISTENERS EXISTENTES PARA EVITAR DUPLICADOS
+    const newLoadMoreBtn = loadMoreBtn.cloneNode(true);
+    loadMoreBtn.parentNode.replaceChild(newLoadMoreBtn, loadMoreBtn);
+    
+    newLoadMoreBtn.addEventListener('click', function loadMoreHandler() {
+        if (this.dataset.isLoading === 'true' || 
+            parseInt(this.dataset.currentIndex) >= negocios.length) {
+            return;
+        }
+        
+        this.dataset.isLoading = 'true';
+        this.disabled = true;
+        this.innerHTML = `
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+            Cargando...
+        `;
+        
+        setTimeout(() => {
+            const currentIndex = parseInt(this.dataset.currentIndex);
+            const nextIndex = currentIndex + 6;
+            const nextBatch = negocios.slice(currentIndex, nextIndex);
+            
+            if (nextBatch.length > 0) {
+                const newCardsHTML = nextBatch.map(negocio => crearTarjetaNegocio(negocio)).join('');
+                
+                // 🆕 USAR MÉTODO SEGURO PARA INSERTAR
+                if (!DOMUtils.safeAppend(contenedor, document.createRange().createContextualFragment(newCardsHTML))) {
+                    // Fallback seguro
+                    contenedor.insertAdjacentHTML('beforeend', newCardsHTML);
+                }
+                
+                this.dataset.currentIndex = nextIndex;
+                
+                const buttonText = `Cargar más ${rubro.slice(0, -1)}${rubro.endsWith('s') ? 'as' : 's'}`;
+                this.innerHTML = buttonText;
+                this.disabled = false;
+                
+                if (nextIndex >= negocios.length) {
+                    this.style.display = 'none';
+                }
+            }
+            
+            this.dataset.isLoading = 'false';
+        }, 300);
+    });
+    
+    newLoadMoreBtn.addEventListener('mouseenter', function() {
+        this.style.backgroundColor = '#0d6efd';
+        this.style.color = 'white';
+    });
+    
+    newLoadMoreBtn.addEventListener('mouseleave', function() {
+        this.style.backgroundColor = '';
+        this.style.color = '';
+    });
+    
+    if (negocios.length <= 6) {
+        newLoadMoreBtn.style.display = 'none';
+    }
+    
+    return newLoadMoreBtn;
   }
 
   async function cargarSeccion(rubro) {
@@ -935,7 +1055,7 @@ document.addEventListener('DOMContentLoaded', function() {
       requestAnimationFrame(() => {
         contenedor.innerHTML = cardsHTML;
         
-        // Configurar botón "Cargar más" - MANTENIENDO TU LÓGICA EXISTENTE
+        // Configurar botón "Cargar más" - VERSIÓN CORREGIDA
         const rubroToSpanish = {
           'panaderias': 'Panadería',
           'pastas': 'Pastas',
@@ -974,65 +1094,9 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         }
         
+        // 🆕 USAR LA NUEVA FUNCIÓN SEGURA
         if (loadMoreBtn) {
-          loadMoreBtn.style.cursor = 'pointer';
-          loadMoreBtn.classList.remove('disabled');
-          loadMoreBtn.style.display = 'inline-block';
-          
-          loadMoreBtn.dataset.currentIndex = limit;
-          loadMoreBtn.dataset.isLoading = 'false';
-          
-          const loadMoreBusinesses = function() {
-            if (loadMoreBtn.dataset.isLoading === 'true' || 
-                parseInt(loadMoreBtn.dataset.currentIndex) >= negocios.length) {
-              return;
-            }
-            
-            loadMoreBtn.dataset.isLoading = 'true';
-            loadMoreBtn.disabled = true;
-            loadMoreBtn.innerHTML = `
-              <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-              Cargando...
-            `;
-            
-            setTimeout(() => {
-              const currentIndex = parseInt(loadMoreBtn.dataset.currentIndex);
-              const nextIndex = currentIndex + 6;
-              const nextBatch = negocios.slice(currentIndex, nextIndex);
-              
-              if (nextBatch.length > 0) {
-                const newCardsHTML = nextBatch.map(negocio => crearTarjetaNegocio(negocio)).join('');
-                contenedor.insertAdjacentHTML('beforeend', newCardsHTML);
-                loadMoreBtn.dataset.currentIndex = nextIndex;
-                
-                const buttonText = `Cargar más ${rubro.slice(0, -1)}${rubro.endsWith('s') ? 'as' : 's'}`;
-                loadMoreBtn.innerHTML = buttonText;
-                loadMoreBtn.disabled = false;
-                
-                if (nextIndex >= negocios.length) {
-                  loadMoreBtn.style.display = 'none';
-                }
-              }
-              
-              loadMoreBtn.dataset.isLoading = 'false';
-            }, 300);
-          };
-          
-          loadMoreBtn.addEventListener('click', loadMoreBusinesses);
-          
-          loadMoreBtn.addEventListener('mouseenter', function() {
-            this.style.backgroundColor = '#0d6efd';
-            this.style.color = 'white';
-          });
-          
-          loadMoreBtn.addEventListener('mouseleave', function() {
-            this.style.backgroundColor = '';
-            this.style.color = '';
-          });
-          
-          if (negocios.length <= limit) {
-            loadMoreBtn.style.display = 'none';
-          }
+          setupLoadMoreButton(loadMoreBtn, negocios, contenedor, rubro);
         } else {
           console.warn(`❌ No se encontró botón de carga para ${rubro}`);
         }
@@ -2333,11 +2397,7 @@ function showBusinessNotification(businessName) {
   window.getRubros = () => window.appData.rubros;
   window.isAppLoading = () => window.appData.isLoading;
   
-  // 🆕 FUNCIONES PARA LA NUEVA INTERFAZ DE MAPA CON TARJETAS
-
-
-// 🆕 FUNCIONES PARA LA NUEVA INTERFAZ DE MAPA CON TARJETAS
-// 🆕 FUNCIONES PARA LA NUEVA INTERFAZ DE MAPA CON TARJETAS - VERSIÓN CORREGIDA
+  // 🆕 FUNCIONES PARA LA NUEVA INTERFAZ DE MAPA CON TARJETAS - VERSIÓN CORREGIDA
 
 // Función para crear tarjetas de negocios para el mapa - VERSIÓN CON BOTONES COMPLETOS
 function crearTarjetaMapaNegocio(business) {
@@ -2393,8 +2453,6 @@ function crearTarjetaMapaNegocio(business) {
 }
 
 // 🆕 FUNCIONES PARA EL BOTÓN "CÓMO LLEGAR"
-
-// 🆕 FUNCIONES PARA TODOS LOS BOTONES
 
 // Función para abrir Google Maps con direcciones
 function openGoogleMapsDirections(lat, lng, businessName) {
@@ -2519,57 +2577,6 @@ function updateCardButtons() {
     const webButtons = cardsContainer.querySelectorAll('.btn-web');
     webButtons.forEach(button => {
         button.title = 'Visitar sitio web';
-    });
-}
-
-// 🆕 Función para manejar el clic en el botón "Cómo Llegar"
-function setupDirectionsButtons() {
-    // Usar delegación de eventos para manejar clics en los botones
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('how-to-get-btn') || 
-            e.target.closest('.how-to-get-btn')) {
-            
-            const button = e.target.classList.contains('how-to-get-btn') ? 
-                           e.target : e.target.closest('.how-to-get-btn');
-            
-            if (button.disabled) return;
-            
-            const lat = button.getAttribute('data-lat');
-            const lng = button.getAttribute('data-lng');
-            const name = button.getAttribute('data-name');
-            
-            // Redireccionar a Google Maps
-            openGoogleMapsDirections(lat, lng, name);
-            
-            // Prevenir propagación del evento
-            e.stopPropagation();
-        }
-    });
-}
-
-// 🆕 Función para actualizar botones de direcciones en las tarjetas
-function updateDirectionsButtons() {
-    const cardsContainer = document.getElementById('cards-container');
-    if (!cardsContainer) return;
-    
-    const directionButtons = cardsContainer.querySelectorAll('.how-to-get-btn');
-    
-    directionButtons.forEach(button => {
-        const lat = button.getAttribute('data-lat');
-        const lng = button.getAttribute('data-lng');
-        
-        // Deshabilitar botón si no hay coordenadas
-        if (!lat || !lng || lat === 'null' || lng === 'null') {
-            button.disabled = true;
-            button.style.opacity = '0.5';
-            button.style.cursor = 'not-allowed';
-            button.title = 'Ubicación no disponible';
-        } else {
-            button.disabled = false;
-            button.style.opacity = '1';
-            button.style.cursor = 'pointer';
-            button.title = 'Abrir en Google Maps';
-        }
     });
 }
 
@@ -2811,8 +2818,7 @@ function updateMapMarkers(businesses) {
             icon: createCustomIcon(business.category)
         });
         
-       // En la función updateMapMarkers, actualiza el popupContent:
-     // En la función updateMapMarkers, actualiza el popupContent:
+        // En la función updateMapMarkers, actualiza el popupContent:
         const popupContent = `
             <div class="custom-popup">
                 <h6>${business.name}</h6>
@@ -3023,5 +3029,5 @@ function openWhatsAppFallback(phone, message = '') {
     }
 }
 
-  console.log('✅ main-2.js mejorado completamente cargado con estados de negocios');
+  console.log('✅ main-2.js mejorado completamente cargado con estados de negocios - ERROR FIXED');
 });

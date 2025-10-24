@@ -1,5 +1,5 @@
 // main-2.js - Versión Mejorada v60-multi con Estados de Negocios
-// Incluye funcionalidad para mostrar negocios cerrados en gris/blur
+// MANTIENE las tarjetas originales de las secciones y SOLO actualiza la lógica del mapa
 
 document.addEventListener('DOMContentLoaded', function() {
   // --- CONSTANTES GLOBALES ---
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // --- NUEVA CONFIGURACIÓN MEJORADA ---
   const APP_CONFIG = {
-    VERSION: 'v60-multi',
+    VERSION: 'v65-multi',
     CACHE_STRATEGIES: {
         STATIC: 'static',
         ASSETS: 'assets', 
@@ -847,8 +847,8 @@ document.addEventListener('DOMContentLoaded', function() {
   let loadedSections = 0;
   const totalSections = Object.keys(secciones).length;
 
-  // 🆕 FUNCIÓN MEJORADA PARA CREAR TARJETAS CON ESTADO
- function crearTarjetaNegocio(negocio) {
+  // 🆕 FUNCIÓN ORIGINAL PARA CREAR TARJETAS (MANTIENE TUS TARJETAS ACTUALES)
+  function crearTarjetaNegocio(negocio) {
     const isOpen = isBusinessOpen(negocio.horarioData || negocio.horario);
     const closedClass = isOpen ? '' : 'business-closed';
     const closedBadge = isOpen ? '' : '<span class="closed-badge">🔴 CERRADO</span>';
@@ -880,7 +880,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </div>
     `;
-}
+  }
 
   async function cargarSeccion(rubro) {
     const url = `./data/${secciones[rubro]}`;
@@ -1123,7 +1123,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // 🆕 FUNCIÓN PARA ACTUALIZAR ESTADOS EN TIEMPO REAL
- function updateBusinessStatus() {
+  function updateBusinessStatus() {
     console.log('🔄 Actualizando estados de negocios...');
     
     document.querySelectorAll('.business-card').forEach(card => {
@@ -1160,10 +1160,10 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error actualizando estado del negocio:', error);
         }
     });
-}
+  }
 
-// Función para actualizar el estado de los rubros en la barra
-function updateRubrosBarStatus() {
+  // Función para actualizar el estado de los rubros en la barra
+  function updateRubrosBarStatus() {
     console.log('🔄 Actualizando estados de rubros en la barra...');
     
     // Mapeo de rubros de la barra a las secciones
@@ -1253,49 +1253,49 @@ function updateRubrosBarStatus() {
                 if (openIndicator) openIndicator.remove();
                 
                 // En la parte donde creas los indicadores, cambia a:
-if (!closedIndicator) {
-    closedIndicator = document.createElement('div');
-    closedIndicator.className = 'closed-indicator';
-    closedIndicator.style.cssText = `
-        position: absolute !important;
-        top: 6px !important;
-        right: 6px !important;
-        width: 16px !important;
-        height: 16px !important;
-        background: #ff0000 !important;
-        border: 3px solid white !important;
-        border-radius: 50% !important;
-        box-shadow: 0 0 15px #ff0000 !important;
-        z-index: 100 !important;
-    `;
-    btn.appendChild(closedIndicator);
-}
+                if (!closedIndicator) {
+                    closedIndicator = document.createElement('div');
+                    closedIndicator.className = 'closed-indicator';
+                    closedIndicator.style.cssText = `
+                        position: absolute !important;
+                        top: 6px !important;
+                        right: 6px !important;
+                        width: 16px !important;
+                        height: 16px !important;
+                        background: #ff0000 !important;
+                        border: 3px solid white !important;
+                        border-radius: 50% !important;
+                        box-shadow: 0 0 15px #ff0000 !important;
+                        z-index: 100 !important;
+                    `;
+                    btn.appendChild(closedIndicator);
+                }
 
-if (!closedText) {
-    closedText = document.createElement('span');
-    closedText.className = 'closed-text';
-    closedText.textContent = 'CERRADO';
-    closedText.style.cssText = `
-        display: block !important;
-        font-size: 11px !important;
-        color: #ff0000 !important;
-        margin-top: 4px !important;
-        font-weight: 900 !important;
-        z-index: 100 !important;
-        background: rgba(255, 255, 255, 0.9) !important;
-        padding: 2px 6px !important;
-        border-radius: 4px !important;
-        border: 1px solid #ff0000 !important;
-    `;
-    
-    // Insertar después del ícono
-    const icono = btn.querySelector('i');
-    if (icono) {
-        btn.insertBefore(closedText, icono.nextSibling);
-    } else {
-        btn.appendChild(closedText);
-    }
-}
+                if (!closedText) {
+                    closedText = document.createElement('span');
+                    closedText.className = 'closed-text';
+                    closedText.textContent = 'CERRADO';
+                    closedText.style.cssText = `
+                        display: block !important;
+                        font-size: 11px !important;
+                        color: #ff0000 !important;
+                        margin-top: 4px !important;
+                        font-weight: 900 !important;
+                        z-index: 100 !important;
+                        background: rgba(255, 255, 255, 0.9) !important;
+                        padding: 2px 6px !important;
+                        border-radius: 4px !important;
+                        border: 1px solid #ff0000 !important;
+                    `;
+                    
+                    // Insertar después del ícono
+                    const icono = btn.querySelector('i');
+                    if (icono) {
+                        btn.insertBefore(closedText, icono.nextSibling);
+                    } else {
+                        btn.appendChild(closedText);
+                    }
+                }
                 
                 btn.title = `Todos cerrados (0/${stats.total})`;
             }
@@ -1311,10 +1311,10 @@ if (!closedText) {
     });
     
     console.log('✅ Estados de rubros actualizados');
-}
+  }
 
   // --- INICIALIZACIÓN DE FUNCIONALIDADES (MEJORADA) ---
- function checkInitialization() {
+  function checkInitialization() {
     if (loadedSections === totalSections) {
       console.log(`✅ Todos los negocios cargados: ${window.businesses.length}`);
       saveBusinessesToCache(window.businesses);
@@ -1334,7 +1334,7 @@ if (!closedText) {
         updateRubrosBarStatus();
       }, 1000);
     }
-}
+  }
 
   function initializeFeatures() {
     if (window.businesses.length === 0) {
@@ -1807,178 +1807,87 @@ if (!closedText) {
 
   function initMap() {
     if (window.mapInitialized) {
-      console.log("El mapa ya ha sido inicializado, omitiendo inicialización");
-      return;
+        console.log("El mapa ya ha sido inicializado, omitiendo inicialización");
+        return;
     }
     
     const mapContainer = document.getElementById('map');
     if (!mapContainer) {
-      console.error("No se encontró el contenedor del mapa");
-      setTimeout(initMap, 500);
-      return;
+        console.error("No se encontró el contenedor del mapa");
+        setTimeout(initMap, 500);
+        return;
     }
     
     if (!isLeafletAvailable()) {
-      console.error("Leaflet no está disponible al intentar inicializar el mapa");
-      setTimeout(checkLeafletAndInit, 300);
-      return;
+        console.error("Leaflet no está disponible al intentar inicializar el mapa");
+        setTimeout(checkLeafletAndInit, 300);
+        return;
     }
     
     try {
-      if (window.map && window.map.remove) {
-        window.map.remove();
-      }
-      
-      window.map = L.map('map', {
-        center: [-34.652, -58.643],
-        zoom: 13,
-        scrollWheelZoom: false,
-        touchZoom: true,
-        dragging: true,
-        zoomControl: true,
-        trackResize: true,
-        fadeAnimation: true,
-        markerZoomAnimation: true,
-        bounceAtZoomLimits: false,
-        inertia: true,
-        inertiaDeceleration: 3000,
-        inertiaMaxSpeed: 1500,
-        zoomSnap: 0.25,
-        zoomDelta: 0.25,
-        trackResize: true,
-        preferCanvas: true
-      });
-      
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        detectRetina: true,
-        updateWhenIdle: true,
-        updateWhenZooming: false,
-        keepBuffer: 5,
-        maxNativeZoom: 18,
-        maxZoom: 19,
-        loadingClass: 'loading',
-        unloadInvisibleTiles: true,
-        reuseTiles: true
-      }).addTo(window.map);
-      
-      window.map.on('click', function() {
-        if (!window.map.scrollWheelZoom.enabled()) {
-          window.map.scrollWheelZoom.enable();
-          const zoomHint = document.getElementById('mapZoomHint');
-          if (zoomHint && zoomHint.parentNode) {
-            zoomHint.parentNode.removeChild(zoomHint);
-          }
+        if (window.map && window.map.remove) {
+            window.map.remove();
         }
-      });
-      
-      const zoomHint = document.createElement('div');
-      zoomHint.id = 'mapZoomHint';
-      zoomHint.className = 'map-zoom-hint';
-      zoomHint.innerHTML = `
-        <div class="hint-content">
-          <i class="fas fa-mouse-pointer me-2"></i>
-          <span>Haz clic en el mapa para activar el zoom con la rueda</span>
-        </div>
-      `;
-      mapContainer.appendChild(zoomHint);
-      
-      window.map.on('zoomstart', function() {
-        mapContainer.classList.add('map-loading');
-        clearTimeout(window.mapZoomTimeout);
-      });
-      
-      window.map.on('zoomend', function() {
-        window.mapZoomTimeout = setTimeout(() => {
-          mapContainer.classList.remove('map-loading');
-          if (window.businesses && isMapReady) {
-            updateBusinessListDebounced();
-          }
-        }, 150);
-      });
-      
-      window.map.on('movestart', function() {
-        mapContainer.classList.add('map-loading');
-      });
-      
-      window.map.on('moveend', function() {
+        
+        // 🆕 CONFIGURACIÓN MEJORADA DEL MAPA
+        window.map = L.map('map', {
+            center: [-34.652, -58.643],
+            zoom: 13,
+            scrollWheelZoom: true, // Cambiado a true para mejor UX
+            touchZoom: true,
+            dragging: true,
+            zoomControl: true,
+            trackResize: true,
+            fadeAnimation: true,
+            markerZoomAnimation: true
+        });
+        
+        // 🆕 CAPA DEL MAPA MEJORADA
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            detectRetina: true
+        }).addTo(window.map);
+        
+        // 🆕 INICIALIZAR COMPONENTES DEL NUEVO MAPA
+        window.mapInitialized = true;
+        isMapReady = true;
+        
+        console.log("✅ Mapa base inicializado correctamente");
+        
+        // 🆕 Inicializar la nueva interfaz después de un breve delay
         setTimeout(() => {
-          mapContainer.classList.remove('map-loading');
-          if (window.businesses && isMapReady) {
-            updateBusinessListDebounced();
-          }
-        }, 75);
-      });
-      
-      window.mapInitialized = true;
-      isMapReady = true;
-      
-      setTimeout(() => {
-        window.map.invalidateSize();
-        console.log("Tamaño del mapa actualizado");
-        addMapMarkers();
-      }, 100);
-      
-      console.log("✅ Mapa inicializado correctamente");
+            initNewMapInterface();
+            window.map.invalidateSize();
+        }, 500);
+        
     } catch (e) {
-      console.error("Error al inicializar el mapa:", e);
-      setTimeout(initMap, 500);
+        console.error("Error al inicializar el mapa:", e);
+        setTimeout(initMap, 500);
     }
-  }
+}
 
-  function addMapMarkers() {
+ function addMapMarkers() {
     if (!isLeafletAvailable()) {
-      console.warn("Leaflet no está disponible. Programando reintento...");
-      setTimeout(checkLeafletAndInit, 300);
-      return;
+        console.warn("Leaflet no está disponible. Programando reintento...");
+        setTimeout(checkLeafletAndInit, 300);
+        return;
     }
     
     if (!window.map || typeof window.map.addLayer !== 'function') {
-      console.warn("El mapa no está inicializado correctamente. Programando reintento...");
-      setTimeout(initMap, 300);
-      return;
+        console.warn("El mapa no está inicializado correctamente. Programando reintento...");
+        setTimeout(initMap, 300);
+        return;
     }
     
     if (window.businesses.length === 0) {
-      console.log("No hay negocios disponibles para mostrar en el mapa");
-      return;
+        console.log("No hay negocios disponibles para mostrar en el mapa");
+        return;
     }
     
-    try {
-      if (window.businessMarkers) {
-        window.map.removeLayer(window.businessMarkers);
-      }
-      
-      window.businessMarkers = L.featureGroup();
-      const markers = [];
-      
-      window.businesses.forEach(business => {
-        if (business.latitude && business.longitude && isBusinessOpen(business.hours)) {
-          const marker = createBusinessMarker(business);
-          markers.push(marker);
-        }
-      });
-      
-      console.log(`✅ ${markers.length} pines agregados al mapa`);
-      
-      const clusterGroup = L.markerClusterGroup({
-        maxClusterRadius: 80,
-        iconCreateFunction: function(cluster) {
-          return L.divIcon({
-            html: `<div class="cluster-icon">${cluster.getChildCount()}</div>`,
-            className: 'marker-cluster',
-            iconSize: [40, 40]
-          });
-        }
-      }).addLayers(markers);
-      
-      window.businessMarkers.addLayer(clusterGroup);
-      window.businessMarkers.addTo(window.map);
-    } catch (e) {
-      console.error("Error al agregar marcadores al mapa:", e);
-    }
-  }
+    // 🆕 DELEGAR A LA NUEVA IMPLEMENTACIÓN
+    initNewMapInterface();
+}
 
   function createBusinessMarker(business) {
     const marker = L.marker([business.latitude, business.longitude], {
@@ -2009,189 +1918,254 @@ if (!closedText) {
     return marker;
   }
 
-  // --- UBICACIÓN DEL USUARIO (EXISTENTE) ---
   function setupLocationButton() {
     const locateMeButton = document.getElementById('locateMe');
-    if (!locateMeButton) {
-      console.log("Botón 'Mostrar mi ubicación' no encontrado. Esperando...");
-      setTimeout(setupLocationButton, 300);
-      return;
-    }
+    if (!locateMeButton) return;
     
     locateMeButton.addEventListener('click', () => {
-      console.log("Botón 'Mostrar mi ubicación' clicado");
-      
-      if (!window.map || typeof window.map.addLayer !== 'function') {
-        alert('El mapa aún no está listo. Por favor, espera unos segundos e intenta nuevamente.');
-        return;
-      }
-      
-      const originalText = locateMeButton.innerHTML;
-      locateMeButton.disabled = true;
-      locateMeButton.innerHTML = `
-        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-        Obteniendo ubicación...
-      `;
-      
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude, accuracy } = position.coords;
-            const accuracyMeters = Math.round(accuracy);
-            console.log(`📍 Ubicación obtenida: ${latitude}, ${longitude} (precisión: ${accuracyMeters}m)`);
-            
-            if (window.userMarker) window.map.removeLayer(window.userMarker);
-            if (window.userAccuracyCircle) window.map.removeLayer(window.userAccuracyCircle);
-            
-            window.userMarker = L.marker([latitude, longitude], {
-              icon: L.divIcon({
-                className: 'user-location-marker',
-                html: `<div class="user-location-ring"></div><div class="user-location-dot"></div>`,
-                iconSize: [40, 40],
-                iconAnchor: [20, 20]
-              })
-            }).addTo(window.map);
-            
-            window.userAccuracyCircle = L.circle([latitude, longitude], {
-              radius: accuracy,
-              color: '#3b82f6',
-              fillColor: '#3b82f6',
-              fillOpacity: 0.15,
-              weight: 1
-            }).addTo(window.map);
-            
-            window.map.setView([latitude, longitude], 14);
-            updateBusinessList(window.businesses);
-            
-            locateMeButton.innerHTML = `
-              <i class="fas fa-location-dot me-1"></i>
-              Mi ubicación (${accuracyMeters}m)
-            `;
+        if (!window.map) {
+            showBusinessNotification('El mapa aún no está listo. Espera unos segundos.');
+            return;
+        }
+        
+        const originalText = locateMeButton.innerHTML;
+        locateMeButton.disabled = true;
+        locateMeButton.innerHTML = `
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+            Obteniendo ubicación...
+        `;
+        
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude, accuracy } = position.coords;
+                    const accuracyMeters = Math.round(accuracy);
+                    
+                    // 🆕 Limpiar marcadores anteriores
+                    if (window.userMarker) window.map.removeLayer(window.userMarker);
+                    if (window.userAccuracyCircle) window.map.removeLayer(window.userAccuracyCircle);
+                    
+                    // 🆕 Crear marcador de usuario
+                    window.userMarker = L.marker([latitude, longitude], {
+                        icon: L.divIcon({
+                            className: 'user-location-marker',
+                            html: `<div class="user-location-ring"></div><div class="user-location-dot"></div>`,
+                            iconSize: [40, 40],
+                            iconAnchor: [20, 20]
+                        })
+                    }).addTo(window.map);
+                    
+                    window.userAccuracyCircle = L.circle([latitude, longitude], {
+                        radius: accuracy,
+                        color: '#3b82f6',
+                        fillColor: '#3b82f6',
+                        fillOpacity: 0.15,
+                        weight: 1
+                    }).addTo(window.map);
+                    
+                    // 🆕 Centrar mapa y actualizar lista (SIN MODAL)
+                    window.map.setView([latitude, longitude], 14);
+                    updateBusinessList(window.businesses);
+                    
+                    // 🆕 Notificación sutil
+                    showBusinessNotification(`Ubicación detectada (precisión: ${accuracyMeters}m)`);
+                    
+                    locateMeButton.innerHTML = `
+                        <i class="fas fa-location-dot me-1"></i>
+                        Mi ubicación
+                    `;
+                    locateMeButton.disabled = false;
+                },
+                (error) => {
+                    console.error("Error de geolocalización:", error);
+                    let message = "No se pudo obtener tu ubicación. ";
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            message += "Permiso denegado.";
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            message += "Ubicación no disponible.";
+                            break;
+                        case error.TIMEOUT:
+                            message += "Tiempo de espera agotado.";
+                            break;
+                        default:
+                            message += "Error desconocido.";
+                    }
+                    showBusinessNotification(message);
+                    locateMeButton.innerHTML = originalText;
+                    locateMeButton.disabled = false;
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        } else {
+            showBusinessNotification("Tu navegador no soporta geolocalización.");
             locateMeButton.disabled = false;
-          },
-          (error) => {
-            console.error("Error de geolocalización:", error);
-            let message = "No se pudo obtener tu ubicación: ";
-            switch (error.code) {
-              case error.PERMISSION_DENIED:
-                message += "permiso denegado.";
-                break;
-              case error.POSITION_UNAVAILABLE:
-                message += "ubicación no disponible.";
-                break;
-              case error.TIMEOUT:
-                message += "tiempo de espera agotado.";
-                break;
-              default:
-                message += "error desconocido.";
-            }
-            alert(message);
-            locateMeButton.innerHTML = `
-              <i class="fas fa-location-dot me-1"></i>
-              Mostrar mi ubicación
-            `;
-            locateMeButton.disabled = false;
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
-          }
-        );
-      } else {
-        alert("Tu navegador no soporta geolocalización.");
-        locateMeButton.disabled = false;
-      }
+        }
     });
-  }
+}
 
-  // --- ACTUALIZAR LISTA DE COMERCIOS CERCANOS (EXISTENTE) ---
-  function updateBusinessList(businesses) {
+// 🆕 FUNCIÓN ACTUALIZADA - Sin modal, solo actualiza la lista visible
+function updateBusinessList(businesses) {
     const businessList = document.getElementById('businessList');
-    const businessListContainer = document.getElementById('businessListContainer') || 
-                                 document.querySelector('.business-list-container');
-    if (!businessList) {
-      console.error("❌ No se encontró el elemento #businessList");
-      return;
+    const businessListContainer = document.getElementById('businessListContainer');
+    
+    if (!businessList || !businessListContainer) {
+        console.log("⏳ Esperando elementos de lista de negocios...");
+        return; // 🆕 No reintentar si no existen
     }
     
     if (!window.userMarker) {
-      businessList.innerHTML = `
-        <div class="text-center text-muted py-3">
-          <p>Por favor, haz clic en "Mostrar mi ubicación" para ver los comercios cercanos.</p>
-        </div>
-      `;
-      if (businessListContainer) {
+        businessList.innerHTML = `
+            <div class="col-12">
+                <div class="text-center text-muted py-3">
+                    <i class="fas fa-location-dot fa-2x mb-2"></i>
+                    <p>Haz clic en "Mostrar mi ubicación" para ver los comercios cercanos.</p>
+                </div>
+            </div>
+        `;
         businessListContainer.style.display = 'block';
-      }
-      return;
+        return;
     }
     
     try {
-      const userLatLng = window.userMarker.getLatLng();
-      
-      const openBusinesses = businesses
-        .filter(business => business.latitude && business.longitude)
-        .map(business => {
-          const distance = window.map.distance(userLatLng, L.latLng(business.latitude, business.longitude)) / 1000;
-          return { ...business, distance };
-        })
-        .filter(business => isBusinessOpen(business.hours) && business.distance <= 10)
-        .sort((a, b) => a.distance - b.distance);
-      
-      console.log(`✅ ${openBusinesses.length} negocios abiertos encontrados dentro de 10 km`);
-      
-      if (openBusinesses.length > 0) {
-        businessList.innerHTML = openBusinesses.map(business => `
-          <div class="col-12 col-md-6 col-lg-4 mb-2">
-            <div class="border rounded p-3 bg-white shadow-sm">
-              <h6 class="mb-1">${business.name}</h6>
-              <p class="text-muted mb-1" style="font-size: 0.85rem;">${business.category || 'Sin categoría'}</p>
-              <p class="text-muted mb-2" style="font-size: 0.85rem;">${business.address || 'Dirección no disponible'}</p>
-              <p class="mb-2" style="font-size: 0.85rem;">
-                <span class="badge bg-success">Abierto</span>
-                <span class="ms-2">${business.distance.toFixed(2)} km</span>
-              </p>
-              <div class="d-flex gap-2">
-                <a href="https://maps.google.com/?daddr=${business.latitude},${business.longitude}" 
-                   target="_blank" 
-                   class="btn btn-sm btn-outline-primary flex-grow-1">
-                  <i class="fas fa-directions me-1"></i>Ruta
-                </a>
-                <a href="https://wa.me/${business.whatsapp}" 
-                   target="_blank" 
-                   class="btn btn-sm btn-outline-success flex-grow-1">
-                  <i class="fab fa-whatsapp me-1"></i>Chat
-                </a>
-              </div>
-            </div>
-          </div>
-        `).join('');
-      } else {
-        businessList.innerHTML = `
-          <div class="col-12">
-            <p class="text-center text-muted py-3">No hay comercios abiertos cerca de ti.</p>
-          </div>
-        `;
-      }
-      
-      if (businessListContainer) {
+        const userLatLng = window.userMarker.getLatLng();
+        
+        const nearbyBusinesses = businesses
+            .filter(business => business.latitude && business.longitude)
+            .map(business => {
+                const distance = window.map.distance(userLatLng, L.latLng(business.latitude, business.longitude)) / 1000;
+                return { ...business, distance };
+            })
+            .filter(business => isBusinessOpen(business.hours) && business.distance <= 5) // 🆕 Reducido a 5km
+            .sort((a, b) => a.distance - b.distance)
+            .slice(0, 6); // 🆕 Limitar a 6 resultados máximo
+        
+        console.log(`📍 ${nearbyBusinesses.length} negocios cercanos encontrados`);
+        
+        if (nearbyBusinesses.length > 0) {
+            businessList.innerHTML = nearbyBusinesses.map(business => `
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                    <div class="business-item border rounded p-3 bg-white shadow-sm h-100" 
+                         onclick="focusOnBusiness(${business.latitude}, ${business.longitude}, '${business.name.replace(/'/g, "\\'")}')"
+                         style="cursor: pointer; transition: all 0.3s ease;">
+                        <h6 class="mb-2 text-primary">${business.name}</h6>
+                        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+                            <i class="fas fa-tag me-1"></i>${getCategoryName(business.category) || 'Sin categoría'}
+                        </p>
+                        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+                            <i class="fas fa-map-marker-alt me-1"></i>${business.address || 'Dirección no disponible'}
+                        </p>
+                        <p class="mb-3" style="font-size: 0.85rem;">
+                            <span class="badge bg-success me-2">
+                                <i class="fas fa-walking me-1"></i>${business.distance.toFixed(1)} km
+                            </span>
+                            <span class="badge bg-info">Abierto</span>
+                        </p>
+                        <div class="d-flex gap-2 mt-auto">
+                            <a href="https://wa.me/${business.whatsapp}" 
+                               target="_blank" 
+                               class="btn btn-sm btn-success flex-grow-1"
+                               onclick="event.stopPropagation()">
+                                <i class="fab fa-whatsapp me-1"></i>Chat
+                            </a>
+                            <button class="btn btn-sm btn-outline-primary"
+                                    onclick="event.stopPropagation(); showDirections(${business.latitude}, ${business.longitude})">
+                                <i class="fas fa-route me-1"></i>Ruta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            businessList.innerHTML = `
+                <div class="col-12">
+                    <div class="text-center text-muted py-3">
+                        <i class="fas fa-store-slash fa-2x mb-2"></i>
+                        <p>No hay comercios abiertos dentro de 5 km.</p>
+                        <small class="text-muted">Intenta ampliar el área de búsqueda.</small>
+                    </div>
+                </div>
+            `;
+        }
+        
         businessListContainer.style.display = 'block';
-      } else {
-        console.warn("⚠️ No se encontró el contenedor de la lista de negocios");
-      }
+        
     } catch (e) {
-      console.error("Error al actualizar la lista de negocios:", e);
-      businessList.innerHTML = `
-        <div class="col-12">
-          <p class="text-center text-danger">Error al cargar los comercios.</p>
-        </div>
-      `;
-      if (businessListContainer) {
+        console.error("Error al actualizar la lista de negocios:", e);
+        businessList.innerHTML = `
+            <div class="col-12">
+                <div class="text-center text-danger py-3">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Error al cargar los comercios cercanos.
+                </div>
+            </div>
+        `;
         businessListContainer.style.display = 'block';
-      }
     }
-  }
+}
+
+// 🆕 FUNCIONES AUXILIARES PARA LA LISTA
+function focusOnBusiness(lat, lng, businessName) {
+    if (!window.map) return;
+    
+    // Centrar el mapa en el negocio
+    window.map.setView([lat, lng], 16);
+    
+    // 🆕 Mostrar notificación sutil en lugar de modal
+    showBusinessNotification(businessName);
+    
+    console.log(`🎯 Centrado en: ${businessName}`);
+}
+
+function showDirections(lat, lng) {
+    // 🆕 Abrir Google Maps en nueva pestaña
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    window.open(url, '_blank');
+}
+
+// 🆕 FUNCIÓN PARA NOTIFICACIÓN SUTIL
+function showBusinessNotification(businessName) {
+    // Crear notificación temporal
+    const notification = document.createElement('div');
+    notification.className = 'business-notification';
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-map-marker-alt text-primary me-2"></i>
+            <span>Centrado en: <strong>${businessName}</strong></span>
+        </div>
+    `;
+    
+    // Estilos para la notificación
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        border-left: 4px solid #3498db;
+        font-size: 14px;
+        animation: slideDown 0.3s ease;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remover después de 3 segundos
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.animation = 'slideUp 0.3s ease';
+            setTimeout(() => notification.parentNode.removeChild(notification), 300);
+        }
+    }, 3000);
+}
 
   // --- FUNCIONES AUXILIARES (EXISTENTES) ---
   function debounce(func, wait, immediate = false) {
@@ -2307,16 +2281,16 @@ if (!closedText) {
 
   setTimeout(showWelcomeModal, 1500);
 
- // 🆕 INICIALIZAR ACTUALIZACIÓN PERIÓDICA DE ESTADOS
-setInterval(() => {
-    updateBusinessStatus();
-    updateRubrosBarStatus();
-}, 60000); // Actualizar cada minuto
+  // 🆕 INICIALIZAR ACTUALIZACIÓN PERIÓDICA DE ESTADOS
+  setInterval(() => {
+      updateBusinessStatus();
+      updateRubrosBarStatus();
+  }, 60000); // Actualizar cada minuto
 
-window.addEventListener('focus', () => {
-    updateBusinessStatus();
-    updateRubrosBarStatus();
-});
+  window.addEventListener('focus', () => {
+      updateBusinessStatus();
+      updateRubrosBarStatus();
+  });
 
   // --- INICIALIZACIÓN FINAL MEJORADA ---
   console.log('🚀 Inicializando app con mejoras...');
@@ -2351,13 +2325,703 @@ window.addEventListener('focus', () => {
   window.setupLocationButton = setupLocationButton;
   window.updateBusinessList = updateBusinessList;
   window.isBusinessOpen = isBusinessOpen;
-  window.updateBusinessStatus = updateBusinessStatus; // 🆕 Exportar nueva función
-  window.updateRubrosBarStatus = updateRubrosBarStatus; // ← AGREGAR ESTA LÍNEA
+  window.updateBusinessStatus = updateBusinessStatus;
+  window.updateRubrosBarStatus = updateRubrosBarStatus;
   
   // Exportar nuevas funciones para compatibilidad
   window.getComercios = () => window.appData.comercios;
   window.getRubros = () => window.appData.rubros;
   window.isAppLoading = () => window.appData.isLoading;
   
+  // 🆕 FUNCIONES PARA LA NUEVA INTERFAZ DE MAPA CON TARJETAS
+
+
+// 🆕 FUNCIONES PARA LA NUEVA INTERFAZ DE MAPA CON TARJETAS
+// 🆕 FUNCIONES PARA LA NUEVA INTERFAZ DE MAPA CON TARJETAS - VERSIÓN CORREGIDA
+
+// Función para crear tarjetas de negocios para el mapa - VERSIÓN CON BOTONES COMPLETOS
+function crearTarjetaMapaNegocio(business) {
+    const isOpen = isBusinessOpen(business.hours);
+    const closedClass = isOpen ? '' : 'business-closed';
+    
+    // Determinar la categoría para el badge
+    const categoryClass = getCategoryClass(business.category);
+    const categoryName = getCategoryName(business.category);
+    
+    // Verificar si tiene website
+    const hasWebsite = business.url && business.url !== '#' && business.url !== '';
+    
+    return `
+        <div class="map-business-card ${closedClass}" 
+             data-business-id="${business.name.replace(/\s+/g, '-').toLowerCase()}" 
+             data-category="${business.category}">
+            <div class="category-badge ${categoryClass}">${categoryName}</div>
+            <h3>${business.name}</h3>
+            <p><i class="fas fa-map-marker-alt"></i> ${business.address || 'Dirección no disponible'}</p>
+            <p><i class="fas fa-phone"></i> ${business.telefono || 'Teléfono no disponible'}</p>
+            <div class="hours">
+                <p class="hours-title">Horarios:</p>
+                <p>${business.hours || 'No especificado'}</p>
+            </div>
+            <div class="card-buttons">
+                <a href="https://wa.me/${business.whatsapp || whatsappNumber}" 
+                   target="_blank" 
+                   class="btn-whatsapp ${!isOpen ? 'disabled' : ''}">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+                <!-- 🆕 BOTÓN WEB -->
+                ${hasWebsite ? `
+                <a href="${business.url}" 
+                   target="_blank" 
+                   class="btn-web"
+                   data-analytics="web"
+                   data-negocio="${business.name}">
+                    <i class="fas fa-globe"></i> Web
+                </a>
+                ` : ''}
+                <!-- 🆕 BOTÓN CÓMO LLEGAR -->
+                <button class="btn-directions how-to-get-btn" 
+                        data-lat="${business.latitude}" 
+                        data-lng="${business.longitude}" 
+                        data-name="${business.name}"
+                        ${!business.latitude || !business.longitude ? 'disabled' : ''}>
+                    <i class="fas fa-directions"></i> Cómo Llegar
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// 🆕 FUNCIONES PARA EL BOTÓN "CÓMO LLEGAR"
+
+// 🆕 FUNCIONES PARA TODOS LOS BOTONES
+
+// Función para abrir Google Maps con direcciones
+function openGoogleMapsDirections(lat, lng, businessName) {
+    if (!lat || !lng) {
+        showBusinessNotification('Ubicación no disponible para este negocio');
+        return;
+    }
+
+    // Codificar el nombre del negocio para la URL
+    const encodedName = encodeURIComponent(businessName);
+    
+    // Primero intentamos obtener la ubicación actual del usuario
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+                
+                // URL de Google Maps con direcciones desde la ubicación actual
+                const mapsUrl = `https://www.google.com/maps/dir/${userLat},${userLng}/${lat},${lng}/@${userLat},${userLng},15z`;
+                
+                window.open(mapsUrl, '_blank');
+                
+                // 🆕 Track analytics
+                trackButtonClick('directions', businessName);
+            },
+            function(error) {
+                // Si no se puede obtener la ubicación, abrir solo la ubicación del negocio
+                console.error('Error obteniendo ubicación:', error);
+                const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}&ll=${lat},${lng}&z=15`;
+                window.open(mapsUrl, '_blank');
+                trackButtonClick('directions', businessName);
+            }
+        );
+    } else {
+        // Navegador no soporta geolocalización
+        const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}&ll=${lat},${lng}&z=15`;
+        window.open(mapsUrl, '_blank');
+        trackButtonClick('directions', businessName);
+    }
+}
+
+// 🆕 Función para trackear clicks en botones
+function trackButtonClick(action, businessName) {
+    if (typeof gtag === "function") {
+        gtag("event", `click_${action}`, {
+            negocio: businessName,
+            location: 'map_cards'
+        });
+    }
+    console.log(`📊 Botón ${action} clickeado para: ${businessName}`);
+}
+
+// 🆕 Función para manejar el clic en el botón "Cómo Llegar"
+function setupDirectionsButtons() {
+    // Usar delegación de eventos para manejar clics en los botones
+    document.addEventListener('click', function(e) {
+        // Manejar botón "Cómo Llegar"
+        if (e.target.classList.contains('how-to-get-btn') || 
+            e.target.closest('.how-to-get-btn')) {
+            
+            const button = e.target.classList.contains('how-to-get-btn') ? 
+                           e.target : e.target.closest('.how-to-get-btn');
+            
+            if (button.disabled) return;
+            
+            const lat = button.getAttribute('data-lat');
+            const lng = button.getAttribute('data-lng');
+            const name = button.getAttribute('data-name');
+            
+            // Redireccionar a Google Maps
+            openGoogleMapsDirections(lat, lng, name);
+            
+            // Prevenir propagación del evento
+            e.stopPropagation();
+        }
+        
+        // 🆕 Manejar botones de analytics (Web)
+        if (e.target.closest('[data-analytics]')) {
+            const element = e.target.closest('[data-analytics]');
+            const action = element.getAttribute('data-analytics');
+            const businessName = element.getAttribute('data-negocio') || 'Desconocido';
+            
+            trackButtonClick(action, businessName);
+        }
+    });
+}
+
+// 🆕 Función para actualizar botones en las tarjetas
+function updateCardButtons() {
+    const cardsContainer = document.getElementById('cards-container');
+    if (!cardsContainer) return;
+    
+    // Actualizar botones de direcciones
+    const directionButtons = cardsContainer.querySelectorAll('.how-to-get-btn');
+    directionButtons.forEach(button => {
+        const lat = button.getAttribute('data-lat');
+        const lng = button.getAttribute('data-lng');
+        
+        // Deshabilitar botón si no hay coordenadas
+        if (!lat || !lng || lat === 'null' || lng === 'null') {
+            button.disabled = true;
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+            button.title = 'Ubicación no disponible';
+        } else {
+            button.disabled = false;
+            button.style.opacity = '1';
+            button.style.cursor = 'pointer';
+            button.title = 'Abrir en Google Maps';
+        }
+    });
+    
+    // 🆕 Actualizar botones de WhatsApp según horario
+    const whatsappButtons = cardsContainer.querySelectorAll('.btn-whatsapp');
+    whatsappButtons.forEach(button => {
+        const isOpen = !button.classList.contains('disabled');
+        button.title = isOpen ? 'Contactar por WhatsApp' : 'Negocio cerrado';
+    });
+    
+    // 🆕 Actualizar botones Web
+    const webButtons = cardsContainer.querySelectorAll('.btn-web');
+    webButtons.forEach(button => {
+        button.title = 'Visitar sitio web';
+    });
+}
+
+// 🆕 Función para manejar el clic en el botón "Cómo Llegar"
+function setupDirectionsButtons() {
+    // Usar delegación de eventos para manejar clics en los botones
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('how-to-get-btn') || 
+            e.target.closest('.how-to-get-btn')) {
+            
+            const button = e.target.classList.contains('how-to-get-btn') ? 
+                           e.target : e.target.closest('.how-to-get-btn');
+            
+            if (button.disabled) return;
+            
+            const lat = button.getAttribute('data-lat');
+            const lng = button.getAttribute('data-lng');
+            const name = button.getAttribute('data-name');
+            
+            // Redireccionar a Google Maps
+            openGoogleMapsDirections(lat, lng, name);
+            
+            // Prevenir propagación del evento
+            e.stopPropagation();
+        }
+    });
+}
+
+// 🆕 Función para actualizar botones de direcciones en las tarjetas
+function updateDirectionsButtons() {
+    const cardsContainer = document.getElementById('cards-container');
+    if (!cardsContainer) return;
+    
+    const directionButtons = cardsContainer.querySelectorAll('.how-to-get-btn');
+    
+    directionButtons.forEach(button => {
+        const lat = button.getAttribute('data-lat');
+        const lng = button.getAttribute('data-lng');
+        
+        // Deshabilitar botón si no hay coordenadas
+        if (!lat || !lng || lat === 'null' || lng === 'null') {
+            button.disabled = true;
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+            button.title = 'Ubicación no disponible';
+        } else {
+            button.disabled = false;
+            button.style.opacity = '1';
+            button.style.cursor = 'pointer';
+            button.title = 'Abrir en Google Maps';
+        }
+    });
+}
+
+// Función para obtener clase de categoría
+function getCategoryClass(category) {
+    const categoryMap = {
+        'panaderias': 'supermarket',
+        'verdulerias': 'grocery', 
+        'farmacias': 'pharmacy',
+        'ropa': 'clothing',
+        'carnicerias': 'supermarket',
+        'kioscos': 'electronics',
+        'cafeterias': 'electronics',
+        'fiambrerias': 'supermarket',
+        'mascotas': 'electronics',
+        'barberias': 'electronics',
+        'ferreterias': 'electronics',
+        'veterinarias': 'pharmacy',
+        'pastas': 'supermarket',
+        'talleres': 'electronics',
+        'librerias': 'electronics',
+        'mates': 'electronics',
+        'florerias': 'electronics',
+        'comida': 'electronics',
+        'granjas': 'grocery',
+        'muebles': 'electronics',
+        'uñas': 'electronics'
+    };
+    return categoryMap[category] || 'electronics';
+}
+
+// Función para obtener nombre de categoría
+function getCategoryName(category) {
+    const nameMap = {
+        'panaderias': 'Panadería',
+        'verdulerias': 'Verdulería',
+        'farmacias': 'Farmacia', 
+        'ropa': 'Ropa',
+        'carnicerias': 'Carnicería',
+        'kioscos': 'Kiosco',
+        'cafeterias': 'Cafetería',
+        'fiambrerias': 'Fiambrería',
+        'mascotas': 'Mascotas',
+        'barberias': 'Barbería',
+        'ferreterias': 'Ferretería',
+        'veterinarias': 'Veterinaria',
+        'pastas': 'Pastas',
+        'talleres': 'Taller',
+        'librerias': 'Librería',
+        'mates': 'Mates',
+        'florerias': 'Florería',
+        'comida': 'Comida',
+        'granjas': 'Granja',
+        'muebles': 'Muebles',
+        'uñas': 'Uñas'
+    };
+    return nameMap[category] || 'Otros';
+}
+
+// Función para crear icono personalizado según categoría - VERSIÓN CORREGIDA
+function createCustomIcon(category) {
+    const categoryColors = {
+        supermarket: '#3498db',
+        clothing: '#e74c3c',
+        grocery: '#2ecc71', 
+        pharmacy: '#9b59b6',
+        electronics: '#f39c12'
+    };
+    
+    const color = categoryColors[getCategoryClass(category)] || '#f39c12';
+    
+    return L.divIcon({
+        className: 'custom-marker', // 🆕 Cambiado a custom-marker
+        html: `<div class="marker-dot" style="background-color: ${color};"></div>`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
+    });
+}
+
+// Función para actualizar las tarjetas del mapa - VERSIÓN MEJORADA
+function updateMapCards(businesses) {
+    const cardsContainer = document.getElementById('cards-container');
+    if (!cardsContainer) {
+        console.log('⏳ Esperando contenedor de tarjetas...');
+        setTimeout(() => updateMapCards(businesses), 500);
+        return;
+    }
+    
+    const businessesWithCoords = businesses.filter(business => 
+        business.latitude && business.longitude
+    );
+    
+    if (businessesWithCoords.length === 0) {
+        cardsContainer.innerHTML = `
+            <div class="text-center text-muted py-4">
+                <i class="fas fa-store-slash fa-2x mb-3"></i>
+                <p>No hay negocios con ubicación disponible.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const cardsHTML = businessesWithCoords.map(business => 
+        crearTarjetaMapaNegocio(business)
+    ).join('');
+    
+    cardsContainer.innerHTML = cardsHTML;
+    
+    // 🆕 Actualizar estado de todos los botones
+    updateCardButtons();
+    
+    // Agregar event listeners a las tarjetas
+    cardsContainer.querySelectorAll('.map-business-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const businessId = this.getAttribute('data-business-id');
+            highlightMapCard(businessId);
+            
+            // Centrar mapa en el negocio
+            const business = businesses.find(b => 
+                b.name.replace(/\s+/g, '-').toLowerCase() === businessId
+            );
+            if (business && business.latitude && business.longitude) {
+                window.map.setView([business.latitude, business.longitude], 16);
+            }
+        });
+    });
+    
+    console.log(`✅ ${businessesWithCoords.length} tarjetas de mapa actualizadas`);
+}
+
+// Función para resaltar tarjeta en el mapa
+function highlightMapCard(businessId) {
+    // Quitar clase activa de todas las tarjetas
+    document.querySelectorAll('.map-business-card').forEach(card => {
+        card.classList.remove('active');
+    });
+    
+    // Añadir clase activa a la tarjeta seleccionada
+    const card = document.querySelector(`[data-business-id="${businessId}"]`);
+    if (card) {
+        card.classList.add('active');
+        
+        // Desplazar horizontalmente para mostrar la tarjeta
+        card.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'center'
+        });
+    }
+}
+
+// Inicializar filtros del mapa - VERSIÓN MEJORADA
+function initMapFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    if (filterButtons.length === 0) {
+        console.log('⏳ Esperando botones de filtro...');
+        setTimeout(initMapFilters, 500);
+        return;
+    }
+    
+    filterButtons.forEach(btn => {
+        // 🆕 Remover event listeners existentes para evitar duplicados
+        btn.replaceWith(btn.cloneNode(true));
+    });
+    
+    // 🆕 Volver a obtener los botones después del clone
+    const refreshedButtons = document.querySelectorAll('.filter-btn');
+    
+    refreshedButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            console.log('🎯 Filtro clickeado:', this.getAttribute('data-category'));
+            
+            // Quitar clase activa de todos los botones
+            refreshedButtons.forEach(b => {
+                b.classList.remove('active');
+            });
+            
+            // Añadir clase activa al botón clickeado
+            this.classList.add('active');
+            
+            // Filtrar negocios
+            const category = this.getAttribute('data-category');
+            filterMapBusinesses(category);
+        });
+    });
+    
+    console.log('✅ Filtros de mapa inicializados correctamente');
+}
+
+// Función para filtrar negocios en el mapa - VERSIÓN MEJORADA
+function filterMapBusinesses(category) {
+    console.log(`🔍 Aplicando filtro: ${category}`);
+    
+    let filteredBusinesses;
+    
+    if (category === 'all') {
+        filteredBusinesses = window.businesses;
+    } else {
+        filteredBusinesses = window.businesses.filter(business => {
+            // 🆕 Búsqueda más flexible por categoría
+            return business.category === category || 
+                   (business.category && business.category.includes(category));
+        });
+    }
+    
+    console.log(`📊 Resultados del filtro: ${filteredBusinesses.length} negocios`);
+    
+    // Actualizar marcadores en el mapa
+    updateMapMarkers(filteredBusinesses);
+    
+    // Actualizar tarjetas
+    updateMapCards(filteredBusinesses);
+}
+
+// Función para actualizar marcadores del mapa
+function updateMapMarkers(businesses) {
+    if (!window.map) {
+        console.log('⏳ Esperando mapa...');
+        setTimeout(() => updateMapMarkers(businesses), 500);
+        return;
+    }
+    
+    // Limpiar marcadores existentes
+    if (window.businessMarkers) {
+        window.map.removeLayer(window.businessMarkers);
+    }
+    
+    window.businessMarkers = L.featureGroup();
+    
+    const businessesWithCoords = businesses.filter(business => 
+        business.latitude && business.longitude
+    );
+    
+    const markers = businessesWithCoords.map(business => {
+        const isOpen = isBusinessOpen(business.hours);
+        
+        const marker = L.marker([business.latitude, business.longitude], {
+            icon: createCustomIcon(business.category)
+        });
+        
+       // En la función updateMapMarkers, actualiza el popupContent:
+     // En la función updateMapMarkers, actualiza el popupContent:
+        const popupContent = `
+            <div class="custom-popup">
+                <h6>${business.name}</h6>
+                <p><i class="fas fa-map-marker-alt"></i> ${business.address || 'Dirección no disponible'}</p>
+                <p><i class="fas fa-clock"></i> ${business.hours || 'Horario no disponible'}</p>
+                <p><i class="fas fa-phone"></i> ${business.telefono || 'Teléfono no disponible'}</p>
+                <div class="d-flex gap-2 mt-2 flex-wrap">
+                    <a href="https://wa.me/${business.whatsapp}" 
+                       target="_blank" 
+                       class="btn btn-sm btn-success"
+                       data-analytics="whatsapp"
+                       data-negocio="${business.name}">
+                        <i class="fab fa-whatsapp me-1"></i>WhatsApp
+                    </a>
+                    <!-- 🆕 BOTÓN WEB EN POPUP -->
+                    ${business.url && business.url !== '#' ? `
+                    <a href="${business.url}" 
+                       target="_blank" 
+                       class="btn btn-sm btn-info"
+                       data-analytics="web"
+                       data-negocio="${business.name}">
+                        <i class="fas fa-globe me-1"></i>Web
+                    </a>
+                    ` : ''}
+                    <!-- 🆕 BOTÓN CÓMO LLEGAR EN POPUP -->
+                    <button class="btn btn-sm btn-primary how-to-get-btn"
+                            data-lat="${business.latitude}" 
+                            data-lng="${business.longitude}" 
+                            data-name="${business.name}"
+                            onclick="event.stopPropagation(); openGoogleMapsDirections(${business.latitude}, ${business.longitude}, '${business.name.replace(/'/g, "\\'")}')"
+                            ${!business.latitude || !business.longitude ? 'disabled' : ''}>
+                        <i class="fas fa-directions me-1"></i>Cómo Llegar
+                    </button>
+                </div>
+            </div>
+        `;
+        marker.bindPopup(popupContent);
+        
+        marker.on('click', function() {
+            const businessId = business.name.replace(/\s+/g, '-').toLowerCase();
+            highlightMapCard(businessId);
+        });
+        
+        return marker;
+    });
+    
+    // 🆕 USAR CLUSTERING MEJORADO
+    const clusterGroup = L.markerClusterGroup({
+        maxClusterRadius: 50,
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: true,
+        zoomToBoundsOnClick: true,
+        iconCreateFunction: function(cluster) {
+            const count = cluster.getChildCount();
+            return L.divIcon({
+                html: `<div class="marker-cluster">${count}</div>`,
+                className: 'marker-cluster',
+                iconSize: [40, 40]
+            });
+        }
+    });
+    
+    clusterGroup.addLayers(markers);
+    window.businessMarkers.addLayer(clusterGroup);
+    window.businessMarkers.addTo(window.map);
+    
+    // Ajustar vista del mapa si hay marcadores
+    if (markers.length > 0) {
+        const group = new L.featureGroup(markers);
+        window.map.fitBounds(group.getBounds().pad(0.1));
+    }
+    
+    console.log(`✅ ${markers.length} marcadores actualizados en el mapa`);
+}
+
+// Agregar leyenda al mapa - VERSIÓN SIN DUPLICADOS
+function addMapLegend() {
+    if (!window.map) return;
+    
+    // 🆕 Limpiar leyenda existente antes de agregar una nueva
+    if (window.mapLegend) {
+        window.map.removeControl(window.mapLegend);
+    }
+    
+    const legend = L.control({position: 'bottomright'});
+    
+    legend.onAdd = function(map) {
+        const div = L.DomUtil.create('div', 'legend');
+        let html = '<h4>Tipos de Negocios</h4>';
+        
+        const categories = [
+            { class: 'supermarket', name: 'Alimentos' },
+            { class: 'clothing', name: 'Ropa' },
+            { class: 'grocery', name: 'Verdulerías' },
+            { class: 'pharmacy', name: 'Farmacias' },
+            { class: 'electronics', name: 'Otros' }
+        ];
+        
+        const colors = {
+            supermarket: '#3498db',
+            clothing: '#e74c3c', 
+            grocery: '#2ecc71',
+            pharmacy: '#9b59b6',
+            electronics: '#f39c12'
+        };
+        
+        categories.forEach(cat => {
+            const color = colors[cat.class];
+            html += `
+                <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                    <div style="width: 18px; height: 18px; background: ${color}; border-radius: 50%; margin-right: 8px; border: 2px solid white; box-shadow: 0 0 3px rgba(0,0,0,0.3);"></div>
+                    <span style="font-size: 12px;">${cat.name}</span>
+                </div>
+            `;
+        });
+        
+        div.innerHTML = html;
+        return div;
+    };
+    
+    legend.addTo(window.map);
+    window.mapLegend = legend; // 🆕 Guardar referencia para evitar duplicados
+    console.log('✅ Leyenda del mapa agregada (sin duplicados)');
+}
+
+// Inicializar la nueva interfaz del mapa - VERSIÓN ACTUALIZADA
+function initNewMapInterface() {
+    console.log('🔄 Iniciando nueva interfaz de mapa...');
+    
+    if (!window.map) {
+        console.log('⏳ Esperando inicialización del mapa...');
+        setTimeout(initNewMapInterface, 500);
+        return;
+    }
+    
+    if (!window.businesses || window.businesses.length === 0) {
+        console.log('⏳ Esperando datos de negocios...');
+        setTimeout(initNewMapInterface, 500);
+        return;
+    }
+    
+    console.log('🎯 Inicializando componentes del nuevo mapa...');
+    
+    // 🆕 Forzar redimensionamiento del mapa
+    setTimeout(() => {
+        window.map.invalidateSize(true);
+    }, 100);
+    
+    // Inicializar componentes en secuencia con delays
+    setTimeout(() => initMapFilters(), 200);
+    setTimeout(() => updateMapMarkers(window.businesses), 400);
+    setTimeout(() => updateMapCards(window.businesses), 600);
+    setTimeout(() => addMapLegend(), 800);
+    setTimeout(() => setupLocationButton(), 1000);
+    setTimeout(() => setupDirectionsButtons(), 1200); // 🆕 Configurar botones de direcciones
+    
+    console.log('✅ Inicialización del nuevo mapa programada');
+}
+
+// Llamar a la inicialización después de que todo esté cargado
+setTimeout(() => {
+    if (window.businesses.length > 0) {
+        initNewMapInterface();
+    }
+}, 3000);
+
+// 🆕 FUNCIÓN SEGURA PARA WHATSAPP - Añadir al main-2.js
+function openWhatsAppSecure(phone, message = '') {
+    // Verificar seguridad primero
+    if (!window.appSecurity) {
+        console.warn('⚠️ Seguridad no disponible, usando método alternativo');
+        openWhatsAppFallback(phone, message);
+        return;
+    }
+
+    // Validar y sanitizar el número
+    const safePhone = window.appSecurity.validatePhoneNumber(phone);
+    
+    if (!safePhone) {
+        console.error('🔒 No se pudo validar el número de WhatsApp:', phone);
+        alert('El número de WhatsApp no es válido.');
+        return;
+    }
+
+    // Codificar mensaje de forma segura
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${safePhone}${message ? `?text=${encodedMessage}` : ''}`;
+    
+    // Abrir de forma segura
+    window.appSecurity.openExternalLink(whatsappUrl);
+    
+    // Log de seguridad
+    window.appSecurity.logSecurityEvent('whatsapp_opened', {
+        phone: safePhone,
+        messageLength: message.length
+    });
+}
+
+// 🆕 Función de respaldo por si falla la seguridad
+function openWhatsAppFallback(phone, message = '') {
+    try {
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/${phone}${message ? `?text=${encodedMessage}` : ''}`;
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    } catch (error) {
+        console.error('❌ Error abriendo WhatsApp:', error);
+        alert('Error al abrir WhatsApp. Por favor, intenta manualmente.');
+    }
+}
+
   console.log('✅ main-2.js mejorado completamente cargado con estados de negocios');
 });

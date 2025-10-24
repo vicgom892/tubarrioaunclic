@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+   <script src="../shared/js/security-config.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="description" content="Tu Barrio a un Clik - Conectamos los mejores comercios de Ituzaingó con sus vecinos. Encuentra panaderías, verdulerías, fiambrerías y más en tu barrio.">
@@ -2552,26 +2553,73 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
   </section>
   
-<!-- Contenedor del mapa -->
-<div id="map"></div>
-
-<!-- Botón para obtener ubicación -->
-<button id="locateMe" class="btn btn-primary mt-3">
-  <i class="fas fa-location-dot me-1"></i> Mostrar mi ubicación
-</button>
-
-<!-- Panel debajo del mapa (como un modal, pero integrado) -->
-<div class="business-list-container" id="businessListContainer" style="display: none;">
-  <div class="card shadow-sm border-0">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-      <h5 class="mb-0">Comercios abiertos cerca de ti</h5>
-      <button type="button" class="btn-close btn-close-white" id="closeBusinessList"></button>
+<!-- === NUEVA SECCIÓN DEL MAPA CON TARJETAS === -->
+<section id="mapa" class="py-5 bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="text-center mb-4 text-dark">Mapa de Negocios Locales</h2>
+        <p class="text-center text-muted mb-4">Explora los diferentes negocios en tu área. Haz clic en cualquier marcador del mapa o en las tarjetas para ver más información.</p>
+      </div>
     </div>
-    <div id="businessList" class="card-body p-0" style="max-height: 400px; overflow-y: auto;">
-      <!-- Aquí se cargarán los negocios -->
+    
+    <!-- Filtros -->
+    <div class="row">
+      <div class="col-12">
+        <div class="map-filters">
+          <button class="filter-btn active" data-category="all">Todos</button>
+          <button class="filter-btn" data-category="panaderias">Panaderías</button>
+          <button class="filter-btn" data-category="pastas">pastas</button>
+          <button class="filter-btn" data-category="fiambrerias">Fiambrerías</button>
+          <button class="filter-btn" data-category="comida">Comida</button>
+          <button class="filter-btn" data-category="granja">Granjas</button>
+          <button class="filter-btn" data-category="verdulerias">Verdulerías</button>
+          <button class="filter-btn" data-category="farmacias">Farmacias</button>
+          <button class="filter-btn" data-category="ropa">Tiendas</button>
+          <button class="filter-btn" data-category="carnicerias">Carnicerías</button>
+          <button class="filter-btn" data-category="kioscos">Kioscos</button>
+          <button class="filter-btn" data-category="cafeterias">Cafeterías</button>
+          <button class="filter-btn" data-category="mascotas">Mascotas</button>
+          <button class="filter-btn" data-category="barberias">Barberías</button>
+          <button class="filter-btn" data-category="cafeterias">Cafeterías</button>
+          <button class="filter-btn" data-category="ferreterias">Ferreterías</button>
+          <button class="filter-btn" data-category="talleres">Talleres</button>
+          <button class="filter-btn" data-category="uñas">Uñas</button>
+          <button class="filter-btn" data-category="mates">Mates</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <!-- Contenedor del mapa -->
+        <div class="map-container">
+          <div id="map"></div>
+        </div>
+        
+       <!-- En tu sección del mapa, asegúrate de que esta parte esté así: -->
+        <div class="business-list-container mt-4" id="businessListContainer" style="display: none;">
+          
+            <div id="businessList" class="row g-3">
+              <!-- Los negocios se cargarán aquí dinámicamente -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tarjetas scrollables -->
+        <div class="cards-scroll-container mt-4">
+          <div class="cards-container" id="cards-container">
+            <!-- Las tarjetas se generarán dinámicamente con JavaScript -->
+            <div class="text-center text-muted py-4">
+              <i class="fas fa-spinner fa-spin me-2"></i>
+              Cargando negocios...
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- Formulario de contacto -->
     <section class="contact-form-section">
@@ -2595,7 +2643,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div id="questions-section" class="questions-section">
                 <!-- Preguntas dinámicas se insertan aquí -->
             </div>
-           <button type="button" onclick="submitForm()">Enviar</button> 
+           <button type="button" id="submitFormBtn">Enviar</button> 
         </form>
     </section>
 

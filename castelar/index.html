@@ -123,6 +123,7 @@
   <link rel="stylesheet" href="../shared/css/fondo.css">
   <!-- En el <head> -->
   <link rel="stylesheet" href="../shared/js/chatbot/chatbot.css">
+  <link rel="stylesheet" href="../shared/css/favorites.css">
 
 </head>
 <body class="bg-light">
@@ -146,6 +147,13 @@
 <header id="mainHeader" class="modern-header bg-white shadow-sm">
   <div class="container d-flex justify-content-between align-items-center py-2">
     <!-- Menú escritorio - dropdowns independientes -->
+     <!-- Logo -->
+    <div class="logo text-center">
+      <a href="index.html">
+        <img src="img/icon-abeja-sola.png" alt="Tu Barrio a un Clik Logo" class="logo-img">
+      </a>
+    </div>
+    
     <nav class="d-none d-lg-flex align-items-center gap-2">
     
       <!-- Alimentos -->
@@ -231,12 +239,6 @@
       </div>
     </nav>
 
-    <!-- Logo -->
-    <div class="logo text-center">
-      <a href="index.html">
-        <img src="img/icon-abeja-sola.png" alt="Tu Barrio a un Clik Logo" class="logo-img">
-      </a>
-    </div>
 
     <!-- Barra de búsqueda mejorada -->
     <div class="search-bar">
@@ -250,24 +252,32 @@
       <div class="suggestions-dropdown" id="suggestionsDropdown"></div>
     </div>
 
-    <!-- 🔔 Campanita -->
-    <button id="btnNotificacion" class="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-red-50 transition-all duration-200 focus:outline-none group" aria-label="Notificaciones">
-      <svg id="campanita" class="w-6 h-6 text-red-600 group-hover:text-red-700" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.93 6 11v5l-2 2v1h16v-1l-2-2z"/>
-      </svg>
-      <span id="badgeNotificacion" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center scale-0 opacity-0">
-        1
-      </span>
-    </button>
+    <!-- 🔔 Campanita y ❤️ Favoritos -->
+    <div class="d-flex align-items-center gap-3">
+      <!-- Botón de Favoritos - Versión Elegante -->
+      <button id="favoritesBtn" class="favorites-btn-header" data-bs-toggle="modal" data-bs-target="#favoritesModal" title="Tus comercios favoritos">
+        <i class="fas fa-heart"></i>
+        <span id="favoritesCount" class="favorites-count-header">0</span>
+      </button>
     
+      <!-- 🔔 Campanita de Notificaciones -->
+      <button id="btnNotificacion" class="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-red-50 transition-all duration-200 focus:outline-none group" aria-label="Notificaciones" title="Notificaciones y ofertas">
+        <svg id="campanita" class="w-6 h-6 text-red-600 group-hover:text-red-700" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.93 6 11v5l-2 2v1h16v-1l-2-2z"/>
+        </svg>
+        <span id="badgeNotificacion" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center scale-0 opacity-0">
+          1
+        </span>
+      </button>
+    </div>
 
     <!-- Menú derecha escritorio -->
     <nav class="d-none d-lg-flex align-items-center gap-3">
       <a href="#map" class="text-dark font-weight-bold d-flex align-items-center">
-        <i class="fas fa-map-marker-alt me-1"></i> Ubicación
+        <i class="fas fa-map-marker-alt me-1"></i> Maps
       </a>
       <a href="#contact-form" class="text-dark font-weight-bold d-flex align-items-center">
-        <i class="fas fa-envelope me-1"></i> Contacto
+        <i class="fas fa-envelope me-1"></i>Contacto
       </a>
     </nav>
 
@@ -277,6 +287,33 @@
     </button>
   </div>
 </header>
+
+<!-- Modal de Favoritos -->
+<div class="modal fade favorites-modal" id="favoritesModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">❤️ Tus Comercios Favoritos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="favoritesList">
+          <div class="text-center text-muted py-4" id="emptyFavorites">
+            <i class="fas fa-heart fa-2x mb-3"></i>
+            <p>No tienes comercios favoritos aún</p>
+            <small>Haz clic en el ❤️ de los comercios que te gusten</small>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" id="clearAllFavorites">
+          <i class="fas fa-trash"></i> Limpiar Todos
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal de notificaciones (estilo moderno, sin Bootstrap) -->
 <div id="modalNotificaciones" class="fixed inset-0 bg-black bg-opacity-20 flex items-start justify-center z-50 hidden pt-20 overflow-y-auto">
@@ -329,7 +366,7 @@
   </div>
 </div>
   
-  <!-- Modal de menú para móviles -->
+<!-- Modal de menú para móviles -->
 <div class="modal fade" id="mobileMenuModal" tabindex="-1" aria-labelledby="mobileMenuModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm modal-dialog-scrollable">
     <div class="modal-content">
@@ -508,8 +545,7 @@
     </div>
   </div>
 </div>
-  
-  <!-- Barra de rubros - completamente responsive -->
+
 <!-- Barra de rubros - completamente responsive -->
 <div class="rubros-bar" id="rubrosBar">
   <div class="rubros-container">
@@ -2866,7 +2902,8 @@ document.addEventListener('DOMContentLoaded', function() {
   <!-- Scripts principales -->
   <script src="../shared/js/main-2.js" defer></script>
   <script src="../shared/js/search-functionality.js" defer></script>
-  <!-- Antes de </body> -->
+
+  <script src="../shared/js/favorites-system.js" defer></script>
   <script src="../shared/js/chatbot/chat-2.js" defer></script>
   <script src="../shared/js/form.js" defer></script>
   <script src="../shared/js/testimonials.js" defer></script>

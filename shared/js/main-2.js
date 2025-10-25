@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // --- NUEVA CONFIGURACIÓN MEJORADA ---
   const APP_CONFIG = {
-    VERSION: 'v65-multi',
+    VERSION: 'v70-multi',
     CACHE_STRATEGIES: {
         STATIC: 'static',
         ASSETS: 'assets', 

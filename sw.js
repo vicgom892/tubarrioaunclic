@@ -40,7 +40,7 @@ const CONFIG = {
     baseDelay: 1000,
     maxDelay: 4000
   },
-  LOCALIDADES: ['castelar', 'moron', 'ituzaingo', 'ciudadela', 'merlo', 'haedo', 'ramos']
+  LOCALIDADES: ['castelar', 'moron', 'ituzaingo', 'ciudadela', 'merlo', 'haedo', 'ramos','padua']
 };
 
 const STATIC_CACHE = `${CONFIG.CACHES.STATIC}-${CONFIG.CACHE_VERSION}`;
@@ -383,6 +383,7 @@ async function findHtmlFallback(pathname) {
     '/haedo': '/haedo/index.html',
     '/haedo/': '/haedo/index.html',
     '/ramos': '/ramos/index.html',
+    '/padua': '/padua/index.html',
     '/ramos/': '/ramos/index.html'
   };
   

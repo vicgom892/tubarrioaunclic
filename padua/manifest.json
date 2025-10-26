@@ -1,0 +1,25 @@
+{
+  "name": "Tu Barrio a un Clik - Padua",
+  "short_name": "BarrioClik Padua",
+  "description": "Conectamos los mejores comercios de Padua con sus vecinos",
+  "start_url": "/padua/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#e1306c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "img/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["shopping", "business", "food"],
+  "lang": "es-AR",
+  "scope": "/padua/"
+}

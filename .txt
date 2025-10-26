@@ -1,0 +1,22 @@
+castelar
+    data/cupones/castelar-cupones.json
+      panaderias.json
+      carnicerias.json
+      farmacias.json    
+      etc.json
+    datos
+    emprendimientos
+       promociones.json
+    img
+       todas las imagenes
+    negocios
+       todos los html de los negocios que tienen web
+    ofertas
+       todas las ofertas.json
+    oficios
+       todos los oficios.json
+    comunidad-de-ofertas.html
+    emprendimientos.htmlindex.html
+    manifest.json
+    offline.html
+    oficios-profeciones.html

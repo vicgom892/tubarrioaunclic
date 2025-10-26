@@ -672,6 +672,7 @@ document.getElementById('businessModal')?.addEventListener('hidden.bs.modal', fu
                        currentPath.includes('/merlo/') ||
                        currentPath.includes('/haedo/') ||
                        currentPath.includes('/ramos-mejia/') ||
+                       currentPath.includes('/padua/') ||
                        (currentPath.split('/').filter(Boolean).length > 1 && 
                         !currentPath.endsWith('/index.html'));
     

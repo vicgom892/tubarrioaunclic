@@ -1535,18 +1535,19 @@
         }
 
         // =============================================
-        // DETECCIÓN DE UBICACIÓN MEJORADA
+        // DETECCIÓN DE UBICACIÓN MEJORADA - COORDENADAS CORREGIDAS
         // =============================================
 
+        // COORDENADAS PRECISAS CORREGIDAS PARA CASTELAR Y ZONA OESTE
         const supportedLocations = [
-            { name: 'Castelar', slug: 'castelar', lat: -34.6514, lng: -58.6722 },
-            { name: 'Ituzaingó', slug: 'ituzaingo', lat: -34.6667, lng: -58.7000 },
-            { name: 'Morón', slug: 'moron', lat: -34.6500, lng: -58.6167 },
-            { name: 'Ciudadela', slug: 'ciudadela', lat: -34.6333, lng: -58.5833 },
-            { name: 'Merlo', slug: 'merlo', lat: -34.6667, lng: -58.7333 },
-            { name: 'Haedo', slug: 'haedo', lat: -34.6333, lng: -58.6000 },
-            { name: 'Padua', slug: 'padua', lat: -34.6783, lng: -58.6510 },
-            { name: 'Ramos Mejía', slug: 'ramos', lat: -34.6333, lng: -58.5667 }
+            { name: 'Castelar', slug: 'castelar', lat: -34.6489, lng: -58.6475, priority: 1 }, // Coordenadas exactas de Castelar
+            { name: 'Padua', slug: 'padua', lat: -34.6783, lng: -58.6510, priority: 2 },
+            { name: 'Ituzaingó', slug: 'ituzaingo', lat: -34.6589, lng: -58.6662, priority: 3 },
+            { name: 'Morón', slug: 'moron', lat: -34.6534, lng: -58.6198, priority: 4 },
+            { name: 'Haedo', slug: 'haedo', lat: -34.6413, lng: -58.5921, priority: 5 },
+            { name: 'Ciudadela', slug: 'ciudadela', lat: -34.6354, lng: -58.5379, priority: 6 },
+            { name: 'Ramos Mejía', slug: 'ramos', lat: -34.6481, lng: -58.5622, priority: 7 },
+            { name: 'Merlo', slug: 'merlo', lat: -34.6674, lng: -58.7292, priority: 8 }
         ];
 
         let userLocation = null;
@@ -1558,7 +1559,7 @@
             window.location.href = `${slug}/index.html`;
         }
 
-        // Calcular distancia usando fórmula de Haversine
+        // Calcular distancia usando fórmula de Haversine (MEJORADA)
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371; // Radio de la tierra en km
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -1568,21 +1569,53 @@
                 Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
                 Math.sin(dLon/2) * Math.sin(dLon/2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
+            const distance = R * c;
+            
+            // Para debugging - mostrar en consola
+            console.log(`📍 Distancia calculada: ${distance.toFixed(3)}km desde (${lat1}, ${lon1}) hasta (${lat2}, ${lon2})`);
+            
+            return distance;
         }
 
-        // Encontrar la localidad más cercana
+        // Encontrar la localidad más cercana - FUNCIÓN COMPLETAMENTE REESCRITA
         function findClosestLocation(lat, lng) {
+            console.log('🔍 Iniciando búsqueda de localidad más cercana...');
+            console.log('📍 Tu ubicación detectada:', lat, lng);
+            
             let closest = null;
             let minDistance = Infinity;
+            let distances = [];
 
             for (const location of supportedLocations) {
                 const distance = calculateDistance(lat, lng, location.lat, location.lng);
-                if (distance < minDistance && distance < 8) { // 8 km de radio
+                distances.push({ name: location.name, distance: distance });
+                
+                // PRIORIZAMOS CASTELAR si está dentro de un radio razonable
+                if (location.name === 'Castelar' && distance < 5) { // 5km de radio para Castelar
+                    console.log(`🎯 PRIORIDAD CASTELAR: Encontrado a ${distance.toFixed(2)}km`);
+                    return location;
+                }
+                
+                // Para otras localidades, buscamos la más cercana
+                if (distance < minDistance) {
                     minDistance = distance;
                     closest = location;
                 }
             }
+            
+            // Mostrar todas las distancias en consola para debugging
+            console.log('📊 Distancias a todas las localidades:');
+            distances.sort((a, b) => a.distance - b.distance);
+            distances.forEach(item => {
+                console.log(`   ${item.name}: ${item.distance.toFixed(2)}km`);
+            });
+            
+            if (closest) {
+                console.log(`✅ Localidad detectada: ${closest.name} (${minDistance.toFixed(2)}km)`);
+            } else {
+                console.log('❌ No se encontró localidad cercana');
+            }
+            
             return closest;
         }
 
@@ -1615,14 +1648,18 @@
 
         // Manejar errores de geolocalización
         function handleGeolocationError(error) {
+            console.error('Error de geolocalización:', error);
+            
             const errorMessages = {
                 1: 'Para usar la detección automática, necesitamos acceso a tu ubicación. Por favor, permite el acceso en la configuración de tu navegador.',
-                2: 'No pudimos obtener tu ubicación. Verifica tu conexión a internet.',
+                2: 'No pudimos obtener tu ubicación. Verifica tu conexión a internet o GPS.',
                 3: 'La detección de ubicación tardó demasiado. Intenta nuevamente.',
                 0: 'Error desconocido al detectar la ubicación.'
             };
             
-            showError(errorMessages[error.code] || errorMessages[0]);
+            const errorMessage = errorMessages[error.code] || errorMessages[0];
+            showError(errorMessage);
+            console.log('Detalles del error:', error);
         }
 
         // Resetear botón de detección
@@ -1634,6 +1671,8 @@
 
         // Obtener ubicación del usuario con manejo mejorado de errores
         function getUserLocation() {
+            console.log('📍 Iniciando detección de ubicación...');
+            
             const detectBtn = document.getElementById('detectLocationBtn');
             const originalText = detectBtn.innerHTML;
             
@@ -1646,20 +1685,27 @@
                     detectBtn.innerHTML = originalText;
                     detectBtn.disabled = false;
                     showError('La detección está tomando más tiempo de lo esperado. Intenta nuevamente.');
+                    console.log('⏰ Timeout de geolocalización alcanzado');
                 }
             }, 15000);
 
             if (navigator.geolocation) {
+                console.log('✅ Geolocalización soportada, solicitando permisos...');
+                
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         clearTimeout(timeoutId);
                         const { latitude, longitude } = position.coords;
                         userLocation = { lat: latitude, lng: longitude };
                         
+                        console.log('📍 Ubicación obtenida:', latitude, longitude);
+                        console.log('🎯 Precisión:', position.coords.accuracy, 'metros');
+                        
                         const closestLocation = findClosestLocation(latitude, longitude);
                         if (closestLocation) {
                             detectedCity = closestLocation.name;
                             detectedSlug = closestLocation.slug;
+                            console.log(`✅ Sugiriendo: ${detectedCity}`);
                             showLocationSuggestion();
                         } else {
                             showError('No pudimos detectar una localidad cercana. Por favor seleccioná manualmente.');
@@ -1668,14 +1714,14 @@
                     },
                     (error) => {
                         clearTimeout(timeoutId);
-                        console.log('Error getting location:', error);
+                        console.log('❌ Error obteniendo ubicación:', error);
                         handleGeolocationError(error);
                         resetDetectButton();
                     },
                     { 
                         timeout: 10000,
-                        maximumAge: 60000,
-                        enableHighAccuracy: false // Mejor performance
+                        maximumAge: 300000, // 5 minutos de cache
+                        enableHighAccuracy: true // Mayor precisión para diferenciar Castelar de Padua
                     }
                 );
             } else {
@@ -1694,6 +1740,8 @@
                 document.getElementById('overlay').setAttribute('aria-hidden', 'false');
                 resetDetectButton();
                 
+                console.log(`📍 Modal mostrado para: ${detectedCity}`);
+                
                 // Enfocar el primer botón del modal para accesibilidad
                 setTimeout(() => {
                     document.getElementById('acceptSuggestion').focus();
@@ -1705,6 +1753,7 @@
             document.getElementById('locationSuggestion').classList.remove('show');
             document.getElementById('overlay').classList.remove('show');
             document.getElementById('overlay').setAttribute('aria-hidden', 'true');
+            console.log('❌ Modal de sugerencia cerrado');
         }
 
         // =============================================
@@ -1864,6 +1913,8 @@
         // =============================================
 
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicializando Tu Barrio A Un Click...');
+            
             // Crear partículas de fondo
             createParticles();
 
@@ -1875,11 +1926,16 @@
             
             document.getElementById('acceptSuggestion').addEventListener('click', function() {
                 if (detectedSlug) {
+                    console.log(`✅ Aceptando sugerencia: redirigiendo a ${detectedSlug}`);
                     redirectToApp(detectedSlug);
                 }
             });
             
-            document.getElementById('declineSuggestion').addEventListener('click', hideLocationSuggestion);
+            document.getElementById('declineSuggestion').addEventListener('click', function() {
+                console.log('❌ Rechazando sugerencia');
+                hideLocationSuggestion();
+            });
+            
             document.getElementById('overlay').addEventListener('click', hideLocationSuggestion);
 
             // Cerrar modal con ESC
@@ -1900,12 +1956,13 @@
                     console.log('ℹ️ No se registró SW en raíz (comportamiento esperado)');
                 });
             }
+            
+            console.log('✅ Aplicación inicializada correctamente');
         });
 
         // Manejar errores no capturados
         window.addEventListener('error', function(e) {
             console.error('Error capturado:', e.error);
-            // Aquí podrías enviar el error a un servicio de analytics
         });
 
         // Manejar promesas rechazadas no capturadas
@@ -1913,6 +1970,19 @@
             console.error('Promesa rechazada no capturada:', e.reason);
             e.preventDefault();
         });
+        
+        // Función de debug para probar coordenadas específicas
+        window.debugLocation = function(lat, lng) {
+            console.log('🔍 DEBUG - Probando coordenadas:', lat, lng);
+            const closest = findClosestLocation(lat, lng);
+            if (closest) {
+                console.log(`✅ DEBUG - Localidad detectada: ${closest.name}`);
+                alert(`DEBUG: Localidad detectada: ${closest.name}`);
+            } else {
+                console.log('❌ DEBUG - No se detectó localidad');
+                alert('DEBUG: No se detectó localidad');
+            }
+        };
     </script>
 </body>
 </html>

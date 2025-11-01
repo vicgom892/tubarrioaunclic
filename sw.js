@@ -7,7 +7,7 @@ const isGitHubPages = self.location.hostname.includes('github.io');
 const isLocalhost = self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1';
 const BASE_PATH = isGitHubPages ? '/TU_BARRIO_AUN_CLICK' : '';
 
-const CACHE_VERSION = 'v70-multi';
+const CACHE_VERSION = 'v80-multi';
 
 const CONFIG = {
   CACHE_VERSION: CACHE_VERSION,

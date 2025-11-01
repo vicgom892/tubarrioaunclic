@@ -1,4 +1,5 @@
 // CONFIGURACIÓN DE SEGURIDAD CORREGIDA - Tu Barrio a un Clik
+// ✅ Optimizada para: https://vicgom892.github.io/tubarrioaunclic/
 class SecurityConfig {
     constructor() {
         console.log('🔒 Inicializando sistema de seguridad...');
@@ -16,7 +17,6 @@ class SecurityConfig {
     }
 
     setSecurityHeaders() {
-        // CSP CORREGIDO - SIN frame-ancestors en meta tag
         try {
             const cspMeta = document.createElement('meta');
             cspMeta.httpEquiv = "Content-Security-Policy";
@@ -27,7 +27,6 @@ class SecurityConfig {
             console.warn('⚠️ Error configurando CSP:', error);
         }
 
-        // Headers que SÍ funcionan en meta tags
         const securityHeaders = [
             { httpEquiv: "X-Content-Type-Options", content: "nosniff" },
             { httpEquiv: "Referrer-Policy", content: "strict-origin-when-cross-origin" },
@@ -49,65 +48,44 @@ class SecurityConfig {
     }
 
     generateCSP() {
-        // CSP CORREGIDO - INCLUYE TODOS LOS CDNs QUE USAS
-        return `default-src 'self' 
-                https://tubarrioaunclick.com 
-                https://tubarrioaunclik.github.io;
-               script-src 'self' 'unsafe-inline' 'unsafe-eval'
-                https://tubarrioaunclick.com 
-                https://tubarrioaunclik.github.io
-                https://cdn.jsdelivr.net 
-                https://unpkg.com 
-                https://www.googletagmanager.com 
-                https://code.jquery.com
-                https://cdnjs.cloudflare.com;
-               style-src 'self' 'unsafe-inline'
-                https://tubarrioaunclick.com 
-                https://tubarrioaunclik.github.io
-                https://cdn.jsdelivr.net 
-                https://fonts.googleapis.com
-                https://unpkg.com
-                https://cdnjs.cloudflare.com;
-               font-src 'self' data:
-                https://tubarrioaunclick.com 
-                https://tubarrioaunclik.github.io
-                https://fonts.gstatic.com
-                https://cdnjs.cloudflare.com;
-               img-src 'self' data: blob: https:
-                https://tubarrioaunclick.com 
-                https://tubarrioaunclik.github.io;
-               connect-src 'self'
-                https://tubarrioaunclick.com 
-                https://tubarrioaunclik.github.io
-                https://api.whatsapp.com 
-                https://www.google-analytics.com 
-                https://stats.g.doubleclick.net
-                https://cdn.jsdelivr.net 
-                https://unpkg.com
-                https://cdnjs.cloudflare.com;
-               worker-src 'self' blob:;
-               frame-src 'self'
-                https://tubarrioaunclick.com 
-                https://tubarrioaunclik.github.io;
-               object-src 'none';
-               base-uri 'self';
-               form-action 'self'
-                https://tubarrioaunclick.com 
-                https://tubarrioaunclik.github.io
-                https://api.whatsapp.com 
-                https://wa.me;`;
-    }
+    const isLocal = window.location.hostname.includes('localhost') || 
+                   window.location.hostname.includes('127.0.0.1');
+    
+    const self = "'self'";
+    const githubDomain = "https://vicgom892.github.io";
+
+    // En local, permitir más fuentes para desarrollo
+    const imgSources = isLocal 
+        ? `${self} blob: data: http: https:` 
+        : `${self} blob: data: https:`;
+
+    const connectSources = isLocal
+        ? `${self} ${githubDomain} http: https:`
+        : `${self} ${githubDomain} https://api.whatsapp.com https://www.google-analytics.com https://stats.g.doubleclick.net https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com`;
+
+    return [
+        `default-src ${self} ${isLocal ? 'http: https:' : githubDomain};`,
+        `script-src ${self} 'unsafe-inline' 'unsafe-eval' ${isLocal ? 'http: https:' : githubDomain + ' https://cdn.jsdelivr.net https://unpkg.com https://www.googletagmanager.com https://code.jquery.com https://cdnjs.cloudflare.com'};`,
+        `style-src ${self} 'unsafe-inline' ${isLocal ? 'http: https:' : githubDomain + ' https://cdn.jsdelivr.net https://fonts.googleapis.com https://unpkg.com https://cdnjs.cloudflare.com'};`,
+        `font-src ${self}  ${isLocal ? 'http: https: data:' : githubDomain + ' https://fonts.gstatic.com https://cdnjs.cloudflare.com'};`,
+        `img-src ${imgSources};`, // ✅ Ahora incluye data: y http: en local
+        `connect-src ${connectSources};`,
+        `worker-src ${self} blob:;`,
+        `frame-src ${self} ${isLocal ? 'http: https:' : githubDomain};`,
+        `object-src 'none';`,
+        `base-uri ${self};`,
+        `form-action ${self} ${isLocal ? 'http: https:' : githubDomain + ' https://api.whatsapp.com https://wa.me'};`
+    ].join(' ');
+}
 
     setupErrorHandling() {
         window.addEventListener('error', (e) => {
-            // Ignorar errores de CSP en desarrollo
             if (e.message.includes('Content Security Policy')) {
                 if (window.location.hostname.includes('localhost') || 
                     window.location.hostname.includes('127.0.0.1')) {
-                    return; // No loguear errores de CSP en desarrollo
+                    return;
                 }
             }
-            
             console.error('🔒 Error detectado:', e.message);
             this.logSecurityEvent('javascript_error', {
                 message: e.message,
@@ -130,39 +108,30 @@ class SecurityConfig {
     }
 
     validateEnvironment() {
-        const isProduction = window.location.hostname === 'tubarrioaunclick.com';
-        const isGithubPages = window.location.hostname.includes('github.io');
+        const isGitHubPages = window.location.hostname === 'vicgom892.github.io';
         const isLocal = window.location.hostname.includes('localhost') || 
                        window.location.hostname.includes('127.0.0.1');
-        
-        // En local, no forzar HTTPS
-        if (window.location.protocol !== 'https:' && isProduction && !isLocal) {
-            console.warn('⚠️ PARA PRODUCCIÓN: Es esencial usar HTTPS');
-            this.logSecurityEvent('non_https_production', {
-                protocol: window.location.protocol,
-                hostname: window.location.hostname,
-                localidad: this.getCurrentLocation()
-            });
+
+        // En GitHub Pages, HTTPS es obligatorio y automático
+        if (window.location.protocol !== 'https:' && isGitHubPages) {
+            console.warn('⚠️ GitHub Pages requiere HTTPS');
         }
-        
-        console.log(`✅ Entorno validado: ${isProduction ? 'Producción' : isLocal ? 'Local' : 'GitHub Pages'} - Localidad: ${this.getCurrentLocation()}`);
+
+        console.log(`✅ Entorno validado: ${isGitHubPages ? 'GitHub Pages' : isLocal ? 'Local' : 'Otro'} - Localidad: ${this.getCurrentLocation()}`);
     }
 
     preventClickjacking() {
-        // Protección básica contra clickjacking
-        if (window !== window.top && window.top !== window.self) {
+        if (window !== window.top) {
             console.warn('⚠️ Posible intento de clickjacking detectado');
             this.logSecurityEvent('clickjacking_attempt', {
                 current_url: window.location.href,
                 localidad: this.getCurrentLocation()
             });
         }
-        
         console.log('✅ Protección contra clickjacking activada');
     }
 
     setupNavigationGuard() {
-        // Proteger contra navegación no autorizada entre localidades
         window.addEventListener('beforeunload', (e) => {
             const shouldWarn = document.querySelector('form.dirty');
             if (shouldWarn) {
@@ -171,12 +140,10 @@ class SecurityConfig {
                 return e.returnValue;
             }
         });
-
         console.log('✅ Guardia de navegación configurado');
     }
 
     setupServiceWorkerSecurity() {
-        // En desarrollo local, permitir el Service Worker
         if ('serviceWorker' in navigator) {
             const isLocal = window.location.hostname.includes('localhost') || 
                            window.location.hostname.includes('127.0.0.1');
@@ -185,20 +152,13 @@ class SecurityConfig {
                 console.log('🔧 Entorno local: Service Worker permitido para desarrollo');
                 return;
             }
-            
+
             navigator.serviceWorker.getRegistrations().then(registrations => {
                 registrations.forEach(registration => {
                     const swUrl = registration.active?.scriptURL || '';
-                    const allowedDomains = [
-                        'tubarrioaunclick.com',
-                        'tubarrioaunclik.github.io'
-                    ];
+                    const allowedOrigin = 'https://vicgom892.github.io';
                     
-                    const isAllowed = allowedDomains.some(domain => 
-                        swUrl.includes(domain)
-                    );
-                    
-                    if (!isAllowed) {
+                    if (!swUrl.startsWith(allowedOrigin)) {
                         console.warn('🔒 Service Worker no autorizado detectado:', swUrl);
                         this.logSecurityEvent('unauthorized_sw', { swUrl });
                     }
@@ -208,7 +168,6 @@ class SecurityConfig {
     }
 
     validateSecuritySetup() {
-        // En desarrollo local, ser más permisivo con mixed content
         const isLocal = window.location.hostname.includes('localhost') || 
                        window.location.hostname.includes('127.0.0.1');
         
@@ -238,6 +197,7 @@ class SecurityConfig {
         if (path.includes('/merlo/')) return 'merlo';
         if (path.includes('/haedo/')) return 'haedo';
         if (path.includes('/ramos-mejia/')) return 'ramos-mejia';
+        if (path.includes('/padua/')) return 'padua';
         return 'raiz';
     }
 
@@ -271,7 +231,6 @@ class SecurityConfig {
         
         try {
             const parsedUrl = new URL(url);
-            
             const allowedProtocols = ['https:', 'http:', 'mailto:', 'tel:'];
             if (!allowedProtocols.includes(parsedUrl.protocol)) {
                 console.error('🔒 Protocolo no permitido:', parsedUrl.protocol);
@@ -302,7 +261,6 @@ class SecurityConfig {
 
     logSecurityEvent(event, details) {
         const timestamp = new Date().toISOString();
-        
         console.log(`🔒 [${timestamp}] [${details.localidad || this.getCurrentLocation()}] ${event}`, details);
         
         if (typeof gtag !== 'undefined') {
@@ -330,9 +288,7 @@ class SecurityConfig {
 
     getEnvironmentStatus() {
         const hostname = window.location.hostname;
-        if (hostname === 'tubarrioaunclick.com' || hostname === 'www.tubarrioaunclick.com') {
-            return 'production';
-        } else if (hostname.includes('github.io')) {
+        if (hostname === 'vicgom892.github.io') {
             return 'github-pages';
         } else if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
             return 'development';
@@ -342,14 +298,13 @@ class SecurityConfig {
     }
 }
 
-// Inicializar seguridad con manejo de errores mejorado
+// Inicialización
 console.log('🏠 Tu Barrio a un Clik - Cargando seguridad...');
 
 try {
     if (!window.appSecurity) {
         const appSecurity = new SecurityConfig();
         window.appSecurity = appSecurity;
-        
         console.log('🎉 Sistema de seguridad inicializado correctamente');
         console.log('🔍 Estado de seguridad:', appSecurity.getSecurityStatus());
     } else {

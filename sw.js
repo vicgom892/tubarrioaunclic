@@ -1,13 +1,13 @@
-// sw.js - Service Worker Mejorado v70-multi
+// sw.js - Service Worker Mejorado v80-multi-global
 // Optimizado para GitHub Pages, Hostinger y Live Server
-// Compatibilidad total con main-2.js v65-multi
+// Scope global para todas las localidades - Carga consistente
 
 // === CONFIGURACIÓN UNIVERSAL MEJORADA ===
 const isGitHubPages = self.location.hostname.includes('github.io');
 const isLocalhost = self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1';
 const BASE_PATH = isGitHubPages ? '/TU_BARRIO_AUN_CLICK' : '';
 
-const CACHE_VERSION = 'v70-multi';
+const CACHE_VERSION = 'v80-multi-global';
 
 const CONFIG = {
   CACHE_VERSION: CACHE_VERSION,
@@ -50,7 +50,7 @@ const DYNAMIC_CACHE = `${CONFIG.CACHES.DYNAMIC}-${CONFIG.CACHE_VERSION}`;
 const BUSINESS_CACHE = `${CONFIG.CACHES.BUSINESS}-${CONFIG.CACHE_VERSION}`;
 const PAGES_CACHE = `${CONFIG.CACHES.PAGES}-${CONFIG.CACHE_VERSION}`;
 
-// === FUNCIONES DE RUTAS UNIVERSALES ===
+// === FUNCIONES DE RUTAS UNIVERSALES MEJORADAS ===
 function getFullPath(path) {
   if (!path) return BASE_PATH || '/';
   
@@ -60,23 +60,20 @@ function getFullPath(path) {
   return `${BASE_PATH}/${path}`;
 }
 
+// 🆕 FUNCIÓN MEJORADA PARA DETECTAR LOCALIDAD
 function getAppContext(pathname) {
   const path = pathname || self.location.pathname;
   const analysisPath = CONFIG.BASE_PATH ? path.replace(CONFIG.BASE_PATH, '') : path;
   
-  // Detectar localidades
+  // Detectar localidades de manera más flexible
   for (const localidad of CONFIG.LOCALIDADES) {
     if (analysisPath.includes(`/${localidad}/`) || 
         analysisPath === `/${localidad}` ||
         analysisPath === `/${localidad}/` ||
-        analysisPath.includes(`/${localidad}.html`)) {
+        analysisPath === `/${localidad}.html` ||
+        analysisPath.startsWith(`/${localidad}`)) {
       return localidad;
     }
-  }
-  
-  const pathParts = analysisPath.split('/').filter(part => part);
-  if (pathParts.length > 0 && CONFIG.LOCALIDADES.includes(pathParts[0])) {
-    return pathParts[0];
   }
   
   return 'selector';
@@ -104,6 +101,8 @@ const CORE_RESOURCES = [
   getFullPath('/shared/js/install-app.js'),
   getFullPath('/shared/js/form.js'),
   getFullPath('/shared/js/security-config.js'),
+  getFullPath('/shared/js/splash.js'),
+  getFullPath('/shared/js/config.js'),
   
   // Imágenes esenciales
   getFullPath('/shared/img/icon-192x192.png'),
@@ -139,6 +138,34 @@ const LOCALIDAD_RESOURCES = {
     getFullPath('/castelar/data/granja.json'),
     getFullPath('/castelar/data/muebles.json'),
     getFullPath('/castelar/data/uñas.json')
+  ],
+  moron: [
+    getFullPath('/moron/index.html'),
+    getFullPath('/moron/data/comercios.json')
+  ],
+  ituzaingo: [
+    getFullPath('/ituzaingo/index.html'),
+    getFullPath('/ituzaingo/data/comercios.json')
+  ],
+  ciudadela: [
+    getFullPath('/ciudadela/index.html'),
+    getFullPath('/ciudadela/data/comercios.json')
+  ],
+  merlo: [
+    getFullPath('/merlo/index.html'),
+    getFullPath('/merlo/data/comercios.json')
+  ],
+  haedo: [
+    getFullPath('/haedo/index.html'),
+    getFullPath('/haedo/data/comercios.json')
+  ],
+  ramos: [
+    getFullPath('/ramos/index.html'),
+    getFullPath('/ramos/data/comercios.json')
+  ],
+  padua: [
+    getFullPath('/padua/index.html'),
+    getFullPath('/padua/data/comercios.json')
   ]
 };
 
@@ -208,6 +235,7 @@ self.addEventListener('install', (event) => {
   log('info', `🚀 Instalando SW Universal (${APP_CONTEXT}): ${CONFIG.CACHE_VERSION}`);
   log('info', `📍 Entorno: ${cacheState.environment}`);
   log('info', `🛣️  Ruta base: ${CONFIG.BASE_PATH || '(raíz)'}`);
+  log('info', `🌍 Scope: Global para todas las localidades`);
   
   self.skipWaiting();
 
@@ -297,7 +325,7 @@ self.addEventListener('fetch', (event) => {
                     request.headers.get('Accept')?.includes('text/html');
 
   if (isHtmlPage) {
-    // Páginas HTML: Estrategia optimizada para offline
+    // Páginas HTML: Estrategia Network First MEJORADA
     event.respondWith(handleHtmlPage(request));
   } else if (isImage(pathname)) {
     // Imágenes: Cache First con fallback
@@ -317,59 +345,66 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-// 🆕 MANEJADOR DE PÁGINAS HTML MEJORADO
+// 🆕 MANEJADOR DE PÁGINAS HTML COMPLETAMENTE REESCRITO
 async function handleHtmlPage(request) {
   const url = new URL(request.url);
   const pathname = url.pathname;
   
-  // En desarrollo local, no cachear HTML para live reload
-  if (isLocalhost) {
-    try {
-      return await fetch(request);
-    } catch (error) {
-      return createOfflinePage();
-    }
-  }
+  log('debug', `📄 Manejo HTML: ${pathname} | Contexto: ${APP_CONTEXT}`);
   
+  // ESTRATEGIA: Network First para HTML SIEMPRE
   try {
-    // 1. Intentar network primero para HTML fresco
-    const networkResponse = await fetch(request);
+    log('debug', `🌐 Intentando network para: ${pathname}`);
+    
+    const networkResponse = await fetch(request, {
+      cache: 'no-cache',
+      headers: {
+        'Cache-Control': 'no-cache'
+      }
+    });
+    
     if (networkResponse.ok) {
-      // Cachear respuesta para futuro uso offline
-      const cache = await caches.open(PAGES_CACHE);
-      await cache.put(request, networkResponse.clone());
+      log('info', `✅ HTML fresco desde network: ${pathname}`);
+      
+      // Cachear para uso offline (pero no bloquear la respuesta)
+      cacheResponse(request, networkResponse.clone(), PAGES_CACHE);
+      
       return networkResponse;
     }
-    throw new Error('Network response not ok');
-  } catch (error) {
-    log('info', `📡 Offline - Buscando HTML en cache: ${getShortUrl(pathname)}`);
     
-    // 2. Buscar en cache de páginas
+    throw new Error('Network response not ok');
+    
+  } catch (error) {
+    log('info', `📡 Offline - Buscando en cache: ${pathname}`);
+    
+    // 1. Buscar en cache exacto
     const cached = await caches.match(request);
     if (cached) {
-      log('info', `✅ HTML servido desde cache: ${getShortUrl(pathname)}`);
+      log('info', `✅ HTML desde cache exacto: ${pathname}`);
       return cached;
     }
     
-    // 3. 🎯 FALLBACK INTELIGENTE PARA MULTI-LOCALIDAD
+    // 2. 🎯 FALLBACK INTELIGENTE MEJORADO
     const fallbackHtml = await findHtmlFallback(pathname);
     if (fallbackHtml) {
+      log('info', `🔄 Usando fallback para: ${pathname}`);
       return fallbackHtml;
     }
     
-    // 4. Página offline genérica
+    // 3. Página offline genérica
+    log('warn', `❌ Sin cache - Mostrando página offline para: ${pathname}`);
     return createOfflinePage();
   }
 }
 
-// 🆕 FALLBACK INTELIGENTE PARA HTML
+// 🆕 FUNCIÓN MEJORADA DE FALLBACK
 async function findHtmlFallback(pathname) {
   const fallbackMap = {
     // Página principal
     '/': '/index.html',
     '': '/index.html',
     
-    // Localidades
+    // Localidades - mapeo completo y flexible
     '/castelar': '/castelar/index.html',
     '/castelar/': '/castelar/index.html',
     '/moron': '/moron/index.html',
@@ -383,28 +418,43 @@ async function findHtmlFallback(pathname) {
     '/haedo': '/haedo/index.html',
     '/haedo/': '/haedo/index.html',
     '/ramos': '/ramos/index.html',
+    '/ramos/': '/ramos/index.html',
     '/padua': '/padua/index.html',
-    '/ramos/': '/ramos/index.html'
+    '/padua/': '/padua/index.html'
   };
   
   // Normalizar path para búsqueda
   const normalizedPath = CONFIG.BASE_PATH ? pathname.replace(CONFIG.BASE_PATH, '') : pathname;
-  const fallbackPath = fallbackMap[normalizedPath] || fallbackMap[pathname];
   
-  if (fallbackPath) {
-    const fullFallbackPath = getFullPath(fallbackPath);
+  log('debug', `🔍 Buscando fallback para: ${normalizedPath}`);
+  
+  // Intentar fallback directo
+  const directFallback = fallbackMap[normalizedPath] || fallbackMap[pathname];
+  if (directFallback) {
+    const fullFallbackPath = getFullPath(directFallback);
     const cached = await caches.match(fullFallbackPath);
     if (cached) {
-      log('info', `🔄 Usando fallback: ${pathname} -> ${fallbackPath}`);
+      log('info', `🎯 Fallback encontrado: ${pathname} -> ${directFallback}`);
       return cached;
     }
   }
   
-  // Intentar con index.html genérico
-  const indexFallback = await caches.match(getFullPath('/index.html'));
-  if (indexFallback) {
-    log('info', `🔄 Usando index.html como fallback para: ${pathname}`);
-    return indexFallback;
+  // Intentar detectar localidad y usar su index.html
+  const detectedLocalidad = getAppContext(pathname);
+  if (detectedLocalidad !== 'selector') {
+    const localidadIndex = getFullPath(`/${detectedLocalidad}/index.html`);
+    const cached = await caches.match(localidadIndex);
+    if (cached) {
+      log('info', `🏠 Usando index de localidad: ${localidadIndex}`);
+      return cached;
+    }
+  }
+  
+  // Último intento: index.html principal
+  const mainIndex = await caches.match(getFullPath('/index.html'));
+  if (mainIndex) {
+    log('info', `🏠 Usando index.html principal como fallback universal`);
+    return mainIndex;
   }
   
   return null;
@@ -630,7 +680,7 @@ function createOfflinePage() {
             <button class="btn" onclick="location.reload()">Reintentar Conexión</button>
             
             <div class="context-info">
-                ${APP_CONTEXT !== 'selector' ? `Localidad: ${APP_CONTEXT}` : 'Selector de localidades'}
+                ${APP_CONTEXT !== 'selector' ? `Localidad: ${APP_CONTEXT}` : 'Selector de localidades'} | v${CONFIG.CACHE_VERSION}
             </div>
         </div>
         
@@ -656,6 +706,16 @@ function createOfflinePage() {
 }
 
 // === FUNCIONES AUXILIARES MEJORADAS ===
+
+// 🆕 FUNCIÓN AUXILIAR PARA CACHE NO BLOQUEANTE
+async function cacheResponse(request, response, cacheName) {
+  try {
+    const cache = await caches.open(cacheName);
+    await cache.put(request, response);
+  } catch (error) {
+    log('warn', '⚠️ Error cacheando respuesta:', error);
+  }
+}
 
 // Precaché de recursos
 async function precacheResources(cache, resources) {
@@ -723,21 +783,23 @@ function notifyClients(message) {
   });
 }
 
-// Sistema de logging
+// 🆕 SISTEMA DE LOGGING MEJORADO
 function log(level, message, ...args) {
   const timestamp = new Date().toISOString();
   const levels = { 
     info: 'ℹ️', 
     warn: '⚠️', 
-    error: '❌' 
+    error: '❌',
+    debug: '🐛'
   };
   
   // En producción, solo loguear warnings y errors
-  if (!isLocalhost && level === 'info') {
+  if (!isLocalhost && (level === 'info' || level === 'debug')) {
     return;
   }
   
-  console[level](`[SW ${CONFIG.CACHE_VERSION}] ${timestamp} ${levels[level]} ${message}`, ...args);
+  const emoji = levels[level] || '📝';
+  console[level](`[SW ${CONFIG.CACHE_VERSION}] ${timestamp} ${emoji} ${message}`, ...args);
 }
 
 // === MESSAGE HANDLER ===
@@ -765,6 +827,14 @@ self.addEventListener('message', async (event) => {
     case 'CLEAR_CACHE':
       await clearAllCaches();
       sendResponse(ports, { type: 'CACHE_CLEARED' });
+      break;
+
+    case 'GET_VERSION':
+      sendResponse(ports, {
+        type: 'VERSION_INFO',
+        version: CONFIG.CACHE_VERSION,
+        scope: 'global'
+      });
       break;
   }
 });
@@ -821,7 +891,10 @@ self.addEventListener('notificationclick', (event) => {
 log('info', `🚀 SW Universal cargado - ${APP_CONTEXT}`);
 log('info', `📍 Entorno: ${cacheState.environment}`);
 log('info', `🛣️  Base: ${CONFIG.BASE_PATH || '(raíz)'}`);
-log('info', `🎯 Optimizado para: GitHub Pages, Hostinger & Live Server`);
+log('info', `🌍 Scope: Global para todas las localidades`);
+log('info', `🎯 Estrategia: Network First para HTML`);
+log('info', `📦 Recursos globales: ${CORE_RESOURCES.length}`);
+log('info', `🏘️  Localidades soportadas: ${CONFIG.LOCALIDADES.join(', ')}`);
 
 // Estado inicial
 cacheState.startTime = Date.now();

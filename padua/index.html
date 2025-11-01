@@ -121,6 +121,7 @@
 
   <link rel="stylesheet" href="../shared/css/styles.css">
   <link rel="stylesheet" href="../shared/css/fondo.css">
+  <link rel="stylesheet" href="../shared/lib/aos/aos.css">
   <!-- En el <head> -->
   <link rel="stylesheet" href="../shared/js/chatbot/chatbot.css">
   <link rel="stylesheet" href="../shared/css/favorites.css">
@@ -2913,8 +2914,17 @@ document.addEventListener('DOMContentLoaded', function() {
   <script src="../shared/js/testimonials.js" defer></script>
   <script src="../shared/js/notificaciones.js" defer></script>
   <script src="../shared/js/splash.js" defer></script>
-  <!-- Script de búsqueda mejorada (versión final y corregida) -->
-
+  
+  <script src="../shared/lib/aos/aos.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      AOS.init({
+        duration: 800,
+        easing: 'ease',
+        once: true // anima solo una vez al hacer scroll
+      });
+    });
+  </script>
 <script>
   // Sistema de selección de rol
   document.addEventListener('DOMContentLoaded', () => {
@@ -2960,16 +2970,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
 </script>
-  <script>
-    // Inicialización de AOS después de que el DOM esté listo
-    document.addEventListener('DOMContentLoaded', function() {
-      AOS.init({
-        duration: 600,
-        once: true,
-        offset: 100,
-      });
-    });
-  </script>
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XFQL2JFLTX"></script>
 <script>

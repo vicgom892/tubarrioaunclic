@@ -94,7 +94,9 @@ const CORE_RESOURCES = [
   getFullPath('/shared/js/security-config.js'),
   getFullPath('/shared/img/icon-192x192.png'),
   getFullPath('/shared/img/icon-512x512.png'),
-  getFullPath('/shared/img/icon-abeja-sola.png')
+  getFullPath('/shared/img/icon-abeja-sola.png'),
+  getFullPath('/shared/lib/aos/aos.css'),
+  getFullPath('/shared/lib/aos/aos.js')
 ];
 
 const LOCALIDAD_RESOURCES = {

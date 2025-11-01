@@ -125,6 +125,7 @@
   <!-- En el <head> -->
   <link rel="stylesheet" href="../shared/js/chatbot/chatbot.css">
   <link rel="stylesheet" href="../shared/css/favorites.css">
+  <link rel="stylesheet" href="../shared/lib/aos/aos.css">
 
 </head>
 <body class="bg-light">
@@ -2910,82 +2911,83 @@ document.addEventListener('DOMContentLoaded', function() {
   <script src="../shared/js/testimonials.js" defer></script>
   <script src="../shared/js/notificaciones.js" defer></script>
   <script src="../shared/js/splash.js" defer></script>
-  <!-- Script de búsqueda mejorada (versión final y corregida) -->
-
-<script>
-  // Sistema de selección de rol
-  document.addEventListener('DOMContentLoaded', () => {
-    // Verificar si es la primera visita
-    if (!localStorage.getItem('hasVisited')) {
-      // Mostrar modal de selección de rol
-      const roleModal = document.getElementById('roleSelectionModal');
-      if (roleModal) {
-        roleModal.style.display = 'flex';
-        
-        // Botón para consumidores
-        const consumerBtn = document.getElementById('consumerBtn');
-        if (consumerBtn) {
-          consumerBtn.addEventListener('click', () => {
-            localStorage.setItem('userRole', 'consumer');
-            localStorage.setItem('hasVisited', 'true');
-            roleModal.style.display = 'none';
-          });
-        }
-        
-        // Botón para comerciantes
-        const merchantBtn = document.getElementById('merchantBtn');
-        if (merchantBtn) {
-          merchantBtn.addEventListener('click', () => {
-            localStorage.setItem('userRole', 'merchant');
-            localStorage.setItem('hasVisited', 'true');
-            roleModal.style.display = 'none';
-            
-            // Redirigir a la página de registro
-            setTimeout(() => {
-              window.location.href = 'inscripcion.html';
-            }, 300);
-          });
-        }
-      }
-    }
-    
-    // Si ya hay un rol guardado y está en inscripcion.html siendo consumidor, redirigir
-    const userRole = localStorage.getItem('userRole');
-    if (userRole === 'consumer' && window.location.pathname.includes('inscripcion.html')) {
-      window.location.href = 'index.html';
-    }
-  });
-
-</script>
+ 
+  <script src="../shared/lib/aos/aos.js"></script>
   <script>
-    // Inicialización de AOS después de que el DOM esté listo
     document.addEventListener('DOMContentLoaded', function() {
       AOS.init({
-        duration: 600,
-        once: true,
-        offset: 100,
+        duration: 800,
+        easing: 'ease',
+        once: true // anima solo una vez al hacer scroll
       });
     });
   </script>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XFQL2JFLTX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XFQL2JFLTX');
-</script>
-
- <script>
-        // Inicialización con configuración dinámica
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🏠 Castelar - Configuración:', window.APP_CONFIG);
-            
-            // Si necesitas actualizar rutas dinámicamente en Castelar
-            const currentPath = window.location.pathname;
-            console.log('📍 Ruta actual:', currentPath);
-        });
-    </script>
+  
+  <script>
+    // Sistema de selección de rol
+    document.addEventListener('DOMContentLoaded', () => {
+      // Verificar si es la primera visita
+      if (!localStorage.getItem('hasVisited')) {
+        // Mostrar modal de selección de rol
+        const roleModal = document.getElementById('roleSelectionModal');
+        if (roleModal) {
+          roleModal.style.display = 'flex';
+          
+          // Botón para consumidores
+          const consumerBtn = document.getElementById('consumerBtn');
+          if (consumerBtn) {
+            consumerBtn.addEventListener('click', () => {
+              localStorage.setItem('userRole', 'consumer');
+              localStorage.setItem('hasVisited', 'true');
+              roleModal.style.display = 'none';
+            });
+          }
+          
+          // Botón para comerciantes
+          const merchantBtn = document.getElementById('merchantBtn');
+          if (merchantBtn) {
+            merchantBtn.addEventListener('click', () => {
+              localStorage.setItem('userRole', 'merchant');
+              localStorage.setItem('hasVisited', 'true');
+              roleModal.style.display = 'none';
+              
+              // Redirigir a la página de registro
+              setTimeout(() => {
+                window.location.href = 'inscripcion.html';
+              }, 300);
+            });
+          }
+        }
+      }
+      
+      // Si ya hay un rol guardado y está en inscripcion.html siendo consumidor, redirigir
+      const userRole = localStorage.getItem('userRole');
+      if (userRole === 'consumer' && window.location.pathname.includes('inscripcion.html')) {
+        window.location.href = 'index.html';
+      }
+    });
+  
+  </script>
+    
+    <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XFQL2JFLTX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-XFQL2JFLTX');
+  </script>
+  
+   <script>
+          // Inicialización con configuración dinámica
+          document.addEventListener('DOMContentLoaded', function() {
+              console.log('🏠 Castelar - Configuración:', window.APP_CONFIG);
+              
+              // Si necesitas actualizar rutas dinámicamente en Castelar
+              const currentPath = window.location.pathname;
+              console.log('📍 Ruta actual:', currentPath);
+          });
+      </script>
 </body>
 </html>

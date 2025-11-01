@@ -234,39 +234,22 @@ function showUpdateBanner() {
 
 // Preload crítico para todas las páginas
 function preloadGlobalResources() {
-  // 🆕 USAR RUTAS ABSOLUTAS DESDE LA RAIZ
   const resources = [
     '/shared/js/config.js',
     '/shared/js/security-config.js', 
     '/shared/js/main-2.js',
     '/shared/css/styles.css'
   ];
-  
+
   resources.forEach(resource => {
     const link = document.createElement('link');
     link.rel = 'preload';
     link.href = resource;
-    
-    if (resource.endsWith('.js')) {
-      link.as = 'script';
-      link.crossOrigin = 'anonymous';
-    } else if (resource.endsWith('.css')) {
-      link.as = 'style';
-    }
-    
-    // 🆕 VERIFICAR SI EL RECURSO EXISTE ANTES DE PRELOAD
-    fetch(resource, { method: 'HEAD' })
-      .then(response => {
-        if (response.ok) {
-          document.head.appendChild(link);
-          console.log('✅ Preload agregado:', resource);
-        }
-      })
-      .catch(() => {
-        console.log('⚠️ Recurso no disponible para preload:', resource);
-      });
+    link.as = resource.endsWith('.js') ? 'script' : 'style';
+    document.head.appendChild(link);
   });
 }
+
 // Inicialización mejorada
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 Inicializando:', window.location.pathname);

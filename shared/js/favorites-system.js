@@ -1,12 +1,45 @@
-// favorites-system.js - Sistema de Favoritos Offline
-// Compatible con carga dinámica desde JSON - v1.0
+// favorites-system.js - Sistema de Favoritos por Localidad
+// Compatible con carga dinámica desde JSON - v2.1
 
 class FavoritesSystem {
     constructor() {
-        this.storageKey = 'business_favorites_v2';
+        this.currentLocalidad = this.getCurrentLocalidad();
+        this.storageKey = `business_favorites_${this.currentLocalidad}_v2`;
         this.favorites = this.loadFavorites();
         this.observer = null;
         this.init();
+        
+        console.log(`❤️ Sistema de Favoritos para: ${this.currentLocalidad}`);
+    }
+
+    // Método para detectar la localidad actual
+    getCurrentLocalidad() {
+        // Opción 1: Desde variable global
+        if (window.APP_CONTEXT) {
+            return window.APP_CONTEXT;
+        }
+        
+        // Opción 2: Desde la URL
+        const path = window.location.pathname;
+        const localidadMatch = path.match(/\/([^\/]+)\/index\.html$/);
+        if (localidadMatch) {
+            return localidadMatch[1];
+        }
+        
+        // Opción 3: Desde el cuerpo o datos de la página
+        const bodyClasses = document.body.className.toLowerCase();
+        if (bodyClasses.includes('castelar')) return 'castelar';
+        if (bodyClasses.includes('moron')) return 'moron';
+        if (bodyClasses.includes('haedo')) return 'haedo';
+         if (bodyClasses.includes('ciudadela')) return 'ciudadela';
+        if (bodyClasses.includes('ituzaingo')) return 'ituzaingo';
+        if (bodyClasses.includes('merlo')) return 'merlo';
+         if (bodyClasses.includes('ramos')) return 'ramos';
+        if (bodyClasses.includes('padua')) return 'padua';
+        
+        
+        // Default
+        return 'castelar';
     }
 
     init() {
@@ -24,61 +57,66 @@ class FavoritesSystem {
     }
 
     setupFavoritesButton() {
-    // Crear botón en el header si no existe
-    if (!document.getElementById('favoritesBtn')) {
-        const favoritesBtn = document.createElement('button');
-        favoritesBtn.id = 'favoritesBtn';
-        favoritesBtn.className = 'favorites-btn-header';
-        favoritesBtn.setAttribute('data-bs-toggle', 'modal');
-        favoritesBtn.setAttribute('data-bs-target', '#favoritesModal');
-        favoritesBtn.innerHTML = `
-            <i class="fas fa-heart"></i>
-            <span id="favoritesCount" class="favorites-count-header">0</span>
-        `;
+        // Crear botón en el header si no existe
+        if (!document.getElementById('favoritesBtn')) {
+            const favoritesBtn = document.createElement('button');
+            favoritesBtn.id = 'favoritesBtn';
+            favoritesBtn.className = 'favorites-btn-header';
+            favoritesBtn.setAttribute('data-bs-toggle', 'modal');
+            favoritesBtn.setAttribute('data-bs-target', '#favoritesModal');
+            favoritesBtn.innerHTML = `
+                <i class="fas fa-heart"></i>
+                <span id="favoritesCount" class="favorites-count-header">0</span>
+            `;
+            
+            // Insertar en el header - Opción 1: Junto a la campanita
+            const notificationsContainer = document.querySelector('.d-flex.align-items-center.gap-3');
+            if (notificationsContainer) {
+                notificationsContainer.insertBefore(favoritesBtn, notificationsContainer.firstChild);
+            } 
+            // Opción 2: En el menú derecho
+            else {
+                const rightNav = document.querySelector('.d-none.d-lg-flex.align-items-center.gap-3');
+                if (rightNav) {
+                    rightNav.insertBefore(favoritesBtn, rightNav.firstChild);
+                }
+            }
+            
+            // Agregar funcionalidad al botón
+            favoritesBtn.addEventListener('click', () => {
+                this.updateFavoritesModal();
+            });
+        } else {
+            // Si ya existe, re-asignar el evento
+            document.getElementById('favoritesBtn').addEventListener('click', () => {
+                this.updateFavoritesModal();
+            });
+        }
+    }
+
+    updateFavoritesCount() {
+        const count = Object.keys(this.favorites).length;
+        const countElement = document.getElementById('favoritesCount');
+        const favoritesBtn = document.getElementById('favoritesBtn');
         
-        // Insertar en el header - Opción 1: Junto a la campanita
-        const notificationsContainer = document.querySelector('.d-flex.align-items-center.gap-3');
-        if (notificationsContainer) {
-            notificationsContainer.insertBefore(favoritesBtn, notificationsContainer.firstChild);
-        } 
-        // Opción 2: En el menú derecho
-        else {
-            const rightNav = document.querySelector('.d-none.d-lg-flex.align-items-center.gap-3');
-            if (rightNav) {
-                rightNav.insertBefore(favoritesBtn, rightNav.firstChild);
+        if (countElement) {
+            countElement.textContent = count;
+            // Animación
+            countElement.style.transform = 'scale(1.3)';
+            setTimeout(() => {
+                countElement.style.transform = 'scale(1)';
+            }, 300);
+        }
+        
+        // Agregar clase cuando hay favoritos
+        if (favoritesBtn) {
+            if (count > 0) {
+                favoritesBtn.classList.add('has-favorites');
+            } else {
+                favoritesBtn.classList.remove('has-favorites');
             }
         }
     }
-
-    // Agregar funcionalidad al botón
-    document.getElementById('favoritesBtn').addEventListener('click', () => {
-        this.updateFavoritesModal();
-    });
-}
-
-updateFavoritesCount() {
-    const count = Object.keys(this.favorites).length;
-    const countElement = document.getElementById('favoritesCount');
-    const favoritesBtn = document.getElementById('favoritesBtn');
-    
-    if (countElement) {
-        countElement.textContent = count;
-        // Animación
-        countElement.style.transform = 'scale(1.3)';
-        setTimeout(() => {
-            countElement.style.transform = 'scale(1)';
-        }, 300);
-    }
-    
-    // Agregar clase cuando hay favoritos
-    if (favoritesBtn) {
-        if (count > 0) {
-            favoritesBtn.classList.add('has-favorites');
-        } else {
-            favoritesBtn.classList.remove('has-favorites');
-        }
-    }
-}
 
     setupFavoritesModal() {
         // Crear modal si no existe
@@ -88,14 +126,14 @@ updateFavoritesCount() {
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">❤️ Tus Comercios Favoritos</h5>
+                                <h5 class="modal-title">❤️ Tus Comercios Favoritos - ${this.currentLocalidad.charAt(0).toUpperCase() + this.currentLocalidad.slice(1)}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
                                 <div id="favoritesList">
                                     <div class="text-center text-muted py-4" id="emptyFavorites">
                                         <i class="fas fa-heart fa-2x mb-3"></i>
-                                        <p>No tienes comercios favoritos aún</p>
+                                        <p>No tienes comercios favoritos en ${this.currentLocalidad}</p>
                                         <small>Haz clic en el ❤️ de los comercios que te gusten</small>
                                     </div>
                                 </div>
@@ -112,7 +150,7 @@ updateFavoritesCount() {
             `;
             document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-            // Evento para limpiar todos los favoritos
+            // Evento para limpiar todos los favoritos - CORREGIDO
             document.getElementById('clearAllFavorites').addEventListener('click', () => {
                 this.clearAllFavorites();
             });
@@ -255,7 +293,7 @@ updateFavoritesCount() {
         this.updateFavoritesCount();
         
         // Actualizar modal si está abierto
-        if (document.getElementById('favoritesModal').classList.contains('show')) {
+        if (document.getElementById('favoritesModal') && document.getElementById('favoritesModal').classList.contains('show')) {
             this.updateFavoritesModal();
         }
     }
@@ -270,10 +308,12 @@ updateFavoritesCount() {
             telefono: businessData.telefono,
             whatsapp: businessData.whatsapp,
             categoria: businessData.categoria || businessData.category,
-            localidad: window.APP_CONTEXT || 'castelar',
+            localidad: this.currentLocalidad, // Localidad específica
             addedAt: Date.now()
         };
         this.saveFavorites();
+        
+        console.log(`⭐ Favorito agregado en ${this.currentLocalidad}: ${businessData.nombre}`);
     }
 
     removeFavorite(businessId) {
@@ -288,26 +328,13 @@ updateFavoritesCount() {
     }
 
     generateBusinessId(businessData) {
-        // ID único basado en nombre y localidad
-        const localidad = window.APP_CONTEXT || 'castelar';
-        return `${localidad}-${businessData.nombre}`
+        // ID único basado en nombre y localidad actual
+        return `${this.currentLocalidad}-${businessData.nombre}`
             .toLowerCase()
             .replace(/\s+/g, '-')
             .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '');
-    }
-
-    updateFavoritesCount() {
-        const count = Object.keys(this.favorites).length;
-        const countElement = document.getElementById('favoritesCount');
-        if (countElement) {
-            countElement.textContent = count;
-            // Animación
-            countElement.style.transform = 'scale(1.3)';
-            setTimeout(() => {
-                countElement.style.transform = 'scale(1)';
-            }, 300);
-        }
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^\w\-]/g, '');
     }
 
     updateFavoritesModal() {
@@ -319,7 +346,7 @@ updateFavoritesCount() {
             favoritesList.innerHTML = `
                 <div class="text-center text-muted py-4" id="emptyFavorites">
                     <i class="fas fa-heart fa-2x mb-3"></i>
-                    <p>No tienes comercios favoritos aún</p>
+                    <p>No tienes comercios favoritos en ${this.currentLocalidad}</p>
                     <small>Haz clic en el ❤️ de los comercios que te gusten</small>
                 </div>
             `;
@@ -331,6 +358,7 @@ updateFavoritesCount() {
 
         favoritesList.innerHTML = favorites.map(fav => `
             <div class="favorite-item" data-business-id="${fav.id}">
+                <div class="favorite-item-localidad">${fav.localidad}</div>
                 <img src="${fav.imagen}" alt="${fav.nombre}" 
                      onerror="this.src='../shared/img/fallback-image.png'">
                 <div class="favorite-item-info">
@@ -405,22 +433,38 @@ updateFavoritesCount() {
     }
 
     clearAllFavorites() {
-        if (Object.keys(this.favorites).length === 0) return;
+        if (Object.keys(this.favorites).length === 0) {
+            this.showNotification('No hay favoritos para eliminar', 'info');
+            return;
+        }
         
-        if (confirm('¿Estás seguro de que quieres eliminar todos tus favoritos?')) {
+        if (confirm('¿Estás seguro de que quieres eliminar todos tus favoritos de ' + this.currentLocalidad + '?')) {
+            // Limpiar el objeto de favoritos
             this.favorites = {};
+            
+            // Guardar cambios en localStorage
             this.saveFavorites();
+            
+            // Actualizar la interfaz
             this.updateFavoritesModal();
             this.updateFavoritesCount();
             
-            // Actualizar todos los botones
+            // Actualizar todos los botones en las tarjetas
             document.querySelectorAll('.favorite-toggle').forEach(btn => {
                 btn.innerHTML = '<i class="far fa-heart"></i>';
                 btn.classList.remove('favorited');
                 btn.setAttribute('title', 'Agregar a favoritos');
             });
             
-            this.showNotification('Todos los favoritos han sido eliminados', 'warning');
+            this.showNotification(`Todos los favoritos de ${this.currentLocalidad} han sido eliminados`, 'warning');
+            
+            // Cerrar modal después de un breve delay
+            setTimeout(() => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('favoritesModal'));
+                if (modal) {
+                    modal.hide();
+                }
+            }, 1500);
         }
     }
 
@@ -430,7 +474,7 @@ updateFavoritesCount() {
         toast.className = `favorite-toast favorite-toast-${type}`;
         toast.innerHTML = `
             <div class="toast-content">
-                <i class="fas fa-${type === 'success' ? 'check' : 'info'}-circle"></i>
+                <i class="fas fa-${type === 'success' ? 'check' : type === 'warning' ? 'exclamation-triangle' : 'info'}-circle"></i>
                 <span>${message}</span>
             </div>
         `;
@@ -453,9 +497,12 @@ updateFavoritesCount() {
 
     loadFavorites() {
         try {
-            return JSON.parse(localStorage.getItem(this.storageKey)) || {};
+            const stored = localStorage.getItem(this.storageKey);
+            const favorites = stored ? JSON.parse(stored) : {};
+            console.log(`📂 Favoritos cargados para ${this.currentLocalidad}:`, Object.keys(favorites).length);
+            return favorites;
         } catch (error) {
-            console.warn('Error cargando favoritos:', error);
+            console.warn('❌ Error cargando favoritos:', error);
             return {};
         }
     }
@@ -463,22 +510,83 @@ updateFavoritesCount() {
     saveFavorites() {
         try {
             localStorage.setItem(this.storageKey, JSON.stringify(this.favorites));
+            console.log(`💾 Favoritos guardados para ${this.currentLocalidad}:`, Object.keys(this.favorites).length);
         } catch (error) {
-            console.error('Error guardando favoritos:', error);
+            console.error('❌ Error guardando favoritos:', error);
+        }
+    }
+
+    // Método para cambiar de localidad
+    changeLocalidad(newLocalidad) {
+        if (newLocalidad !== this.currentLocalidad) {
+            console.log(`🔄 Cambiando favoritos de ${this.currentLocalidad} a ${newLocalidad}`);
+            this.currentLocalidad = newLocalidad;
+            this.storageKey = `business_favorites_${this.currentLocalidad}_v2`;
+            this.favorites = this.loadFavorites();
+            this.updateFavoritesCount();
+            
+            // Actualizar título del modal
+            const modalTitle = document.querySelector('#favoritesModal .modal-title');
+            if (modalTitle) {
+                modalTitle.textContent = `❤️ Tus Comercios Favoritos - ${this.currentLocalidad.charAt(0).toUpperCase() + this.currentLocalidad.slice(1)}`;
+            }
+            
+            // Re-aplicar botones a las tarjetas actuales
+            setTimeout(() => this.addFavoritesToAllCards(), 500);
         }
     }
 
     // Método para debug
     debug() {
-        console.log('🛠️ Favoritos actuales:', this.favorites);
-        console.log('📊 Total de favoritos:', Object.keys(this.favorites).length);
+        console.log('🛠️ FAVORITOS POR LOCALIDAD:');
+        console.log(`📍 Localidad actual: ${this.currentLocalidad}`);
+        console.log(`🔑 Storage key: ${this.storageKey}`);
+        console.log(`📊 Total de favoritos: ${Object.keys(this.favorites).length}`);
+        console.log('❤️ Favoritos actuales:', this.favorites);
+        
+        // Mostrar todas las claves de favoritos en localStorage
+        const allKeys = Object.keys(localStorage).filter(key => key.startsWith('business_favorites_'));
+        console.log('🗂️ Todas las claves de favoritos:', allKeys);
     }
+}
+
+// Función para ver todos los favoritos de todas las localidades
+function debugAllFavorites() {
+    const allFavorites = {};
+    const localidades = ['castelar', 'moron', 'haedo', 'ciudadela' , 'ituzaingo', 'merlo', 'padua', 'ramos'];
+    
+    localidades.forEach(localidad => {
+        const key = `business_favorites_${localidad}_v2`;
+        const favs = JSON.parse(localStorage.getItem(key) || '{}');
+        allFavorites[localidad] = {
+            count: Object.keys(favs).length,
+            items: favs
+        };
+    });
+    
+    console.log('🗂️ FAVORITOS POR LOCALIDAD:', allFavorites);
+    return allFavorites;
 }
 
 // Inicialización automática cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
     window.favoritesSystem = new FavoritesSystem();
-    console.log('❤️ Sistema de Favoritos inicializado correctamente');
+    window.debugAllFavorites = debugAllFavorites;
+    
+    console.log('❤️ Sistema de Favoritos por localidad inicializado correctamente');
+    
+    // Debug inicial después de 2 segundos
+    setTimeout(() => {
+        window.favoritesSystem.debug();
+    }, 2000);
+});
+
+// Escuchar cambios de página/localidad
+window.addEventListener('popstate', () => {
+    if (window.favoritesSystem) {
+        const newLocalidad = window.favoritesSystem.getCurrentLocalidad();
+        window.favoritesSystem.changeLocalidad(newLocalidad);
+    }
 });
 
 // Exportar para uso global

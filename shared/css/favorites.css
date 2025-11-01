@@ -349,104 +349,223 @@
     background: #ff2d2d;
 }
 
-/* Estilos para el botón de favoritos en el header - Versión Elegante */
+/* Sistema de Favoritos - Estilos */
 .favorites-btn-header {
+    position: relative;
     background: none;
     border: none;
-    color: #ff4757;
-    padding: 8px;
-    border-radius: 8px;
+    font-size: 1.5rem;
+    color: #6c757d;
     cursor: pointer;
     transition: all 0.3s ease;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
+    padding: 0.5rem;
 }
 
 .favorites-btn-header:hover {
-    background: #fff5f5;
-    color: #ff2d2d;
-    transform: translateY(-1px);
-}
-
-.favorites-btn-header:active {
-    transform: translateY(0);
-}
-
-.favorites-btn-header i {
-    font-size: 1.5rem;
-    transition: all 0.3s ease;
-}
-
-.favorites-btn-header:hover i {
+    color: #dc3545;
     transform: scale(1.1);
+}
+
+.favorites-btn-header.has-favorites {
+    color: #dc3545;
 }
 
 .favorites-count-header {
     position: absolute;
-    top: -2px;
-    right: -2px;
-    background: #ff4757;
+    top: -5px;
+    right: -5px;
+    background: #dc3545;
     color: white;
     border-radius: 50%;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+/* Modal de Favoritos */
+.favorites-modal .modal-content {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.favorites-modal .modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px 15px 0 0;
+    border: none;
+}
+
+.favorites-modal .modal-title {
+    font-weight: 600;
+}
+
+/* Items de Favoritos */
+.favorite-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    margin-bottom: 0.75rem;
+    background: white;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.favorite-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.favorite-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 1rem;
+}
+
+.favorite-item-info {
+    flex: 1;
+}
+
+.favorite-item-info h6 {
+    margin: 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.favorite-item-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.favorite-item-localidad {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #667eea;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
     font-size: 10px;
     font-weight: bold;
-    transition: all 0.3s ease;
-    border: 2px solid white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-transform: uppercase;
 }
 
-.favorites-btn-header:hover .favorites-count-header {
-    background: #ff2d2d;
-    transform: scale(1.15);
+/* Botones de favorito en tarjetas */
+.favorite-toggle {
+    transition: all 0.3s ease !important;
 }
 
-/* Estado activo cuando hay favoritos */
-.favorites-btn-header.has-favorites {
-    color: #ff4757;
+.favorite-toggle:hover {
+    transform: scale(1.1) !important;
+    background: rgba(255, 255, 255, 1) !important;
 }
 
-/* Animación cuando se agregan favoritos */
-.favorites-btn-header.pulse i {
-    animation: heartPulse 0.6s ease;
+.favorite-toggle.favorited {
+    color: #dc3545 !important;
 }
 
-@keyframes heartPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.3); }
-    100% { transform: scale(1); }
+/* Toast Notifications */
+.favorite-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    border-radius: 10px;
+    padding: 12px 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    z-index: 1060;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    border-left: 4px solid #007bff;
+    min-width: 300px;
 }
 
-/* Responsive para el header */
+.favorite-toast.show {
+    transform: translateX(0);
+}
+
+.favorite-toast-success {
+    border-left-color: #28a745;
+}
+
+.favorite-toast-warning {
+    border-left-color: #ffc107;
+}
+
+.favorite-toast-info {
+    border-left-color: #17a2b8;
+}
+
+.favorite-toast .toast-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.favorite-toast .toast-content i {
+    font-size: 1.2rem;
+}
+
+.favorite-toast-success .toast-content i {
+    color: #28a745;
+}
+
+.favorite-toast-warning .toast-content i {
+    color: #ffc107;
+}
+
+.favorite-toast-info .toast-content i {
+    color: #17a2b8;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .favorites-btn-header {
-        width: 36px;
-        height: 36px;
-        padding: 6px;
+    .favorite-item {
+        flex-direction: column;
+        text-align: center;
     }
     
-    .favorites-btn-header i {
-        font-size: 1.3rem;
+    .favorite-item img {
+        margin-right: 0;
+        margin-bottom: 1rem;
     }
     
-    .favorites-count-header {
-        width: 16px;
-        height: 16px;
-        font-size: 9px;
-        top: -1px;
-        right: -1px;
+    .favorite-item-actions {
+        margin-top: 1rem;
+        justify-content: center;
+    }
+    
+    .favorite-toast {
+        min-width: 250px;
+        right: 10px;
+        left: 10px;
     }
 }
 
-/* Eliminar el botón flotante anterior */
-.favorites-btn {
-    display: none !important;
+/* Estados vacíos */
+#emptyFavorites {
+    padding: 3rem 1rem;
+}
+
+#emptyFavorites i {
+    color: #dee2e6;
+    margin-bottom: 1rem;
+}
+
+#emptyFavorites p {
+    margin-bottom: 0.5rem;
+    color: #6c757d;
+}
+
+#emptyFavorites small {
+    color: #adb5bd;
 }

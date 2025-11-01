@@ -659,61 +659,61 @@ document.getElementById('businessModal')?.addEventListener('hidden.bs.modal', fu
   // --- CONFIGURACIÓN DINÁMICA DE RUTAS (EXISTENTE) ---
   const isGitHubPages = window.location.hostname.includes('github.io');
   const BASE_PATH = isGitHubPages ? '/Zona-Tu-Barrio' : '';
-  const SW_PATH = `${BASE_PATH}/sw.js`;
-  const SCOPE_PATH = `${BASE_PATH}/`;
+  //const SW_PATH = `${BASE_PATH}/sw.js`;
+  //const SCOPE_PATH = `${BASE_PATH}/`;
   
   // --- SERVICE WORKER EN PRODUCCIÓN (EXISTENTE) ---
-  if ('serviceWorker' in navigator) {
-    const currentPath = window.location.pathname;
-    const isLocalidad = currentPath.includes('/castelar/') || 
-                       currentPath.includes('/moron/') || 
-                       currentPath.includes('/ituzaingo/') ||
-                       currentPath.includes('/ciudadela/') ||
-                       currentPath.includes('/merlo/') ||
-                       currentPath.includes('/haedo/') ||
-                       currentPath.includes('/ramos-mejia/') ||
-                       currentPath.includes('/padua/') ||
-                       (currentPath.split('/').filter(Boolean).length > 1 && 
-                        !currentPath.endsWith('/index.html'));
-    
-    if (isLocalidad) {
-      navigator.serviceWorker.register(`${SW_PATH}?v=${APP_VERSION}`, {
-        scope: SCOPE_PATH, 
-        updateViaCache: 'none'
-      })
-      .then(registration => {
-        console.log('✅ SW registrado:', APP_VERSION);
-        console.log('📍 Entorno:', isGitHubPages ? 'GitHub Pages' : 'Netlify');
-        console.log('🛣️  Ruta base:', BASE_PATH || '(raíz)');
-
-        const checkForUpdates = () => {
-          if (registration.waiting) {
-            showUpdateModal(registration);
-          }
-        };
-
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                checkForUpdates();
-              }
-            });
-          }
-        });
-
-        checkForUpdates();
-        setInterval(() => registration.update(), 10 * 60 * 1000);
-
-      }).catch(err => {
-        console.error('❌ Error crítico en SW:', err);
-      });
-    } else {
-      console.log('🏠 En raíz - No se registra SW para selector');
-      console.log('📍 Entorno:', isGitHubPages ? 'GitHub Pages' : 'Netlify');
-    }
-  }
+//  if ('serviceWorker' in navigator) {
+//    const currentPath = window.location.pathname;
+//    const isLocalidad = currentPath.includes('/castelar/') || 
+//                       currentPath.includes('/moron/') || 
+//                       currentPath.includes('/ituzaingo/') ||
+//                       currentPath.includes('/ciudadela/') ||
+//                       currentPath.includes('/merlo/') ||
+//                       currentPath.includes('/haedo/') ||
+//                       currentPath.includes('/ramos-mejia/') ||
+//                       currentPath.includes('/padua/') ||
+//                       (currentPath.split('/').filter(Boolean).length > 1 && 
+//                        !currentPath.endsWith('/index.html'));
+//    
+//    if (isLocalidad) {
+//      navigator.serviceWorker.register(`${SW_PATH}?v=${APP_VERSION}`, {
+//        scope: SCOPE_PATH, 
+//        updateViaCache: 'none'
+//      })
+//      .then(registration => {
+//        console.log('✅ SW registrado:', APP_VERSION);
+//        console.log('📍 Entorno:', isGitHubPages ? 'GitHub Pages' : 'Netlify');
+//        console.log('🛣️  Ruta base:', BASE_PATH || '(raíz)');
+//
+//        const checkForUpdates = () => {
+//          if (registration.waiting) {
+//            showUpdateModal(registration);
+//          }
+//        };
+//
+//        registration.addEventListener('updatefound', () => {
+//          const newWorker = registration.installing;
+//          if (newWorker) {
+//            newWorker.addEventListener('statechange', () => {
+//              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+//                checkForUpdates();
+//              }
+//            });
+//          }
+//        });
+//
+//        checkForUpdates();
+//        setInterval(() => registration.update(), 10 * 60 * 1000);
+//
+//      }).catch(err => {
+//        console.error('❌ Error crítico en SW:', err);
+//      });
+//    } else {
+//      console.log('🏠 En raíz - No se registra SW para selector');
+//      console.log('📍 Entorno:', isGitHubPages ? 'GitHub Pages' : 'Netlify');
+//    }
+//  }
 
   // --- GESTIÓN DEL MODAL DE ACTUALIZACIÓN (EXISTENTE) ---
   function showUpdateModal(registration) {

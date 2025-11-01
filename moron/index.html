@@ -101,7 +101,187 @@
     "keywords": "comercios Morón, negocios locales, panadería Morón, verdulería Morón"
   }
   </script>
+  <script>
+// Service Worker Registration - CORREGIDO
+if ('serviceWorker' in navigator) {
+  // Registrar el Service Worker en la RAIZ para scope global
+  navigator.serviceWorker.register('/sw.js', { 
+    scope: '/' 
+  })
+  .then(registration => {
+    console.log('✅ SW registrado con scope global:', registration.scope);
+    
+    // 🆕 VERIFICAR SI YA HAY UNA ACTUALIZACIÓN PENDIENTE
+    let updateShown = false;
+    
+    // Escuchar cambios SOLO UNA VEZ
+    registration.addEventListener('updatefound', () => {
+      console.log('🔄 Nueva versión del SW encontrada');
+      const newWorker = registration.installing;
+      
+      newWorker.addEventListener('statechange', () => {
+        // 🆕 SOLO mostrar alerta cuando esté instalado y sea la primera vez
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller && !updateShown) {
+          updateShown = true; // Marcar como mostrado
+          console.log('🆕 Nueva versión lista.');
+          showUpdateNotification();
+        }
+      });
+    });
+    
+  })
+  .catch(error => {
+    console.log('❌ Error registrando SW:', error);
+  });
+
+  // 🆕 MEJORAR EL CONTROLLER CHANGE - Evitar recargas automáticas
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    console.log('🔄 SW tomó control de la página');
+    
+    // 🆕 SOLO recargar si es necesario (página muy vacía)
+    if (document.readyState !== 'complete' && document.body.innerHTML.length < 500) {
+      console.log('🔄 Recargando por contenido insuficiente...');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  });
+}
+
+// 🆕 FUNCIÓN MEJORADA DE NOTIFICACIÓN
+function showUpdateNotification() {
+  // Solo mostrar en producción y solo UNA vez por sesión
+  if (window.location.hostname !== 'localhost' && !sessionStorage.getItem('updateShown')) {
+    
+    // 🆕 Usar un toast o banner en lugar de alert/confirm
+    const userChoice = showUpdateBanner();
+    
+    if (userChoice === 'reload') {
+      sessionStorage.setItem('updateShown', 'true');
+      window.location.reload();
+    } else if (userChoice === 'later') {
+      sessionStorage.setItem('updateShown', 'true');
+      // El usuario decidió no recargar ahora
+    }
+  }
+}
+
+// 🆕 BANNER MEJORADO EN LUGAR DE ALERT/CONFIRM
+function showUpdateBanner() {
+  return new Promise((resolve) => {
+    // Crear banner en lugar de usar confirm
+    const banner = document.createElement('div');
+    banner.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      z-index: 10000;
+      max-width: 300px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    `;
+    
+    banner.innerHTML = `
+      <h4 style="margin: 0 0 10px 0;">🎉 ¡Nueva versión!</h4>
+      <p style="margin: 0 0 15px 0; font-size: 14px;">Tenemos mejoras disponibles</p>
+      <div style="display: flex; gap: 10px;">
+        <button id="update-now" style="
+          background: white; 
+          color: #667eea; 
+          border: none; 
+          padding: 8px 16px; 
+          border-radius: 5px; 
+          cursor: pointer;
+          font-weight: bold;
+        ">Actualizar ahora</button>
+        <button id="update-later" style="
+          background: transparent; 
+          color: white; 
+          border: 1px solid white; 
+          padding: 8px 16px; 
+          border-radius: 5px; 
+          cursor: pointer;
+        ">Después</button>
+      </div>
+    `;
+    
+    document.body.appendChild(banner);
+    
+    // Manejar clics
+    document.getElementById('update-now').addEventListener('click', () => {
+      document.body.removeChild(banner);
+      resolve('reload');
+    });
+    
+    document.getElementById('update-later').addEventListener('click', () => {
+      document.body.removeChild(banner);
+      resolve('later');
+    });
+    
+    // Auto-cerrar después de 10 segundos
+    setTimeout(() => {
+      if (document.body.contains(banner)) {
+        document.body.removeChild(banner);
+        resolve('later');
+      }
+    }, 10000);
+  });
+}
+
+// Preload crítico para todas las páginas
+function preloadGlobalResources() {
+  const resources = [
+    '/shared/js/config.js',
+    '/shared/js/security-config.js', 
+    '/shared/js/main-2.js',
+    '/shared/css/styles.css'
+  ];
+
+  resources.forEach(resource => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.href = resource;
+    link.as = resource.endsWith('.js') ? 'script' : 'style';
+    document.head.appendChild(link);
+  });
+}
+
+// Inicialización mejorada
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 Inicializando:', window.location.pathname);
   
+  preloadGlobalResources();
+  
+  // 🆕 VERIFICACIÓN MÁS INTELIGENTE - Solo recargar si realmente hay problemas
+  setTimeout(() => {
+    const hasContent = document.body.innerHTML.length > 500; // Más contenido requerido
+    const mainElements = document.querySelectorAll('.location-btn, .app-logo, .container');
+    const hasMainElements = mainElements.length > 0;
+    
+    if (!hasContent || !hasMainElements) {
+      console.warn('⚠️ Contenido no cargado correctamente, recargando...');
+      // Solo recargar una vez
+      if (!sessionStorage.getItem('autoReloadAttempted')) {
+        sessionStorage.setItem('autoReloadAttempted', 'true');
+        window.location.reload();
+      }
+    }
+  }, 2000); // Más tiempo de espera
+});
+
+// Manejo de errores global
+window.addEventListener('error', function(e) {
+  console.error('Error global:', e.error);
+});
+
+window.addEventListener('unhandledrejection', function(e) {
+  console.error('Promesa rechazada:', e.reason);
+});
+</script>
   <!-- CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet" />

@@ -658,7 +658,7 @@ document.getElementById('businessModal')?.addEventListener('hidden.bs.modal', fu
   
   // --- CONFIGURACIÓN DINÁMICA DE RUTAS (EXISTENTE) ---
   const isGitHubPages = window.location.hostname.includes('github.io');
-  const BASE_PATH = isGitHubPages ? '/Zona-Tu-Barrio' : '';
+  const BASE_PATH = isGitHubPages ? '/tubarrioaunclic' : '';
   const SW_PATH = `${BASE_PATH}/sw.js`;
   const SCOPE_PATH = `${BASE_PATH}/`;
   

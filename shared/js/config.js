@@ -1,6 +1,6 @@
 // shared/js/config.js
 const isGitHubPages = window.location.hostname.includes('github.io');
-const BASE_PATH = isGitHubPages ? '/Zona-Tu-Barrio' : '';
+const BASE_PATH = isGitHubPages ? '/tubarrioaunclic' : '';
 
 function getAbsolutePath(path) {
   // Para rutas absolutas (que empiezan con /)

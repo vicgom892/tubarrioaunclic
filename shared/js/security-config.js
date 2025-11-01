@@ -176,53 +176,36 @@ class SecurityConfig {
     }
 
     setupServiceWorkerSecurity() {
-    // 🆕 PERMITIR SERVICE WORKER EN TODOS LOS ENTORNOS
-    if ('serviceWorker' in navigator) {
-        const allowedDomains = [
-            'tubarrioaunclick.com',
-            'tubarrioaunclik.github.io',
-            'vicgom892.github.io', // 🆕 AGREGAR TU DOMINIO ACTUAL
-            'github.io', // 🆕 PERMITIR CUALQUIER GITHUB PAGES
-            'localhost',
-            '127.0.0.1'
-        ];
-        
-        navigator.serviceWorker.getRegistrations().then(registrations => {
-            registrations.forEach(registration => {
-                const swUrl = registration.active?.scriptURL || registration.scope;
-                
-                // 🆕 VERIFICACIÓN MÁS FLEXIBLE
-                const isAllowed = allowedDomains.some(domain => 
-                    swUrl.includes(domain)
-                ) || swUrl.includes('/sw.js'); // 🆕 PERMITIR CUALQUIER SW.JS
-                
-                if (!isAllowed) {
-                    console.warn('🔒 Service Worker no autorizado detectado:', swUrl);
-                    this.logSecurityEvent('unauthorized_sw', { swUrl });
-                    
-                    // 🆕 EN LUGAR DE BLOQUEAR, SOLO REGISTRAR EL EVENTO
-                    // NO desregistrar el SW - solo loguear para monitoreo
-                    console.log('📝 SW detectado pero permitido para funcionalidad:', swUrl);
-                } else {
-                    console.log('✅ Service Worker autorizado:', swUrl);
-                }
-            });
-        }).catch(error => {
-            console.warn('⚠️ Error verificando Service Workers:', error);
-        });
-        
-        // 🆕 ESCUCHAR MENSAJES DEL SERVICE WORKER
-        navigator.serviceWorker.addEventListener('message', (event) => {
-            if (event.data && event.data.type) {
-                console.log('📨 Mensaje del SW:', event.data.type);
-                this.logSecurityEvent('sw_message', {
-                    type: event.data.type,
-                    data: event.data
-                });
+        // En desarrollo local, permitir el Service Worker
+        if ('serviceWorker' in navigator) {
+            const isLocal = window.location.hostname.includes('localhost') || 
+                           window.location.hostname.includes('127.0.0.1');
+            
+            if (isLocal) {
+                console.log('🔧 Entorno local: Service Worker permitido para desarrollo');
+                return;
             }
-        });
+            
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                registrations.forEach(registration => {
+                    const swUrl = registration.active?.scriptURL || '';
+                    const allowedDomains = [
+                        'tubarrioaunclick.com',
+                        'tubarrioaunclik.github.io'
+                    ];
+                    
+                    const isAllowed = allowedDomains.some(domain => 
+                        swUrl.includes(domain)
+                    );
+                    
+                    if (!isAllowed) {
+                        console.warn('🔒 Service Worker no autorizado detectado:', swUrl);
+                        this.logSecurityEvent('unauthorized_sw', { swUrl });
+                    }
+                });
+            });
+        }
     }
-}
 
     validateSecuritySetup() {
         // En desarrollo local, ser más permisivo con mixed content

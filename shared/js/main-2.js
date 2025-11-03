@@ -1449,7 +1449,7 @@ document.getElementById('businessModal')?.addEventListener('hidden.bs.modal', fu
         'granja': 'granjas',
         'kiosco': 'kioscos',
         'mascotas': 'mascotas',
-        'calzados': 'Calzados',
+        'calzados': 'calzados',
         'barberia': 'barberias',
         'ferreteria': 'ferreterias',
         'farmacia': 'farmacias',

@@ -77,6 +77,16 @@ document.addEventListener('DOMContentLoaded', function() {
     'Fiambrería': ['fiambrería', 'fiambrerias', 'fiambre', 'embutido', 'queso', 'jamón', 'mortadela', 'salame', 'chorizo', 'longaniza', 'quesos', 'embutidos'],
     'Kiosco': ['kiosco', 'quiosco', 'cigarrillos', 'golosinas', 'revistas', 'bebida', 'chicles', 'azúcar', 'papel', 'lápiz', 'diarios', 'golosina'],
     'Mascotas': ['mascota', 'mascotas', 'perro', 'gato', 'alimento animal', 'veterinario', 'peluquería canina', 'tienda de mascotas', 'accesorios mascotas', 'veterinaria'],
+    'Calzados': [
+  'calzado', 'calzados', 'zapato', 'zapatos', 'zapatilla', 'zapatillas',
+  'bota', 'botas', 'botín', 'botines', 'sandalia', 'sandalias',
+  'ojota', 'ojotas', 'chancleta', 'chancletas', 'pantufla', 'pantuflas',
+  'tacones', 'tacón', 'deportivo', 'deportivos', 'tenis', 'calzado deportivo',
+  'calzado casual', 'calzado formal', 'calzado infantil', 'calzado para hombre',
+  'calzado para mujer', 'calzado para niño', 'calzado escolar', 'calzado de trabajo',
+  'calzado de seguridad', 'calzado ortopédico', 'calzado cómodo', 'calzado elegante',
+  'marcas de zapatos', 'venta de zapatos', 'zapatería', 'zapaterías'
+],
     'Barbería': ['barbería', 'barberias', 'corte de pelo', 'barbero', 'peluquería hombre', 'peluqueria hombre', 'afeitado', 'bigote', 'barba', 'estilista'],
     'Ferretería': ['ferretería', 'ferreterias', 'herramientas', 'clavo', 'tornillo', 'cable', 'electricidad', 'llave', 'martillo', 'serrucho', 'materiales'],
     'Ropa': ['ropa', 'tienda de ropa', 'camisa', 'pantalón', 'zapatillas', 'moda', 'prendas', 'vestimenta', 'calzado', 'accesorios', 'indumentaria'],
@@ -489,7 +499,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const jsonFiles = [
         'panaderia.json', 'carniceria.json', 'verduleria.json', 'fiambreria.json',
         'kiosco.json', 'farmacia.json', 'ferreteria.json', 'ropa.json',
-        'servicios.json', 'belleza.json', 'hogar.json', 'otros.json'
+        'servicios.json','calzados.json','belleza.json', 'hogar.json', 'otros.json'
       ];
 
       negociosData = []; // Reiniciar array
@@ -737,7 +747,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function getBusinessCategoryIcon(category) {
     const icons = {
       'Panadería': '🍞', 'Fábrica de Pastas': '🍝', 'Verdulería': '🥦', 'Fiambrería': '🧀',
-      'Kiosco': '🏪', 'Mascotas': '🐾', 'Barbería': '✂️', 'Ferretería': '🔧', 'Ropa': '👕',
+      'Kiosco': '🏪', 'Mascotas': '🐾', 'Calzados': '👟', 'Barbería': '✂️', 'Ferretería': '🔧', 'Ropa': '👕',
       'Servicios': '🛠️', 'Farmacia': '💊', 'Cafetería': '☕', 'Taller Mecánico': '🔧',
       'Librería': '📚', 'Mates': '🧋', 'Florería': '🌹', 'Carnicería': '🥩', 'Granjas': '🌾',
       'Muebles': '🪑', 'Uñas': '💅', 'Comidas': '🍽️'

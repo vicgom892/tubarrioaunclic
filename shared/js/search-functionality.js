@@ -169,6 +169,7 @@
         'carnicerias': 'Carnicería',
         'kioscos': 'Kiosco',
         'mascotas': 'Mascotas',
+        'calzados': 'Calzados',
         'barberias': 'Barbería',
         'ferreterias': 'Ferretería',
         'ropa': 'Tienda de Ropa',

@@ -197,6 +197,7 @@ class SecurityConfig {
         if (path.includes('/merlo/')) return 'merlo';
         if (path.includes('/haedo/')) return 'haedo';
         if (path.includes('/ramos-mejia/')) return 'ramos-mejia';
+        if (path.includes('/marcos-paz/')) return 'marcos-paz';
         if (path.includes('/padua/')) return 'padua';
         return 'raiz';
     }

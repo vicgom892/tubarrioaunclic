@@ -1,0 +1,17 @@
+[
+    {
+      "id": "carniceria-01",
+      "nombre": "Carnicería La Pampa",
+      "imagen": "img/barberia.webp",
+      "horario": "Lunes a Sábados: 8am - 8pm",
+      "horarioData": "Mon-Sat 08:00-20:00",
+      "telefono": "11 5555 6666",
+      "whatsapp": "541155556666",
+      "pagina": "negocios/granja-2.html",
+      "icono": "fas fa-drumstick-bite",
+      "rubro": "Carnicería",
+      "direccion": "Av. San Martín 7373",
+      "latitud": -34.6532,
+      "longitud": -58.6438
+    }
+  ]

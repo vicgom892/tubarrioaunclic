@@ -1,0 +1,52 @@
+[
+  {
+    "id": "cupon-1",
+    "titulo": "20% OFF en Panadería",
+    "nombreNegocio": "Panadería Dulce Hogar",
+    "descripcion": "20% de descuento en toda la panadería artesanal",
+    "descuento": "20% OFF",
+    "validoHasta": "30/12/2024",
+    "usos": "1 uso por persona",
+    "categoria": "panaderias"
+  },
+  {
+    "id": "cupon-2", 
+    "titulo": "2x1 en Cafés",
+    "nombreNegocio": "Cafetería Aroma",
+    "descripcion": "Lleva 2 cafés premium por el precio de 1",
+    "descuento": "2x1",
+    "validoHasta": "15/01/2025",
+    "usos": "1 uso por día",
+    "categoria": "cafeterias"
+  },
+  {
+    "id": "cupon-3",
+    "titulo": "Envío Gratis",
+    "nombreNegocio": "Verdulería Frescor",
+    "descripcion": "Envío gratis en compras mayores a $2000",
+    "descuento": "ENVÍO GRATIS", 
+    "validoHasta": "31/12/2024",
+    "usos": "Ilimitado",
+    "categoria": "verdulerias"
+  },
+  {
+    "id": "cupon-4",
+    "titulo": "15% OFF en Ferretería",
+    "nombreNegocio": "Ferretería El Martillo",
+    "descripcion": "15% de descuento en herramientas y materiales",
+    "descuento": "15% OFF",
+    "validoHasta": "28/02/2025", 
+    "usos": "1 uso por cliente",
+    "categoria": "ferreterias"
+  },
+  {
+    "id": "cupon-5",
+    "titulo": "Corte + Barba $500",
+    "nombreNegocio": "Barbería Estilo Clásico",
+    "descripcion": "Corte de cabello + arreglo de barba por $500",
+    "descuento": "COMBO $500",
+    "validoHasta": "20/01/2025",
+    "usos": "1 vez por cliente",
+    "categoria": "barberias"
+  }
+]

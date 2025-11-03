@@ -1,0 +1,17 @@
+[
+    {
+      "id": "fiambreria-01",
+      "nombre": "Fiambrería Delicias",
+      "imagen": "img/fiambreria-1.webp",
+      "horario": "Lunes a Sábados: 8am - 8pm",
+      "horarioData": "Mon-Sat 08:00-20:00",
+      "telefono": "11 5555 9999",
+      "whatsapp": "541155559999",
+      "pagina": "negocios/fiambreria.html",
+      "icono": "fas fa-cheese",
+      "rubro": "Fiambrería",
+      "direccion": "Av. San Martín 1717",
+      "latitud": -34.6525,
+      "longitud": -58.6431
+    }
+  ]

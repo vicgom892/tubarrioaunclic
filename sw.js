@@ -276,6 +276,8 @@ async function findHtmlFallback(url) {
     '/moron/': '/moron/index.html',
     '/ituzaingo': '/ituzaingo/index.html',
     '/ituzaingo/': '/ituzaingo/index.html',
+    '/marcos-paz': '/marcos-paz/index.html',
+    '/marcos-paz/': '/marcos-paz/index.html',
     '/ciudadela': '/ciudadela/index.html',
     '/ciudadela/': '/ciudadela/index.html',
     '/merlo': '/merlo/index.html',

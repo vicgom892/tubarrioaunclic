@@ -1,0 +1,14 @@
+{
+  "name": "Tu Barrio a un Click - Marcos-paz",
+  "short_name": "BarrioClick Marcos-paz",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "../shared/img/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

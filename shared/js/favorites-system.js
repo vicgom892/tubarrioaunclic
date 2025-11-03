@@ -36,6 +36,7 @@ class FavoritesSystem {
         if (bodyClasses.includes('merlo')) return 'merlo';
          if (bodyClasses.includes('ramos')) return 'ramos';
         if (bodyClasses.includes('padua')) return 'padua';
+        if (bodyClasses.includes('marcos-paz')) return 'marcos-paz';
         
         
         // Default

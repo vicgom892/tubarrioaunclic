@@ -672,6 +672,7 @@ document.getElementById('businessModal')?.addEventListener('hidden.bs.modal', fu
                        currentPath.includes('/merlo/') ||
                        currentPath.includes('/haedo/') ||
                        currentPath.includes('/ramos-mejia/') ||
+                       currentPath.includes('/marcos-paz/') ||
                        currentPath.includes('/padua/') ||
                        (currentPath.split('/').filter(Boolean).length > 1 && 
                         !currentPath.endsWith('/index.html'));
@@ -1070,6 +1071,7 @@ document.getElementById('businessModal')?.addEventListener('hidden.bs.modal', fu
     fiambrerias: 'fiambrerias.json',
     kioscos: 'kioscos.json',
     mascotas: 'mascotas.json',
+    calzados: 'calzados.json',
     barberias: 'barberias.json',
     ferreterias: 'ferreterias.json',
     ropa: 'tiendas.json',
@@ -1260,6 +1262,7 @@ document.getElementById('businessModal')?.addEventListener('hidden.bs.modal', fu
           'fiambrerias': 'Fiambrería',
           'kioscos': 'Kioscos',
           'mascotas': 'Mascotas',
+          'calzados': 'Calzados',
           'barberias': 'Barbería',
           'ferreterias': 'Ferretería',
           'ropa': 'Ropa',
@@ -1446,6 +1449,7 @@ document.getElementById('businessModal')?.addEventListener('hidden.bs.modal', fu
         'granja': 'granjas',
         'kiosco': 'kioscos',
         'mascotas': 'mascotas',
+        'calzados': 'Calzados',
         'barberia': 'barberias',
         'ferreteria': 'ferreterias',
         'farmacia': 'farmacias',
@@ -2796,6 +2800,7 @@ function getCategoryClass(category) {
         'cafeterias': 'electronics',
         'fiambrerias': 'supermarket',
         'mascotas': 'electronics',
+        'calzados': 'Calzados',
         'barberias': 'electronics',
         'ferreterias': 'electronics',
         'veterinarias': 'pharmacy',
@@ -2824,6 +2829,7 @@ function getCategoryName(category) {
         'cafeterias': 'Cafetería',
         'fiambrerias': 'Fiambrería',
         'mascotas': 'Mascotas',
+        'calzados': 'Calzados',
         'barberias': 'Barbería',
         'ferreterias': 'Ferretería',
         'veterinarias': 'Veterinaria',

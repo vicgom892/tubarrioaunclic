@@ -39,7 +39,7 @@ const CONFIG = {
     baseDelay: 1000,
     maxDelay: 4000
   },
-  LOCALIDADES: ['castelar', 'moron', 'ituzaingo', 'ciudadela', 'merlo', 'haedo', 'ramos', 'padua']
+  LOCALIDADES: ['castelar', 'moron', 'ituzaingo', 'ciudadela', 'merlo', 'haedo', 'ramos', 'padua', 'marcos-paz']
 };
 
 const STATIC_CACHE = `${CONFIG.CACHES.STATIC}-${CONFIG.CACHE_VERSION}`;

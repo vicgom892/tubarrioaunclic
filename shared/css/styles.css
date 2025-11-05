@@ -2452,7 +2452,7 @@ border: 2px solid #fffdfd;
     box-shadow: 0 10px 20px rgba(0,0,0,0.3);
     cursor: pointer;
     z-index: 1000;
-    /*animation: float 3s ease-in-out infinite;*/
+    animation: pulse 3s infinite;
     border: none;
     outline: none;
 }

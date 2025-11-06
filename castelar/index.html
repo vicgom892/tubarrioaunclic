@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+
    <script src="../shared/js/security-config.js" defer></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,18 +17,18 @@
   <title>Tu Barrio a un Clik | Encuentra Comercios Locales en Castelar</title>
   <link rel="icon" href="../shared/img/icon-abeja-sola.png">
   
-  <!-- Canonical URL -->
+ 
   <link rel="canonical" href="https://www.tubarrioaunclik.com/" />
 
-<!-- Iconos -->
+
   <link rel="icon" href="../shared/img/icon-192x192.png" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="../shared/img/icon-192x192.png">
   
-  <!-- Manifest -->
+  
   <link rel="manifest" href="../manifest.json">
    <script src="../shared/js/config.js"></script>
   
-  <!-- Open Graph / Facebook -->
+  
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.tubarrioaunclik.com/">
   <meta property="og:title" content="Tu Barrio a un Clik | Encuentra Comercios Locales en Castelar">
@@ -38,7 +39,7 @@
   <meta property="og:locale" content="es_AR">
   <meta property="og:site_name" content="Tu Barrio a un Clik">
   
-  <!-- Twitter -->
+ 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@TuBarrioaunClik">
   <meta name="twitter:creator" content="@TuBarrioaunClik">
@@ -46,7 +47,7 @@
   <meta name="twitter:description" content="Conectamos los mejores comercios de Castelar con sus vecinos. Encuentra panaderías, verdulerías, fiambrerías y más en tu barrio.">
   <meta name="twitter:image" content="https://www.tubarrioaunclik.com/img/social-preview.jpg">
   
-  <!-- Meta tags para PWA -->
+  
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="application-name" content="Tu Barrio a un Clik">
@@ -57,11 +58,11 @@
   <meta name="msapplication-starturl" content="/">
   <meta name="apple-itunes-app" content="app-id=1234567890">
   
-  <!-- Hreflang para SEO internacional -->
+  
   <link rel="alternate" hreflang="es" href="https://www.tubarrioaunclik.com/" />
   <link rel="alternate" hreflang="x-default" href="https://www.tubarrioaunclik.com/" />
   
-  <!-- Schema.org para Rich Snippets -->
+  
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -103,25 +104,25 @@
   }
   </script>
   
-  <!-- CSS -->
+  
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet" />
-  <!-- CSS (en el <head>) -->
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
  
-
-  
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <!-- Leaflet.markercluster CSS -->
+ 
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+  <link rel="stylesheet" href="../shared/css/publicidad.css">
   <link rel="stylesheet" href="../shared/css/styles.css">
   <link rel="stylesheet" href="../shared/css/fondo.css">
-  <!-- En el <head> -->
+  
   <link rel="stylesheet" href="../shared/js/chatbot/chatbot.css">
   <link rel="stylesheet" href="../shared/css/favorites.css">
   <link rel="stylesheet" href="../shared/lib/aos/aos.css">
@@ -804,7 +805,139 @@
       </div>
     </div>
   </section>
-  
+
+  <!--publicidad-->
+   <!-- Botón para abrir publicidad -->
+    <button class="publicidad-toggle" id="publicidadToggle">OFERTAS</button>
+    
+    <!-- Overlay del slider de publicidad -->
+    <div class="publicidad-overlay" id="publicidadOverlay">
+        <!-- Botón de cerrar - AHORA VISIBLE -->
+        <button class="cerrar-publicidad" id="cerrarPublicidad" title="Cerrar publicidad">×</button>
+        
+        <!-- Header con marquee -->
+        <div class="publicidad-header">
+            <h2>¡Tu Barrio a un Click!</h2>
+            <p>Descubre las mejores ofertas y promociones cerca de ti</p>
+            
+            <!-- Marquee animado -->
+            <div class="marquee-container">
+                <div class="marquee-content">
+                    <span class="marquee-item">
+                        <i>•</i> CyberWeek 2025 <strong>6 al 9 de Noviembre</strong>
+                    </span>
+                    <span class="marquee-item">
+                        <i>•</i> 2x1 en cafeterías del barrio <strong>Hoy y mañana</strong>
+                    </span>
+                    <span class="marquee-item">
+                        <i>•</i> Descuentos en ferreterías <strong>Hasta 40%</strong>
+                    </span>
+                    <span class="marquee-item">
+                        <i>•</i> Oferta especial en peluquerías <strong>Fin de semana</strong>
+                    </span>
+                    <span class="marquee-item">
+                        <i>•</i> Promoción en supermercados <strong>3x2 en lácteos</strong>
+                    </span>
+                    <span class="marquee-item">
+                        <i>•</i> Delivery gratis <strong>En compras mayores a $5000</strong>
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="publicidad-slider">
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    <!-- Anuncio 1 -->
+                    <div class="swiper-slide">
+                        <div class="anuncio">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Pizza especial" class="anuncio-imagen">
+                            <h3 class="anuncio-titulo">Pizzería Don Carlos</h3>
+                            <p class="anuncio-descripcion">2 pizzas grandes + gaseosa 1.5L. Promoción válida hasta agotar stock.</p>
+                            <p class="anuncio-precio">$3.499</p>
+                            <button class="anuncio-boton">Ver oferta</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Anuncio 2 -->
+                    <div class="swiper-slide">
+                        <div class="anuncio">
+                            <img src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Descuento en supermercado" class="anuncio-imagen">
+                            <h3 class="anuncio-titulo">Supermercado El Ahorro</h3>
+                            <p class="anuncio-descripcion">30% de descuento en productos seleccionados. Lleva 3 y paga 2 en lácteos.</p>
+                            <p class="anuncio-precio">Hasta 50% OFF</p>
+                            <button class="anuncio-boton">Ver oferta</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Anuncio 3 -->
+                    <div class="swiper-slide">
+                        <div class="anuncio">
+                            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Lavado de auto" class="anuncio-imagen">
+                            <h3 class="anuncio-titulo">Lavadero Express</h3>
+                            <p class="anuncio-descripcion">Lavado completo + Aspirado + Encerado. Incluye limpieza de tapizados.</p>
+                            <p class="anuncio-precio">$2.999</p>
+                            <button class="anuncio-boton">Ver oferta</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Anuncio 4 -->
+                    <div class="swiper-slide">
+                        <div class="anuncio">
+                            <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Hamburguesa" class="anuncio-imagen">
+                            <h3 class="anuncio-titulo">Burger House</h3>
+                            <p class="anuncio-descripcion">Combo doble hamburguesa + papas + bebida. Opción vegetariana disponible.</p>
+                            <p class="anuncio-precio">$2.299</p>
+                            <button class="anuncio-boton">Ver oferta</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Anuncio 5 -->
+                    <div class="swiper-slide">
+                        <div class="anuncio">
+                            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Frutas y verduras" class="anuncio-imagen">
+                            <h3 class="anuncio-titulo">Verdulería Fresca</h3>
+                            <p class="anuncio-descripcion">Promoción en frutas de estación. Frescas y directas del productor.</p>
+                            <p class="anuncio-precio">Desde $199/kg</p>
+                            <button class="anuncio-boton">Ver oferta</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Paginación -->
+                <div class="swiper-pagination"></div>
+                
+                <!-- Navegación -->
+                <button class="nav-button prev" id="publicidadPrev">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                    </svg>
+                </button>
+                <button class="nav-button next" id="publicidadNext">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Controles de reproducción automática -->
+            <div class="autoplay-controls">
+                <button class="autoplay-btn" id="pauseAutoplay">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                    Pausar
+                </button>
+                <button class="autoplay-btn" id="playAutoplay" style="display: none;">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    Reproducir
+                </button>
+            </div>
+        </div>
+    </div>
+
   
   <!-- Panaderías -->
   <section id="panaderias" class="parallax my-5">
@@ -2919,6 +3052,9 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Scripts - Cargados al final del body en el orden correcto -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+
+  <!--publicidad-->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
   <!-- Leaflet.markercluster JS - ¡ES CLAVE! -->
@@ -2934,6 +3070,7 @@ document.addEventListener('DOMContentLoaded', function() {
   <script src="../shared/js/testimonials.js" defer></script>
   <script src="../shared/js/notificaciones.js" defer></script>
   <script src="../shared/js/splash.js" defer></script>
+  <script src="../shared/js/publicidad.js" defer></script>
  
   <script src="../shared/lib/aos/aos.js"></script>
   <script>

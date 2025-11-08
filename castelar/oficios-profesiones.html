@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <!--<script src="../shared/js/security-config.js" defer></script>-->
+  <script src="../shared/js/security-config.js" defer></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <meta http-equiv="Content-Security-Policy" 
@@ -991,55 +991,61 @@ class ReviewSystem {
   }
 
   async addReview(professionalId, rating, comment, userName = 'Anónimo') {
-    try {
-      const review = {
-        professionalId: professionalId,
-        userName: userName,
-        rating: rating,
-        comment: comment,
-        timestamp: new Date().toISOString(),
-        verified: true
-      };
+  try {
+    const review = {
+      professionalId: professionalId,
+      userName: userName,
+      rating: rating,
+      comment: comment,
+      timestamp: new Date().toISOString(),
+      verified: true
+    };
 
-      // Guardar en Firebase
-      const docRef = await db.collection('reviews').add(review);
-      console.log('✅ Reseña guardada en Firebase con ID:', docRef.id);
-      
-      // Actualizar localmente
-      if (!this.reviews[professionalId]) {
-        this.reviews[professionalId] = [];
-      }
-      this.reviews[professionalId].push({ id: docRef.id, ...review });
-      
-      await this.updateProfessionalRating(professionalId);
-      
-      return { success: true, message: '✅ Reseña guardada en la nube' };
-      
-    } catch (error) {
-      console.error('Error con Firebase, guardando localmente:', error);
-      
-      // Fallback a localStorage
-      const reviewId = 'review_' + Date.now();
-      const review = {
-        id: reviewId,
-        professionalId: professionalId,
-        userName: userName,
-        rating: rating,
-        comment: comment,
-        timestamp: new Date().toISOString(),
-        verified: true
-      };
+    console.log('💾 Guardando en Firebase...', review);
 
-      if (!this.reviews[professionalId]) {
-        this.reviews[professionalId] = [];
-      }
-      this.reviews[professionalId].push(review);
-      localStorage.setItem('professionalReviews', JSON.stringify(this.reviews));
-      this.updateProfessionalRating(professionalId);
-      
-      return { success: true, message: '📱 Reseña guardada localmente' };
+    // Guardar en Firebase
+    const docRef = await db.collection('reviews').add(review);
+    console.log('✅ Reseña guardada en Firebase con ID:', docRef.id);
+    
+    // Actualizar localmente inmediatamente
+    if (!this.reviews[professionalId]) {
+      this.reviews[professionalId] = [];
     }
+    this.reviews[professionalId].push({ id: docRef.id, ...review });
+    
+    // Actualizar rating inmediatamente
+    await this.updateProfessionalRating(professionalId);
+    
+    console.log('📊 Estado actualizado localmente');
+    
+    return { success: true, message: '✅ Reseña guardada en la nube' };
+    
+  } catch (error) {
+    console.error('❌ Error con Firebase, guardando localmente:', error);
+    
+    // Fallback a localStorage
+    const reviewId = 'review_' + Date.now();
+    const review = {
+      id: reviewId,
+      professionalId: professionalId,
+      userName: userName,
+      rating: rating,
+      comment: comment,
+      timestamp: new Date().toISOString(),
+      verified: true
+    };
+
+    if (!this.reviews[professionalId]) {
+      this.reviews[professionalId] = [];
+    }
+    this.reviews[professionalId].push(review);
+    localStorage.setItem('professionalReviews', JSON.stringify(this.reviews));
+    this.updateProfessionalRating(professionalId);
+    
+    return { success: true, message: '📱 Reseña guardada localmente' };
   }
+}
+
 
   calculateAllRatings() {
     this.ratings = {};
@@ -1403,7 +1409,7 @@ function selectRating(rating) {
   });
 }
 
-// Enviar reseña - FUNCIÓN CORREGIDA
+// Enviar reseña - VERSIÓN CORREGIDA
 async function submitReview() {
   if (selectedRating === 0) {
     alert('Por favor selecciona una calificación');
@@ -1414,6 +1420,13 @@ async function submitReview() {
   const userName = document.getElementById('reviewerName').value || 'Anónimo';
   
   try {
+    console.log('📤 Enviando reseña...', {
+      professionalId: currentProfessionalId,
+      rating: selectedRating,
+      comment: comment,
+      userName: userName
+    });
+    
     const result = await reviewSystem.addReview(
       currentProfessionalId, 
       selectedRating, 
@@ -1422,17 +1435,87 @@ async function submitReview() {
     );
     
     alert(result.message);
+    
+    // Cerrar el modal de reseña
     const reviewModal = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
     reviewModal.hide();
     
-    // Recargar modal de tarjeta si estaba abierto
-    openCardModal(currentProfessionalId);
+    // Recargar datos desde Firebase
+    console.log('🔄 Recargando datos desde Firebase...');
+    await reviewSystem.loadInitialData();
+    
+    // Actualizar la interfaz del profesional
+    console.log('🎨 Actualizando interfaz...');
+    updateProfessionalUI(currentProfessionalId);
+    
+    // Re-abrir el modal de tarjeta para ver los cambios
+    setTimeout(() => {
+      openCardModal(currentProfessionalId);
+    }, 500);
     
   } catch (error) {
-    console.error('Error al enviar reseña:', error);
+    console.error('❌ Error al enviar reseña:', error);
     alert('Error al enviar la reseña. Por favor intenta nuevamente.');
   }
 }
+
+// Función para actualizar la UI del profesional
+function updateProfessionalUI(professionalId) {
+  console.log('🔄 Actualizando UI para:', professionalId);
+  
+  const professionalRating = reviewSystem.ratings[professionalId] || { 
+    averageRating: 0, 
+    totalReviews: 0 
+  };
+  
+  const reviews = reviewSystem.getReviews(professionalId);
+  console.log(`📊 Datos actualizados - Rating: ${professionalRating.averageRating}, Reviews: ${professionalRating.totalReviews}`);
+  console.log('📝 Reseñas:', reviews);
+
+  // Actualizar tarjetas en la lista principal
+  const cards = document.querySelectorAll(`[data-professional-id="${professionalId}"]`);
+  console.log(`🎯 Encontradas ${cards.length} tarjetas para actualizar`);
+  
+  cards.forEach((card, index) => {
+    const ratingElement = card.querySelector('.professional-rating');
+    if (ratingElement) {
+      ratingElement.innerHTML = reviewSystem.generateStarRating(
+        professionalRating.averageRating, 
+        professionalRating.totalReviews
+      );
+      console.log(`✅ Tarjeta ${index + 1} actualizada`);
+    }
+  });
+
+  // Actualizar el modal si está abierto
+  updateModalContent(professionalId, professionalRating, reviews);
+}
+
+// Función para actualizar el contenido del modal
+function updateModalContent(professionalId, professionalRating, reviews) {
+  const modalContent = document.getElementById('modalCardContent');
+  if (!modalContent) return;
+  
+  // Actualizar rating en el modal
+  const modalRatingElement = modalContent.querySelector('.professional-rating');
+  if (modalRatingElement) {
+    modalRatingElement.innerHTML = reviewSystem.generateStarRating(
+      professionalRating.averageRating, 
+      professionalRating.totalReviews
+    );
+  }
+  
+  // Actualizar sección de reseñas en el modal
+  const reviewsSection = modalContent.querySelector('.reviews-section');
+  if (reviewsSection) {
+    reviewsSection.innerHTML = `
+      <h5>Reseñas de Clientes (${reviews.length})</h5>
+      ${reviewSystem.generateReviewsHTML(professionalId)}
+    `;
+    console.log('✅ Sección de reseñas del modal actualizada');
+  }
+}
+
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeCardModal();

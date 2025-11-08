@@ -29,7 +29,6 @@
       --instagram: #E1306C;
       --location: #10b981;
       --website: #8b5cf6;
-      --warning: #f59e0b;
     }
 
     body {
@@ -39,10 +38,10 @@
       padding-bottom: 100px;
       overflow-x: hidden;
     }
-
     /* Splash Screen Tecnológico */
     .splash-screen {
         position: fixed;
+        /*top: 50px;*/
         left: 0;
         width: 100%;
         height: 100%;
@@ -62,6 +61,7 @@
         pointer-events: none;
     }
     
+    /* Fondo de partículas animadas */
     .splash-particles {
         position: absolute;
         top: 0;
@@ -79,6 +79,7 @@
         animation: float 6s infinite ease-in-out;
     }
     
+    /* Grid de fondo */
     .splash-grid {
         position: absolute;
         top: 0;
@@ -93,6 +94,7 @@
         opacity: 0.3;
     }
     
+    /* Logo con efecto de brillo */
     .splash-logo {
         width: 320px;
         height: 320px;
@@ -212,6 +214,7 @@
         box-shadow: 0 8px 25px rgba(255, 98, 0, 0.3);
     }
     
+    /* Animaciones */
     @keyframes pulseGlow {
         0% {
             box-shadow: 0 20px 60px rgba(255, 98, 0, 0.4);
@@ -271,59 +274,41 @@
             transform: translateY(0);
         }
     }
- /* Header con logo */
-
-    .logo-icon-1 {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .splash-logo {
+            width: 280px;
+            height: 280px;
+        }
+        
+        .splash-text {
+            font-size: 1.6rem;
+        }
+        
+        .loading-bar-container {
+            width: 160px;
+        }
     }
-    /* Header con logo */
-    .header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(10px);
-      z-index: 1100;
-      padding: 12px 20px;
-      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
-    }
-
-    .logo-btn {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 13px;
-      color: #fff;
-    }
-
-    .logo-btn p {
-      margin: 0;
-      padding: 0;
-    }
-
-    .install-btn {
-      text-transform: none;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-      font-size: 10px;
-    }
-
-    .install-btn:hover {
-      background-color: #45a049;
+    
+    @media (max-width: 576px) {
+        .splash-logo {
+            width: 250px;
+            height: 250px;
+        }
+        
+        .splash-text {
+            font-size: 1.4rem;
+        }
+        
+        .loading-bar-container {
+            width: 140px;
+        }
+        
+        .skip-btn {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+        }
     }
 
     /* Hero Section */
@@ -365,6 +350,26 @@
       max-width: 700px;
       margin: 0 auto 24px;
       opacity: 0.95;
+    }
+
+    /* Header con logo */
+    .header-bar {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1100;
+      padding: 12px 20px;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .logo-icon-1 {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     /* Fondos temáticos por sección */
@@ -445,7 +450,7 @@
       background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='fire' x='0' y='0' width='70' height='70' patternUnits='userSpaceOnUse'%3E%3Cpath d='M35,10 Q40,5 45,10 T55,10 Q50,15 45,15 T35,15 Q30,10 35,10 Z' fill='%23fbbf24'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23fire)'/%3E%3C/svg%3E");
     }
 
-    /* Jardineros - Verde */
+    /* Nuevas secciones */
     #jardineros .oficio-section {
       background: linear-gradient(135deg, #166534 0%, #15803d 30%, #16a34a 100%);
     }
@@ -453,7 +458,6 @@
       background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='leaf' x='0' y='0' width='60' height='60' patternUnits='userSpaceOnUse'%3E%3Cpath d='M30,10 Q40,20 30,30 Q20,20 30,10 Z' fill='%2334d399'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23leaf)'/%3E%3C/svg%3E");
     }
 
-    /* Limpieza - Violeta */
     #limpieza .oficio-section {
       background: linear-gradient(135deg, #4338ca 0%, #5b21b6 30%, #7c3aed 100%);
     }
@@ -461,7 +465,6 @@
       background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='clean' x='0' y='0' width='50' height='50' patternUnits='userSpaceOnUse'%3E%3Cpath d='M10,10 L40,10 L40,40 L10,40 Z' fill='none' stroke='%23c084fc' stroke-width='2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23clean)'/%3E%3C/svg%3E");
     }
 
-    /* Transporte - Púrpura */
     #transporte .oficio-section {
       background: linear-gradient(135deg, #7e22ce 0%, #9333ea 30%, #a855f7 100%);
     }
@@ -502,6 +505,7 @@
       object-fit: cover;
     }
 
+    /* Texto legible en tarjetas */
     .card-title,
     .card-text,
     .text-muted {
@@ -526,8 +530,6 @@
       text-decoration: none;
       transition: transform 0.2s;
       color: white !important;
-      border: none;
-      cursor: pointer;
     }
 
     .contact-btn:hover {
@@ -539,27 +541,6 @@
     .instagram-btn { background: var(--instagram); }
     .location-btn { background: var(--location); }
     .website-btn { background: var(--website); }
-    .review-btn { background: var(--warning); }
-
-    /* Sistema de Rating */
-    .professional-rating {
-      min-height: 24px;
-      margin-bottom: 10px;
-    }
-
-    .star-rating {
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    .star-icon {
-      transition: all 0.2s ease;
-      margin-right: 2px;
-    }
-
-    .star-icon:hover {
-      transform: scale(1.2);
-    }
 
     /* Modal de tarjeta completa */
     .card-modal {
@@ -644,29 +625,6 @@
       transform: scale(1.05);
     }
 
-    /* Modal de reseñas */
-    .modal-content {
-      background: var(--card-bg) !important;
-      border: 1px solid rgba(56, 189, 248, 0.2);
-    }
-
-    .modal-header, .modal-footer {
-      border-color: rgba(255,255,255,0.1) !important;
-    }
-
-    .form-control {
-      background: var(--dark-bg);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: var(--text-light);
-    }
-
-    .form-control:focus {
-      background-color: var(--dark-bg);
-      border-color: var(--accent);
-      color: var(--text-light);
-      box-shadow: 0 0 0 0.2rem rgba(0, 245, 255, 0.25);
-    }
-
     /* Barra de navegación inferior */
     .navbar-bottom {
       position: fixed;
@@ -740,54 +698,6 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Sección de reseñas en modal */
-    .reviews-section {
-      margin-top: 20px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 20px;
-    }
-
-    .review-item {
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
-
-    .review-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .review-author {
-      font-weight: bold;
-      color: var(--accent);
-    }
-
-    .review-date {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .review-rating {
-      color: var(--warning);
-      margin-bottom: 5px;
-    }
-
-    .review-comment {
-      color: var(--text-light);
-      line-height: 1.4;
-    }
-
-    .no-reviews {
-      text-align: center;
-      color: var(--text-muted);
-      font-style: italic;
-      padding: 20px;
-    }
-
     /* Responsive */
     @media (max-width: 768px) {
       .hero h1 { font-size: 2.2rem; }
@@ -796,23 +706,6 @@
       .modal-card-content img { height: 220px; }
       .contact-buttons { flex-direction: column; }
       .contact-btn { width: 100%; justify-content: center; }
-      .splash-logo {
-        width: 280px;
-        height: 280px;
-      }
-      .splash-text {
-        font-size: 1.6rem;
-      }
-    }
-
-    @media (max-width: 576px) {
-      .splash-logo {
-        width: 250px;
-        height: 250px;
-      }
-      .splash-text {
-        font-size: 1.4rem;
-      }
     }
   </style>
 </head>
@@ -822,6 +715,7 @@
         <div class="splash-particles" id="splashParticles"></div>
         <div class="splash-grid"></div>
         <div class="splash-logo">
+            <!--<i class="fas fa-store logo-icon"></i>-->
             <img src="img/icon-192x192.png" class="logo-icon" alt="logo de la app">
         </div>
         <h1 class="splash-text">Tu Barrio A Un Clic</h1>
@@ -832,18 +726,57 @@
         <button onclick="skipSplash()" class="skip-btn">Saltar</button>
     </div>
 
-  <!-- Header con logo -->
-  <header class="header-bar">
-    <a href="index.html" class="logo-btn">
-      <div class="logo-icon-1">
-        <img src="img/icon-192x192.png" class="logo-icon-1" alt="logo de la app">
-      </div>
-      <p>Volver a TB-Click</p>
-    </a>
-    <button id="botonInstalar" class="install-btn">
-      <i class="fas fa-download me-2"></i> Instalar App
+ <!-- Header con logo -->
+<header class="header-bar">
+  <a href="index.html" class="logo-btn">
+    <div class="logo-icon-1">
+      <img src="img/icon-192x192.png" class="logo-icon-1" alt="logo de la app">
+    </div>
+    <p>Volver a TB-Click</p>
+  </a>
+ <button id="botonInstalar" class=" install-btn bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 inline-flex items-center">
+      <i class="fas fa-download me-2"> Instalar App</i> 
     </button>
-  </header>
+</header>
+
+<style>
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo-btn {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 13px;
+  color: #fff;
+}
+.logo-btn p{
+   margin: 0;
+   padding: 0;
+}
+.install-btn {
+  text-transform: none ;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  font-size: 10px;
+}
+
+.install-btn:hover {
+  background-color: #45a049;
+}
+</style>
 
   <!-- Hero Section -->
   <section class="hero">
@@ -862,53 +795,6 @@
     <div class="modal-card-content" id="modalCardContent"></div>
   </div>
 
-  <!-- Modal para agregar reseñas -->
-  <div class="modal fade" id="reviewModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content bg-dark text-light">
-        <div class="modal-header border-secondary">
-          <h5 class="modal-title">Calificar Profesional</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div id="reviewProfessionalInfo" class="mb-3"></div>
-          
-          <div class="mb-3">
-            <label class="form-label">Calificación</label>
-            <div class="star-rating">
-              <i class="far fa-star star-icon" data-rating="1"></i>
-              <i class="far fa-star star-icon" data-rating="2"></i>
-              <i class="far fa-star star-icon" data-rating="3"></i>
-              <i class="far fa-star star-icon" data-rating="4"></i>
-              <i class="far fa-star star-icon" data-rating="5"></i>
-            </div>
-            <small class="text-muted">Selecciona de 1 a 5 estrellas</small>
-          </div>
-          
-          <div class="mb-3">
-            <label class="form-label">Tu reseña (opcional)</label>
-            <textarea class="form-control bg-secondary text-light" 
-                      id="reviewComment" 
-                      rows="3" 
-                      placeholder="Comparte tu experiencia con este profesional..."></textarea>
-          </div>
-          
-          <div class="mb-3">
-            <label class="form-label">Tu nombre (opcional)</label>
-            <input type="text" 
-                   class="form-control bg-secondary text-light" 
-                   id="reviewerName" 
-                   placeholder="Cómo quieres que aparezca tu nombre">
-          </div>
-        </div>
-        <div class="modal-footer border-secondary">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-warning" onclick="submitReview()">Enviar Reseña</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Barra de navegación inferior -->
   <nav class="navbar-bottom">
     <div class="scroll-container" id="bottom-nav"></div>
@@ -918,147 +804,7 @@
   <script src="../shared/js/install-app.js" defer></script>
   
   <script>
-    // Sistema de Reseñas y Calificaciones
-    class ReviewSystem {
-      constructor() {
-        this.reviews = JSON.parse(localStorage.getItem('professionalReviews') || '{}');
-        this.ratings = JSON.parse(localStorage.getItem('professionalRatings') || '{}');
-      }
-
-      // Agregar reseña
-      addReview(professionalId, rating, comment, userName = 'Anónimo') {
-        try {
-          const reviewId = 'review_' + Date.now();
-          const review = {
-            id: reviewId,
-            professionalId: professionalId,
-            userName: userName,
-            rating: rating,
-            comment: comment,
-            timestamp: new Date().toISOString(),
-            verified: true
-          };
-
-          // Guardar reseña
-          if (!this.reviews[professionalId]) {
-            this.reviews[professionalId] = [];
-          }
-          this.reviews[professionalId].push(review);
-          localStorage.setItem('professionalReviews', JSON.stringify(this.reviews));
-          
-          // Actualizar rating promedio
-          this.updateProfessionalRating(professionalId);
-          
-          return { success: true, message: 'Reseña agregada exitosamente' };
-        } catch (error) {
-          console.error('Error agregando reseña:', error);
-          return { success: false, message: 'Error al agregar reseña' };
-        }
-      }
-
-      // Obtener reseñas de un profesional
-      getReviews(professionalId) {
-        return this.reviews[professionalId] || [];
-      }
-
-      // Calcular rating promedio
-      getAverageRating(professionalId) {
-        const reviews = this.getReviews(professionalId);
-        if (reviews.length === 0) return 0;
-        
-        const total = reviews.reduce((sum, review) => sum + review.rating, 0);
-        return (total / reviews.length).toFixed(1);
-      }
-
-      // Actualizar rating del profesional
-      updateProfessionalRating(professionalId) {
-        const averageRating = this.getAverageRating(professionalId);
-        const totalReviews = this.getReviews(professionalId).length;
-        
-        this.ratings[professionalId] = {
-          averageRating: parseFloat(averageRating),
-          totalReviews: totalReviews,
-          lastUpdated: new Date().toISOString()
-        };
-        
-        localStorage.setItem('professionalRatings', JSON.stringify(this.ratings));
-        this.updateProfessionalCardUI(professionalId, averageRating, totalReviews);
-      }
-
-      // Actualizar interfaz de usuario
-      updateProfessionalCardUI(professionalId, rating, totalReviews) {
-        const cards = document.querySelectorAll(`[data-professional-id="${professionalId}"]`);
-        
-        cards.forEach(card => {
-          const ratingElement = card.querySelector('.professional-rating');
-          if (ratingElement) {
-            ratingElement.innerHTML = this.generateStarRating(rating, totalReviews);
-          }
-        });
-
-        // Actualizar también en el modal si está abierto
-        const modalContent = document.getElementById('modalCardContent');
-        if (modalContent && modalContent.querySelector('.professional-rating')) {
-          const modalRatingElement = modalContent.querySelector('.professional-rating');
-          modalRatingElement.innerHTML = this.generateStarRating(rating, totalReviews);
-        }
-      }
-
-      // Generar estrellas HTML
-      generateStarRating(rating, totalReviews) {
-        const numericRating = parseFloat(rating);
-        const stars = [];
-        const fullStars = Math.floor(numericRating);
-        const hasHalfStar = numericRating % 1 >= 0.5;
-        
-        // Estrellas llenas
-        for (let i = 0; i < fullStars; i++) {
-          stars.push('<i class="fas fa-star text-warning"></i>');
-        }
-        
-        // Media estrella
-        if (hasHalfStar) {
-          stars.push('<i class="fas fa-star-half-alt text-warning"></i>');
-        }
-        
-        // Estrellas vacías
-        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-        for (let i = 0; i < emptyStars; i++) {
-          stars.push('<i class="far fa-star text-warning"></i>');
-        }
-        
-        return `${stars.join('')} <span class="text-muted ms-2">(${numericRating}) • ${totalReviews} reseñas</span>`;
-      }
-
-      // Generar reseñas HTML para el modal
-      generateReviewsHTML(professionalId) {
-        const reviews = this.getReviews(professionalId);
-        
-        if (reviews.length === 0) {
-          return '<div class="no-reviews">Aún no hay reseñas para este profesional.</div>';
-        }
-
-        return reviews.map(review => `
-          <div class="review-item">
-            <div class="review-header">
-              <span class="review-author">${review.userName}</span>
-              <span class="review-date">${new Date(review.timestamp).toLocaleDateString()}</span>
-            </div>
-            <div class="review-rating">
-              ${this.generateStarRating(review.rating, 0).replace(/<span class="text-muted ms-2">.*?<\/span>/, '')}
-            </div>
-            ${review.comment ? `<div class="review-comment">${review.comment}</div>` : ''}
-          </div>
-        `).join('');
-      }
-    }
-
-    // Inicializar sistema de reseñas
-    const reviewSystem = new ReviewSystem();
-
-    // Variables globales
-    let currentProfessionalId = '';
-    let selectedRating = 0;
+    // Expanded list of professions with new categories
     const oficios = [
       { id: 'plomeros', name: 'Plomeros', icon: 'fas fa-wrench' },
       { id: 'electricistas', name: 'Electricistas', icon: 'fas fa-bolt' },
@@ -1074,7 +820,7 @@
 
     const sectionsContainer = document.getElementById('sections-container');
     const bottomNav = document.getElementById('bottom-nav');
-    let allProfessionals = [];
+    let allProfessionals = []; // Almacenar todos los profesionales para el modal
 
     // Crear barra de navegación
     oficios.forEach(oficio => {
@@ -1122,7 +868,6 @@
         
         renderCards(profesionales, container, oficioName, oficioId);
       } catch (error) {
-        console.error('Error cargando oficio:', error);
         container.innerHTML = `<div class="col-12 text-center py-4" style="color: #ef4444;">No hay ${oficioName.toLowerCase()} disponibles.</div>`;
       }
     }
@@ -1130,14 +875,11 @@
     function renderCards(profesionales, container, oficioName, oficioId) {
       container.innerHTML = '';
       profesionales.forEach((prof, index) => {
-        const professionalId = `${oficioId}-${index}`;
-        const professionalRating = reviewSystem.ratings[professionalId] || { averageRating: 0, totalReviews: 0 };
-        
         // Build contact buttons for card view
         let contactButtons = '';
         if (prof.whatsapp) {
           contactButtons += `<a href="https://wa.me/${prof.whatsapp.replace(/\D/g, '')}" target="_blank" class="contact-btn whatsapp-btn">
-            <i class="fab fa-whatsapp"></i> WhatsApp
+            <i class="fab fa-whatsapp"></i>
           </a>`;
         }
         if (prof.facebook) {
@@ -1164,7 +906,7 @@
         const col = document.createElement('div');
         col.className = 'col-md-6 col-lg-4';
         col.innerHTML = `
-          <div class="card h-100" onclick="openCardModal('${professionalId}')" data-professional-id="${professionalId}">
+          <div class="card h-100" onclick="openCardModal('${oficioId}-${index}')">
             <img src="${prof.imagen || 'https://placehold.co/400x250?text=Sin+Imagen'}" 
                  class="card-img-top" 
                  alt="${prof.nombre}">
@@ -1174,26 +916,12 @@
                 <strong>${prof.rubro || oficioName}</strong>
               </div>
               <h5 class="card-title">${prof.nombre}</h5>
-              
-              <!-- Sistema de Rating -->
-              <div class="professional-rating mb-2">
-                ${reviewSystem.generateStarRating(
-                  professionalRating.averageRating, 
-                  professionalRating.totalReviews
-                )}
-              </div>
-              
               <p class="card-text flex-grow-1">${prof.direccion || ''}</p>
               <p class="text-muted small">
                 <i class="fas fa-clock me-1"></i> ${prof.horario || 'Horario no especificado'}
               </p>
               <div class="contact-buttons">
                 ${contactButtons}
-                <!-- Botón para agregar reseña -->
-                <button class="contact-btn review-btn" 
-                        onclick="event.stopPropagation(); showReviewForm('${professionalId}', '${prof.nombre}')">
-                  <i class="fas fa-star"></i> Calificar
-                </button>
               </div>
             </div>
           </div>
@@ -1207,7 +935,6 @@
       const prof = allProfessionals.find(p => p._id === profId);
       if (!prof) return;
 
-      const professionalRating = reviewSystem.ratings[profId] || { averageRating: 0, totalReviews: 0 };
       const modalContent = document.getElementById('modalCardContent');
       
       // Build modal contact buttons
@@ -1238,34 +965,14 @@
         </a>`;
       }
       
-      modalButtons += `<button class="modal-contact-btn review-btn" onclick="showReviewForm('${profId}', '${prof.nombre}')">
-        <i class="fas fa-star"></i> Dejar Reseña
-      </button>`;
-      
       modalContent.innerHTML = `
         <img src="${prof.imagen || 'https://placehold.co/400x250?text=Sin+Imagen'}" alt="${prof.nombre}">
         <h3>${prof.nombre}</h3>
         <p><strong>${prof.rubro}</strong></p>
-        
-        <!-- Rating en modal -->
-        <div class="professional-rating mb-3">
-          ${reviewSystem.generateStarRating(
-            professionalRating.averageRating, 
-            professionalRating.totalReviews
-          )}
-        </div>
-        
         <p><i class="fas fa-map-marker-alt me-2"></i>${prof.direccion || 'Sin dirección'}</p>
         <p><i class="fas fa-clock me-2"></i>${prof.horario || 'Horario no especificado'}</p>
-        
         <div class="modal-contact-buttons">
           ${modalButtons}
-        </div>
-        
-        <!-- Sección de reseñas -->
-        <div class="reviews-section">
-          <h5>Reseñas de Clientes</h5>
-          ${reviewSystem.generateReviewsHTML(profId)}
         </div>
       `;
       document.getElementById('cardModal').classList.add('show');
@@ -1275,75 +982,6 @@
     function closeCardModal() {
       document.getElementById('cardModal').classList.remove('show');
       document.body.style.overflow = 'auto';
-    }
-
-    // Mostrar formulario de reseña
-    function showReviewForm(professionalId, professionalName) {
-      currentProfessionalId = professionalId;
-      selectedRating = 0;
-      
-      // Cerrar modal de tarjeta si está abierto
-      closeCardModal();
-      
-      document.getElementById('reviewProfessionalInfo').innerHTML = `
-        <h6>Calificar a: <strong>${professionalName}</strong></h6>
-      `;
-      
-      // Resetear estrellas
-      document.querySelectorAll('.star-icon').forEach(star => {
-        star.className = 'far fa-star star-icon';
-        star.style.cursor = 'pointer';
-        star.onclick = () => selectRating(parseInt(star.dataset.rating));
-      });
-      
-      document.getElementById('reviewComment').value = '';
-      document.getElementById('reviewerName').value = '';
-      
-      // Mostrar modal
-      const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'));
-      reviewModal.show();
-    }
-
-    // Seleccionar rating
-    function selectRating(rating) {
-      selectedRating = rating;
-      
-      document.querySelectorAll('.star-icon').forEach((star, index) => {
-        if (index < rating) {
-          star.className = 'fas fa-star star-icon text-warning';
-        } else {
-          star.className = 'far fa-star star-icon';
-        }
-      });
-    }
-
-    // Enviar reseña
-    async function submitReview() {
-      if (selectedRating === 0) {
-        alert('Por favor selecciona una calificación');
-        return;
-      }
-      
-      const comment = document.getElementById('reviewComment').value;
-      const userName = document.getElementById('reviewerName').value || 'Anónimo';
-      
-      const result = reviewSystem.addReview(
-        currentProfessionalId, 
-        selectedRating, 
-        comment, 
-        userName
-      );
-      
-      if (result.success) {
-        alert('¡Gracias! Tu reseña ha sido enviada.');
-        const reviewModal = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
-        reviewModal.hide();
-      } else {
-        alert('Error: ' + result.message);
-      }
-      
-      // Recargar modal de tarjeta si estaba abierto
-      openCardModal(currentProfessionalId);
     }
 
     document.addEventListener('keydown', (e) => {
@@ -1385,21 +1023,6 @@
         ticking = true;
       }
     });
-
-    // Inicializar estrellas del modal de reseñas
-    document.addEventListener('DOMContentLoaded', function() {
-      document.querySelectorAll('.star-icon').forEach(star => {
-        star.onclick = () => selectRating(parseInt(star.dataset.rating));
-      });
-    });
-
-    // Función para saltar splash screen (temporal)
-    function skipSplash() {
-      document.getElementById('splash-screen').classList.add('fade-out');
-      setTimeout(() => {
-        document.getElementById('splash-screen').style.display = 'none';
-      }, 800);
-    }
   </script>
  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

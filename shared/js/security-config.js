@@ -59,25 +59,28 @@ class SecurityConfig {
         ? `${self} blob: data: http: https:` 
         : `${self} blob: data: https:`;
 
+    // 🔥 AGREGAR DOMINIOS DE FIREBASE AQUÍ 🔥
+    const firebaseDomains = "https://firestore.googleapis.com https://*.firebaseio.com https://www.googleapis.com https://www.gstatic.com wss://*.firestore.googleapis.com https://*.firebaseapp.com";
+
     const connectSources = isLocal
-        ? `${self} ${githubDomain} http: https:`
-        : `${self} ${githubDomain} https://api.whatsapp.com https://www.google-analytics.com https://stats.g.doubleclick.net https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com`;
+        ? `${self} ${githubDomain} ${firebaseDomains} http: https:`
+        : `${self} ${githubDomain} ${firebaseDomains} https://api.whatsapp.com https://www.google-analytics.com https://stats.g.doubleclick.net https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com`;
 
     return [
-        `default-src ${self} ${isLocal ? 'http: https:' : githubDomain};`,
-        `script-src ${self} 'unsafe-inline' 'unsafe-eval' ${isLocal ? 'http: https:' : githubDomain + ' https://cdn.jsdelivr.net https://unpkg.com https://www.googletagmanager.com https://code.jquery.com https://cdnjs.cloudflare.com'};`,
+        `default-src ${self} ${isLocal ? 'http: https:' : githubDomain} ${firebaseDomains};`,
+        `script-src ${self} 'unsafe-inline' 'unsafe-eval' ${isLocal ? 'http: https:' : githubDomain + ' https://cdn.jsdelivr.net https://unpkg.com https://www.googletagmanager.com https://code.jquery.com https://cdnjs.cloudflare.com'} ${firebaseDomains};`,
         `style-src ${self} 'unsafe-inline' ${isLocal ? 'http: https:' : githubDomain + ' https://cdn.jsdelivr.net https://fonts.googleapis.com https://unpkg.com https://cdnjs.cloudflare.com'};`,
         `font-src ${self}  ${isLocal ? 'http: https: data:' : githubDomain + ' https://fonts.gstatic.com https://cdnjs.cloudflare.com'};`,
-        `img-src ${imgSources};`, // ✅ Ahora incluye data: y http: en local
+        `img-src ${imgSources};`,
         `connect-src ${connectSources};`,
         `worker-src ${self} blob:;`,
-        `frame-src ${self} ${isLocal ? 'http: https:' : githubDomain};`,
+        `frame-src ${self} ${isLocal ? 'http: https:' : githubDomain} ${firebaseDomains};`,
         `object-src 'none';`,
         `base-uri ${self};`,
         `form-action ${self} ${isLocal ? 'http: https:' : githubDomain + ' https://api.whatsapp.com https://wa.me'};`
     ].join(' ');
 }
-
+    
     setupErrorHandling() {
         window.addEventListener('error', (e) => {
             if (e.message.includes('Content Security Policy')) {

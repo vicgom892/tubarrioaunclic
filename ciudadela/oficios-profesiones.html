@@ -460,12 +460,6 @@
         <div class="scroll-container" id="bottom-nav"></div>
     </nav>
 
-    <!-- Botón flotante para reseñas -->
-    <button class="floating-review-btn" onclick="scrollToProfessionals()">
-        <i class="fas fa-star me-2"></i>
-        Dejar Reseña
-    </button>
-
     <!-- Scripts -->
     <script src="../shared/js/splash.js" defer></script>
     <script src="../shared/js/install-app.js" defer></script>
@@ -475,13 +469,7 @@
 
     <script>
         // Funcionalidades adicionales para la experiencia de reseñas
-        function scrollToProfessionals() {
-            const firstSection = document.querySelector('.oficio-section');
-            if (firstSection) {
-                firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-
+        
         function updateCommunityStats() {
             if (typeof reviewSystem !== 'undefined') {
                 const totalReviews = Object.values(reviewSystem.reviews).flat().length;

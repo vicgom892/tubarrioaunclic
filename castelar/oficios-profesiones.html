@@ -902,27 +902,50 @@ class ReviewSystem {
     this.loadInitialData();
   }
 
-  async loadInitialData() {
-    try {
-      console.log('📥 Intentando conectar con Firebase...');
-      
-      // Verificar conectividad primero
-      const connectivityTest = await this.testFirebaseConnectivity();
-      
-      if (connectivityTest.success) {
-        console.log('✅ Firebase disponible, cargando desde la nube...');
-        await this.loadFromFirebase();
-        this.firebaseAvailable = true;
-      } else {
-        throw new Error('Firebase no disponible');
-      }
-      
-    } catch (error) {
-      console.warn('❌ Usando modo offline:', error.message);
-      this.firebaseAvailable = false;
-      this.loadFromLocalStorage();
+  // En tu ReviewSystem, modifica el método loadInitialData:
+async loadInitialData() {
+  try {
+    console.log('📥 Intentando conectar con Firebase...');
+    
+    const connectivityTest = await this.testFirebaseConnectivity();
+    
+    if (connectivityTest.success) {
+      console.log('✅ Firebase disponible, cargando desde la nube...');
+      await this.loadFromFirebase();
+      this.firebaseAvailable = true;
+    } else {
+      throw new Error('Firebase no disponible');
     }
+    
+  } catch (error) {
+    console.warn('❌ Usando modo offline:', error.message);
+    this.firebaseAvailable = false;
+    this.loadFromLocalStorage();
   }
+  
+  // 🔥 AGREGAR ESTO: Actualizar todas las tarjetas después de cargar
+  this.updateAllCardsUI();
+}
+
+// 🔥 AGREGAR ESTE MÉTODO NUEVO:
+updateAllCardsUI() {
+  console.log('🔄 Actualizando UI de todas las tarjetas...');
+  
+  // Actualizar cada profesional que tenga reseñas
+  Object.keys(this.ratings).forEach(professionalId => {
+    const rating = this.ratings[professionalId];
+    this.updateProfessionalCardUI(professionalId, rating.averageRating, rating.totalReviews);
+  });
+  
+  // También actualizar profesionales sin reseñas (rating 0)
+  const allProfessionalIds = [...new Set(Object.values(this.reviews).flat().map(r => r.professionalId))];
+  allProfessionalIds.forEach(professionalId => {
+    if (!this.ratings[professionalId]) {
+      this.updateProfessionalCardUI(professionalId, 0, 0);
+    }
+  });
+}
+
 
   async testFirebaseConnectivity() {
     return new Promise((resolve) => {
@@ -972,33 +995,37 @@ class ReviewSystem {
     console.log('📱 Reseñas cargadas desde almacenamiento local');
   }
 
-  async addReview(professionalId, rating, comment, userName = 'Anónimo') {
-    const reviewData = {
-      professionalId: professionalId,
-      userName: userName,
-      rating: rating,
-      comment: comment,
-      timestamp: new Date().toISOString(),
-      verified: true
-    };
+ async addReview(professionalId, rating, comment, userName = 'Anónimo') {
+  const reviewData = {
+    professionalId: professionalId,
+    userName: userName,
+    rating: rating,
+    comment: comment,
+    timestamp: new Date().toISOString(),
+    verified: true
+  };
 
-    // Primero guardar localmente para respuesta inmediata
-    this.addReviewLocally(professionalId, reviewData);
-    
-    // Luego intentar sincronizar con Firebase si está disponible
-    if (this.firebaseAvailable) {
-      try {
-        await this.syncWithFirebase(professionalId, reviewData);
-        return { success: true, message: '✅ Reseña guardada en la nube' };
-      } catch (error) {
-        console.warn('⚠️ No se pudo sincronizar con Firebase, guardando localmente:', error);
-        this.firebaseAvailable = false;
-        return { success: true, message: '📱 Reseña guardada localmente' };
-      }
-    } else {
+  // Primero guardar localmente
+  this.addReviewLocally(professionalId, reviewData);
+  
+  // Luego intentar sincronizar con Firebase
+  if (this.firebaseAvailable) {
+    try {
+      await this.syncWithFirebase(professionalId, reviewData);
+      return { success: true, message: '✅ Reseña guardada en la nube' };
+    } catch (error) {
+      console.warn('⚠️ No se pudo sincronizar con Firebase:', error);
+      this.firebaseAvailable = false;
       return { success: true, message: '📱 Reseña guardada localmente' };
     }
+  } else {
+    return { success: true, message: '📱 Reseña guardada localmente' };
   }
+  
+  // 🔥 AGREGAR ESTO: Actualizar la UI después de agregar reseña
+  this.updateProfessionalRating(professionalId);
+}
+
 
   addReviewLocally(professionalId, reviewData) {
     const reviewId = 'review_' + Date.now();
@@ -1055,37 +1082,65 @@ class ReviewSystem {
   }
 
   updateProfessionalCardUI(professionalId, rating, totalReviews) {
-    const cards = document.querySelectorAll(`[data-professional-id="${professionalId}"]`);
-    cards.forEach(card => {
-      const ratingElement = card.querySelector('.professional-rating');
-      if (ratingElement) {
-        ratingElement.innerHTML = this.generateStarRating(rating, totalReviews);
-      }
-    });
-    const modalContent = document.getElementById('modalCardContent');
-    if (modalContent && modalContent.querySelector('.professional-rating')) {
+  // Buscar todas las tarjetas con este professionalId
+  const cards = document.querySelectorAll(`[data-professional-id="${professionalId}"]`);
+  
+  cards.forEach(card => {
+    const ratingElement = card.querySelector('.professional-rating');
+    if (ratingElement) {
+      ratingElement.innerHTML = this.generateStarRating(rating, totalReviews);
+    }
+  });
+  
+  // También actualizar el modal si está abierto
+  const modalContent = document.getElementById('modalCardContent');
+  if (modalContent && modalContent.querySelector('.professional-rating')) {
+    const currentModalProfessional = modalContent.querySelector('[data-professional-id]');
+    if (currentModalProfessional && currentModalProfessional.dataset.professionalId === professionalId) {
       const modalRatingElement = modalContent.querySelector('.professional-rating');
       modalRatingElement.innerHTML = this.generateStarRating(rating, totalReviews);
+      
+      // Actualizar también la sección de reseñas en el modal
+      const reviewsSection = modalContent.querySelector('.reviews-section');
+      if (reviewsSection) {
+        const reviewsHTML = this.generateReviewsHTML(professionalId);
+        reviewsSection.innerHTML = `<h5>Reseñas de Clientes</h5>${reviewsHTML}`;
+      }
     }
   }
+}
 
-  generateStarRating(rating, totalReviews) {
-    const numericRating = parseFloat(rating);
-    const stars = [];
-    const fullStars = Math.floor(numericRating);
-    const hasHalfStar = numericRating % 1 >= 0.5;
-    for (let i = 0; i < fullStars; i++) {
-      stars.push('<i class="fas fa-star text-warning"></i>');
-    }
-    if (hasHalfStar) {
-      stars.push('<i class="fas fa-star-half-alt text-warning"></i>');
-    }
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push('<i class="far fa-star text-warning"></i>');
-    }
-    return `${stars.join('')} <span class="text-muted ms-2">(${numericRating}) • ${totalReviews} reseñas</span>`;
+generateStarRating(rating, totalReviews) {
+  const numericRating = parseFloat(rating);
+  
+  // Si no hay reseñas, mostrar mensaje diferente
+  if (totalReviews === 0) {
+    return '<span class="text-muted">Sin reseñas aún</span>';
   }
+  
+  const stars = [];
+  const fullStars = Math.floor(numericRating);
+  const hasHalfStar = numericRating % 1 >= 0.5;
+  
+  // Estrellas llenas
+  for (let i = 0; i < fullStars; i++) {
+    stars.push('<i class="fas fa-star text-warning"></i>');
+  }
+  
+  // Media estrella
+  if (hasHalfStar) {
+    stars.push('<i class="fas fa-star-half-alt text-warning"></i>');
+  }
+  
+  // Estrellas vacías
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+  for (let i = 0; i < emptyStars; i++) {
+    stars.push('<i class="far fa-star text-warning"></i>');
+  }
+  
+  return `${stars.join('')} <span class="text-muted ms-2">${numericRating.toFixed(1)} • ${totalReviews} ${totalReviews === 1 ? 'reseña' : 'reseñas'}</span>`;
+}
+
 
   generateReviewsHTML(professionalId) {
     const reviews = this.getReviews(professionalId);

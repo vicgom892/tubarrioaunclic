@@ -872,63 +872,29 @@
       }
     }
 
-    function renderCards(profesionales, container, oficioName, oficioId) {
-      container.innerHTML = '';
-      profesionales.forEach((prof, index) => {
-        // Build contact buttons for card view
-        let contactButtons = '';
-        if (prof.whatsapp) {
-          contactButtons += `<a href="https://wa.me/${prof.whatsapp.replace(/\D/g, '')}" target="_blank" class="contact-btn whatsapp-btn">
-            <i class="fab fa-whatsapp"></i>
-          </a>`;
-        }
-        if (prof.facebook) {
-          contactButtons += `<a href="${prof.facebook}" target="_blank" class="contact-btn facebook-btn">
-            <i class="fab fa-facebook-f"></i>
-          </a>`;
-        }
-        if (prof.instagram) {
-          contactButtons += `<a href="${prof.instagram}" target="_blank" class="contact-btn instagram-btn">
-            <i class="fab fa-instagram"></i>
-          </a>`;
-        }
-        if (prof.latitud && prof.longitud) {
-          contactButtons += `<a href="https://www.google.com/maps?q=${prof.latitud},${prof.longitud}" target="_blank" class="contact-btn location-btn">
-            <i class="fas fa-map-marker-alt"></i>
-          </a>`;
-        }
-        if (prof.pagina) {
-          contactButtons += `<a href="${prof.pagina}" target="_blank" class="contact-btn website-btn">
-            <i class="fas fa-globe"></i>
-          </a>`;
-        }
-        
-        const col = document.createElement('div');
-        col.className = 'col-md-6 col-lg-4';
-        col.innerHTML = `
-          <div class="card h-100" onclick="openCardModal('${oficioId}-${index}')">
-            <img src="${prof.imagen || 'https://placehold.co/400x250?text=Sin+Imagen'}" 
-                 class="card-img-top" 
-                 alt="${prof.nombre}">
-            <div class="card-body d-flex flex-column">
-              <div class="mb-2">
-                <i class="${prof.icono || 'fas fa-user'} text-info me-2"></i>
-                <strong>${prof.rubro || oficioName}</strong>
-              </div>
-              <h5 class="card-title">${prof.nombre}</h5>
-              <p class="card-text flex-grow-1">${prof.direccion || ''}</p>
-              <p class="text-muted small">
-                <i class="fas fa-clock me-1"></i> ${prof.horario || 'Horario no especificado'}
-              </p>
-              <div class="contact-buttons">
-                ${contactButtons}
-              </div>
-            </div>
-          </div>
-        `;
-        container.appendChild(col);
-      });
-    }
+   function renderCards(profesionales, container, oficioName, oficioId) {
+  container.innerHTML = '';
+  profesionales.forEach((prof, index) => {
+    const professionalId = `${oficioId}-${index}`;
+    const professionalRating = reviewSystem.ratings[professionalId] || { averageRating: 0, totalReviews: 0 };
+    
+    const col = document.createElement('div');
+    col.className = 'col-md-6 col-lg-4';
+    col.innerHTML = `
+      <div class="card h-100" onclick="openCardModal('${professionalId}')" data-professional-id="${professionalId}">
+        <!-- ... resto del contenido ... -->
+        <div class="professional-rating mb-2">
+          ${reviewSystem.generateStarRating(
+            professionalRating.averageRating, 
+            professionalRating.totalReviews
+          )}
+        </div>
+        <!-- ... resto del contenido ... -->
+      </div>
+    `;
+    container.appendChild(col);
+  });
+}
 
     // Modal de tarjeta completa
     function openCardModal(profId) {

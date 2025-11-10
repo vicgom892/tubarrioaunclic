@@ -1,6 +1,3 @@
-// main-2.js - Versión Mejorada v65-multi con Estados de Negocios - ERROR FIXED
-// CORREGIDO: Error insertBefore en línea 1082 - VERSIÓN CON FUNCIÓN SEGURA
-// MANTIENE las tarjetas originales de las secciones y SOLO actualiza la lógica del mapa
 
 document.addEventListener('DOMContentLoaded', function() {
   // --- CONSTANTES GLOBALES ---
@@ -28,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // --- NUEVA CONFIGURACIÓN MEJORADA ---
   const APP_CONFIG = {
-    VERSION: 'v80-multi',
+    VERSION: 'v81-multi',
     CACHE_STRATEGIES: {
         STATIC: 'static',
         ASSETS: 'assets', 
@@ -654,7 +651,7 @@ document.getElementById('businessModal')?.addEventListener('hidden.bs.modal', fu
   }
 
   // --- CONFIGURACIÓN DE PRODUCCIÓN (EXISTENTE) ---
-  const APP_VERSION = 'v80-multi';
+  const APP_VERSION = 'v81-multi';
   
   // --- CONFIGURACIÓN DINÁMICA DE RUTAS (EXISTENTE) ---
   const isGitHubPages = window.location.hostname.includes('github.io');
@@ -3238,6 +3235,153 @@ function openWhatsAppFallback(phone, message = '') {
         alert('Error al abrir WhatsApp. Por favor, intenta manualmente.');
     }
 }
+// ========================================================================
+// === EXTENSIÓN PWA + SYNC + UPDATE BANNER (AGREGAR AL FINAL, SIN REPETIR) ===
+// ========================================================================
 
+(() => {
+  'use strict';
+
+  // === 1. PWA: Instalación (NO TENÉS beforeinstallprompt) ===
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    ['botonInstalar', 'botonInstalarMobile'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn && !btn.dataset.pwaBound) {
+        btn.style.display = 'inline-block';
+        btn.textContent = 'Instalar App';
+        btn.disabled = false;
+        btn.dataset.pwaBound = 'true';
+        btn.onclick = () => {
+          if (!deferredPrompt) return mostrarToast('No disponible', 'warning');
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then(res => {
+            if (res.outcome === 'accepted') {
+              btn.innerHTML = '<i class="fas fa-check me-1"></i>¡Instalada!';
+              btn.className = btn.className.replace('btn-success', 'btn-secondary');
+              btn.disabled = true;
+              mostrarToast('¡App instalada en tu pantalla de inicio!', 'success');
+              registerPeriodicSync();
+            }
+            deferredPrompt = null;
+          });
+        };
+      }
+    });
+  });
+
+  // === 2. Periodic Background Sync (NO TENÉS) ===
+  async function registerPeriodicSync() {
+    if (!('serviceWorker' in navigator) || !('PeriodicSyncManager' in window)) return;
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      await reg.periodicSync.register('update-offers', { minInterval: 6 * 60 * 60 * 1000 });
+      mostrarToast('Ofertas se actualizarán automáticamente', 'info');
+    } catch (e) {
+      if (e.name !== 'InvalidStateError') console.error(e);
+    }
+  }
+  window.addEventListener('appinstalled', registerPeriodicSync);
+
+  // === 3. Service Worker + Update Banner (NO TENÉS detección de nueva versión) ===
+  const isGitHubPages = location.hostname.includes('github.io');
+  const BASE_PATH = isGitHubPages ? '/tubarrioaunclic' : '';
+  const SW_PATH = `${BASE_PATH}/sw.js?v=${Date.now()}`;
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register(SW_PATH, { scope: BASE_PATH + '/', updateViaCache: 'none' })
+      .then(reg => {
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                showUpdateBanner(reg);
+              }
+            });
+          }
+        });
+        setInterval(() => reg.update(), 10 * 60 * 1000);
+      })
+      .catch(() => {});
+  }
+
+  function showUpdateBanner(reg) {
+    const key = 'update_banner_shown';
+    if (sessionStorage.getItem(key)) return;
+
+    let banner = document.getElementById('pwa-update-banner');
+    if (banner) return;
+
+    banner = document.createElement('div');
+    banner.id = 'pwa-update-banner';
+    banner.className = 'fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-80 bg-gradient-to-r from-green-500 to-emerald-600 text-white p-4 rounded-lg shadow-xl z-50 flex items-center justify-between animate-pulse';
+    banner.innerHTML = `
+      <div><i class="fas fa-sync-alt mr-2"></i><strong>¡Nueva versión!</strong></div>
+      <button id="update-now-btn" class="bg-white text-green-600 px-3 py-1 rounded-full text-sm font-bold">Actualizar</button>
+    `;
+    document.body.appendChild(banner);
+
+    document.getElementById('update-now-btn').onclick = () => {
+      banner.remove();
+      sessionStorage.setItem(key, 'true');
+      if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+      setTimeout(() => location.reload(), 1000);
+    };
+  }
+
+  // === 4. Offline Indicator (NO TENÉS indicador visual) ===
+  function createOfflineIndicator() {
+    if (document.getElementById('offline-indicator')) return;
+    const el = document.createElement('div');
+    el.id = 'offline-indicator';
+    el.style.cssText = 'position:fixed;top:70px;right:10px;padding:8px 12px;border-radius:4px;color:white;font-size:12px;z-index:10000;transition:all .3s;';
+    document.body.appendChild(el);
+    updateOfflineIndicator();
+  }
+
+  function updateOfflineIndicator() {
+    const el = document.getElementById('offline-indicator');
+    if (!el) return;
+    const offline = !navigator.onLine;
+    el.textContent = offline ? 'Sin conexión' : 'Conectado';
+    el.style.background = offline ? '#ef4444' : '#10b981';
+  }
+
+  window.addEventListener('online', updateOfflineIndicator);
+  window.addEventListener('offline', updateOfflineIndicator);
+  setTimeout(createOfflineIndicator, 1500);
+
+  // === 5. Forzar recarga si SW envía mensaje (NO TENÉS) ===
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.addEventListener('message', e => {
+      if (e.data?.type === 'FORCE_REFRESH') location.reload();
+    });
+  }
+
+  console.log('PWA + Sync + Update + Offline: INYECTADO SIN REPETIR');
+})
+();
+// === ACTIVAR PERIODIC SYNC (SI NO LO TENÉS) ===
+async function activarSyncPeriodico() {
+  if (!('serviceWorker' in navigator) || !('PeriodicSyncManager' in window)) return;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const tags = await reg.periodicSync.getTags();
+    if (!tags.includes('update-offers')) {
+      await reg.periodicSync.register('update-offers', {
+        minInterval: 6 * 60 * 60 * 1000 // 6 horas
+      });
+      mostrarToast('Ofertas se actualizarán en segundo plano', 'info');
+    }
+  } catch (e) {
+    if (e.name !== 'InvalidStateError') console.error('Sync error:', e);
+  }
+}
+
+// Llamar después de instalar la app
+window.addEventListener('appinstalled', activarSyncPeriodico);
   console.log('✅ main-2.js mejorado completamente cargado con estados de negocios - ERROR FIXED');
 });

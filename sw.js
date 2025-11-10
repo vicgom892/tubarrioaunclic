@@ -1,12 +1,12 @@
-// sw.js - Service Worker Final v80-multi
-// ✅ Optimizado para: https://vicgom892.github.io/tubarrioaunclic/
+// sw.js - Service Worker Final v81-multi (MEJORADO)
+// Optimizado para: https://vicgom892.github.io/tubarrioaunclic/
 // Compatible con Live Server, GitHub Pages y offline
 
 const isGitHubPages = self.location.hostname === 'vicgom892.github.io';
 const isLocalhost = self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1';
-const BASE_PATH = isGitHubPages ? '/tubarrioaunclic' : ''; // ✅ minúsculas, sin guiones
+const BASE_PATH = isGitHubPages ? '/tubarrioaunclic' : ''; // minúsculas, sin guiones
 
-const CACHE_VERSION = 'v80-multi';
+const CACHE_VERSION = 'v81-multi'; // ¡Versión actualizada!
 
 const CONFIG = {
   CACHE_VERSION,
@@ -51,9 +51,7 @@ const PAGES_CACHE = `${CONFIG.CACHES.PAGES}-${CONFIG.CACHE_VERSION}`;
 
 function getFullPath(path) {
   if (!path) return BASE_PATH || '/';
-  if (path.startsWith('/')) {
-    return `${BASE_PATH}${path}`;
-  }
+  if (path.startsWith('/')) return `${BASE_PATH}${path}`;
   return `${BASE_PATH}/${path}`;
 }
 
@@ -127,7 +125,7 @@ const LOCALIDAD_RESOURCES = {
     getFullPath('/castelar/data/muebles.json'),
     getFullPath('/castelar/data/uñas.json')
   ]
-  // Agrega otras localidades aquí si las tienes
+  // Agrega otras localidades aquí
 };
 
 function isStaticAsset(path) {
@@ -162,9 +160,29 @@ const cacheState = {
   environment: isLocalhost ? 'development' : isGitHubPages ? 'github-pages' : 'production'
 };
 
+// === NUEVA: Stale-While-Revalidate para datos críticos ===
+async function handleStaleWhileRevalidate(request, cacheName) {
+  const cached = await caches.match(request);
+  const fetchPromise = fetch(request).then(async (networkResponse) => {
+    if (networkResponse.ok) {
+      const cache = await caches.open(cacheName);
+      await cache.put(request, networkResponse.clone());
+      await limitCacheSize(cacheName, CONFIG.LIMITS.business);
+    }
+    return networkResponse;
+  }).catch(() => {
+    return cached || new Response(JSON.stringify({ error: 'offline', message: 'Sin conexión' }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 503
+    });
+  });
+
+  return cached || fetchPromise;
+}
+
 // === INSTALL ===
 self.addEventListener('install', (event) => {
-  log('info', `🚀 Instalando SW (${APP_CONTEXT}): ${CACHE_VERSION}`);
+  log('info', `Instalando SW (${APP_CONTEXT}): ${CACHE_VERSION}`);
   self.skipWaiting();
 
   event.waitUntil(
@@ -185,10 +203,10 @@ self.addEventListener('install', (event) => {
         cacheState.precacheComplete = true;
         cacheState.lastUpdate = Date.now();
         
-        log('info', `✅ SW instalado - ${essentialResources.length} recursos`);
+        log('info', `SW instalado - ${essentialResources.length} recursos`);
         notifyClients({ type: 'SW_INSTALLED', version: CACHE_VERSION, context: APP_CONTEXT });
       } catch (error) {
-        log('error', '💥 Error en install:', error);
+        log('error', 'Error en install:', error);
       }
     })()
   );
@@ -208,7 +226,7 @@ self.addEventListener('activate', (event) => {
           .map(name => caches.delete(name))
       );
       
-      log('info', `✅ SW activado: ${CACHE_VERSION} (${APP_CONTEXT})`);
+      log('info', `SW activado: ${CACHE_VERSION} (${APP_CONTEXT})`);
       notifyClients({ type: 'SW_ACTIVATED', version: CACHE_VERSION });
     })()
   );
@@ -231,7 +249,12 @@ self.addEventListener('fetch', (event) => {
   } else if (isImage(pathname)) {
     event.respondWith(handleImageRequest(request));
   } else if (isBusinessData(pathname)) {
-    event.respondWith(handleBusinessData(request));
+    // Stale-While-Revalidate solo para comercios.json (el más crítico)
+    if (pathname.includes('comercios.json')) {
+      event.respondWith(handleStaleWhileRevalidate(request, BUSINESS_CACHE));
+    } else {
+      event.respondWith(handleBusinessData(request));
+    }
   } else if (isAPI(pathname)) {
     event.respondWith(handleApiRequest(request));
   } else if (isStaticAsset(pathname)) {
@@ -241,7 +264,7 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-// === MANEJADORES ===
+// === MANEJADORES (sin cambios, excepto que ahora usan Stale si aplica) ===
 async function handleHtmlPage(request) {
   if (isLocalhost) {
     try { return await fetch(request); } catch { return createOfflinePage(); }
@@ -408,7 +431,7 @@ function createOfflinePage() {
     </head>
     <body>
         <div class="container">
-            <h1>📡 Estás Offline</h1>
+            <h1>Estás Offline</h1>
             <p>No hay conexión a internet.</p>
             <p>Puedes navegar por comercios ya cargados.</p>
             <button class="btn" onclick="location.reload()">Reintentar</button>
@@ -431,7 +454,7 @@ async function precacheResources(cache, resources) {
       const res = await fetch(url, { cache: 'no-cache' });
       if (res.ok) await cache.put(url, res);
     } catch (e) {
-      log('warn', `⚠️ No se pudo cachear: ${url}`);
+      log('warn', `No se pudo cachear: ${url}`);
     }
   }
 }
@@ -463,4 +486,26 @@ self.addEventListener('message', (event) => {
   if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
-log('info', `🚀 SW cargado - ${APP_CONTEXT} | Base: ${BASE_PATH || '(raíz)'}`);
+// === PERIÓDICO SYNC (opcional, activar desde JS) ===
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === 'update-offers') {
+    event.waitUntil(updateCriticalData());
+  }
+});
+
+async function updateCriticalData() {
+  const cache = await caches.open(BUSINESS_CACHE);
+  const urls = LOCALIDAD_RESOURCES[APP_CONTEXT]?.filter(u => u.includes('.json')) || [];
+  
+  for (const url of urls) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) await cache.put(url, res);
+    } catch (e) {
+      log('warn', 'Fallo actualización periódica:', url);
+    }
+  }
+  log('info', 'Actualización periódica completada');
+}
+
+log('info', `SW cargado - ${APP_CONTEXT} | Base: ${BASE_PATH || '(raíz)'} | v81-multi`);
